@@ -49,10 +49,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
 
-  // Redirect authenticated users away from auth pages
+  // Redirect authenticated users away from auth pages to their role-specific homepage
   if (isAuthPath && hasToken && request.method === 'GET') {
-    console.log('🏠 Redirecting to dashboard - user already has token')
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    console.log('🏠 Redirecting to homepage - user already has token')
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
   console.log('✅ Middleware passed, continuing to:', path)

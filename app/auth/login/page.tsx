@@ -50,11 +50,11 @@ export default function LoginPage() {
       const data = await response.json()
       console.log('✅ Login successful!')
       
-      setSuccess('Login successful! Redirecting...')
+      setSuccess('Login successful! Redirecting to your homepage...')
       
-      // Simple redirect after successful login
+      // Redirect to homepage which will show role-specific content
       setTimeout(() => {
-        router.push('/dashboard')
+        router.push('/')
       }, 1000)
         
     } catch (error) {

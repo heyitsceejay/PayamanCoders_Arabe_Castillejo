@@ -17,6 +17,11 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Get pagination parameters
+    const { searchParams } = new URL(request.url)
+    const limit = parseInt(searchParams.get('limit') || '5')
+    const offset = parseInt(searchParams.get('offset') || '0')
+
     // Get user profile to understand their skills and preferences
     const userProfile = await User.findById(user.userId)
     if (!userProfile) {
@@ -56,19 +61,24 @@ export async function GET(request: NextRequest) {
       recommendationQuery.remote = true
     }
 
-    // Get recommended jobs
+    // Get total count for pagination
+    const totalCount = await Job.countDocuments(recommendationQuery)
+
+    // Get recommended jobs with pagination
     const recommendedJobs = await Job.find(recommendationQuery)
       .populate('employerId', 'firstName lastName')
       .sort({ createdAt: -1 })
-      .limit(5)
+      .skip(offset)
+      .limit(limit)
 
     const formattedRecommendations = recommendedJobs.map(job => ({
-      id: job._id,
+      _id: job._id,
       title: job.title,
       company: job.company,
       location: job.location,
       remote: job.remote,
       type: job.type,
+      description: job.description,
       salary: job.salary,
       skills: job.skills,
       createdAt: job.createdAt
@@ -76,7 +86,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       recommendations: formattedRecommendations,
-      total: formattedRecommendations.length
+      total: totalCount,
+      hasMore: offset + limit < totalCount
     })
 
   } catch (error) {

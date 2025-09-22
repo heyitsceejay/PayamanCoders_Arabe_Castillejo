@@ -78,7 +78,7 @@ export default function JobDetailPage() {
 
       if (response.ok) {
         alert('Application submitted successfully!')
-        router.push('/dashboard')
+        router.push('/')
       } else {
         alert(data.error || 'Failed to submit application')
       }
