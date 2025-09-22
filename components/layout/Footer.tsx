@@ -36,7 +36,7 @@ export default function Footer() {
         
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-300">
-            © 2024 WorkQit Platform. Built by Christian John Castillejo & Cloyd Matthew Arabe.
+            © 2025 WorkQit Platform. Built by Christian John Castillejo & Cloyd Matthew Arabe.
           </p>
         </div>
       </div>
