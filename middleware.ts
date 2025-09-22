@@ -49,12 +49,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
 
-  // Temporarily disable auto-redirect from auth pages to prevent loops
-  // JWT verification will happen in the API routes instead
-  // if (isAuthPath && hasToken && request.method === 'GET') {
-  //   console.log('🏠 Redirecting to dashboard - has token')
-  //   return NextResponse.redirect(new URL('/dashboard', request.url))
-  // }
+  // Redirect authenticated users away from auth pages
+  if (isAuthPath && hasToken && request.method === 'GET') {
+    console.log('🏠 Redirecting to dashboard - user already has token')
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
 
   console.log('✅ Middleware passed, continuing to:', path)
   return NextResponse.next()

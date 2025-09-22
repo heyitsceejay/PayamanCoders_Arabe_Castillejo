@@ -35,3 +35,48 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    await dbConnect()
+    
+    const user = await verifyToken(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    const updateData = await request.json()
+    
+    const updatedUser = await User.findByIdAndUpdate(
+      user.userId,
+      {
+        firstName: updateData.firstName,
+        lastName: updateData.lastName,
+        profile: updateData.profile
+      },
+      { new: true, runValidators: true }
+    ).select('-password')
+
+    if (!updatedUser) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json({
+      message: 'Profile updated successfully',
+      user: updatedUser
+    })
+
+  } catch (error) {
+    console.error('Profile update error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}

@@ -48,40 +48,14 @@ export default function LoginPage() {
       }
 
       const data = await response.json()
-      console.log('📨 Response data:', data)
       console.log('✅ Login successful!')
       
-      setSuccess('Login successful! Verifying session...')
+      setSuccess('Login successful! Redirecting...')
       
-      // Wait for cookie to be set and verify authentication
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      console.log('🔍 Verifying authentication status...')
-      
-      // Test if we're actually authenticated before redirecting
-      try {
-        const authTest = await fetch('/api/test-auth')
-        const authData = await authTest.json()
-        console.log('🧪 Auth verification:', authData)
-        
-        if (authData.authResult) {
-          console.log('✅ Authentication verified, redirecting...')
-          setSuccess('Authentication verified! Redirecting to dashboard...')
-          
-          // Use window.location.href for a clean redirect
-          setTimeout(() => {
-            window.location.href = '/dashboard'
-          }, 500)
-        } else {
-          console.error('❌ Authentication verification failed')
-          setError('Login succeeded but session verification failed. Please try again.')
-        }
-      } catch (authError) {
-        console.error('❌ Auth verification error:', authError)
-        // Fallback: try to redirect anyway
-        console.log('🔄 Attempting redirect despite verification error...')
-        window.location.href = '/dashboard'
-      }
+      // Simple redirect after successful login
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 1000)
         
     } catch (error) {
       console.error('💥 Login error:', error)
@@ -122,36 +96,7 @@ export default function LoginPage() {
           
           {success && (
             <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded">
-              <p className="mb-2">{success}</p>
-              <div className="flex space-x-2">
-                <button 
-                  onClick={() => {
-                    console.log('🔄 Manual dashboard redirect')
-                    window.location.href = '/dashboard'
-                  }}
-                  className="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
-                >
-                  Go to Dashboard
-                </button>
-                <button 
-                  onClick={() => {
-                    console.log('🧪 Testing auth status')
-                    fetch('/api/test-auth').then(r => r.json()).then(data => {
-                      console.log('Auth test result:', data)
-                      alert('Auth test: ' + JSON.stringify(data, null, 2))
-                    })
-                  }}
-                  className="text-sm bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
-                >
-                  Test Auth
-                </button>
-                <button 
-                  onClick={() => window.location.href = '/test-redirect'}
-                  className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                >
-                  Test Page
-                </button>
-              </div>
+              {success}
             </div>
           )}
           
