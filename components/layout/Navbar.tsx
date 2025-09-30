@@ -4,61 +4,21 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Menu, X, User, Briefcase, Users, BookOpen, LogOut, Settings } from 'lucide-react'
-
-interface User {
-  firstName: string
-  lastName: string
-  email: string
-  role: string
-}
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const router = useRouter()
+  const { user, loading, logout } = useAuth()
 
-  useEffect(() => {
-    checkAuthStatus()
-  }, [])
-
-  const checkAuthStatus = async () => {
-    try {
-      const response = await fetch('/api/user/profile')
-      if (response.ok) {
-        const data = await response.json()
-        setIsAuthenticated(true)
-        setUser(data.user)
-      } else {
-        setIsAuthenticated(false)
-        setUser(null)
-      }
-    } catch (error) {
-      console.error('Auth check error:', error)
-      setIsAuthenticated(false)
-      setUser(null)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const isAuthenticated = !!user
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include'
-      })
-
-      if (response.ok) {
-        setIsAuthenticated(false)
-        setUser(null)
-        setShowUserMenu(false)
-        router.push('/')
-      } else {
-        console.error('Logout failed')
-      }
+      await logout()
+      setShowUserMenu(false)
+      router.push('/')
     } catch (error) {
       console.error('Logout error:', error)
     }

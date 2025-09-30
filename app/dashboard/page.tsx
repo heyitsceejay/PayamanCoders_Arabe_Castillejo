@@ -9,6 +9,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Stats {
   applications: number;
@@ -42,15 +43,8 @@ interface Recommendation {
   };
 }
 
-interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-}
-
 export default function DashboardPage() {
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useAuth();
   const [stats, setStats] = useState<Stats>({
     applications: 0,
     interviews: 0,
@@ -74,19 +68,17 @@ export default function DashboardPage() {
 
       // Fetch all dashboard data in parallel
       console.log("📡 Making API calls...");
-      const [statsRes, applicationsRes, recommendationsRes, userRes] =
+      const [statsRes, applicationsRes, recommendationsRes] =
         await Promise.all([
           fetch("/api/dashboard/stats"),
           fetch("/api/dashboard/applications"),
           fetch("/api/dashboard/recommendations"),
-          fetch("/api/user/profile"),
         ]);
 
       console.log("📨 API responses:", {
         stats: statsRes.status,
         applications: applicationsRes.status,
         recommendations: recommendationsRes.status,
-        user: userRes.status,
       });
 
       if (statsRes.ok) {
@@ -114,14 +106,6 @@ export default function DashboardPage() {
           "❌ Recommendations request failed:",
           recommendationsRes.status
         );
-      }
-
-      if (userRes.ok) {
-        const userData = await userRes.json();
-        console.log("👤 User data:", userData);
-        setUser(userData.user);
-      } else {
-        console.log("❌ User request failed:", userRes.status);
       }
 
       console.log("✅ Dashboard data fetch completed");

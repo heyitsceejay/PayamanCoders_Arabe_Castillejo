@@ -2,16 +2,7 @@
 
 import Link from 'next/link'
 import { ArrowRight, Heart, Users, BookOpen, MessageCircle, Target, Award, Calendar } from 'lucide-react'
-
-interface User {
-  firstName: string
-  lastName: string
-  role: string
-}
-
-interface MentorHomepageProps {
-  user?: User
-}
+import { useAuth } from '@/contexts/AuthContext'
 
 const mentorFeatures = [
   {
@@ -53,7 +44,8 @@ const mentorStats = [
   { number: '4.9/5', label: 'Average Rating' },
 ]
 
-export default function MentorHomepage({ user }: MentorHomepageProps) {
+export default function MentorHomepage() {
+  const { user } = useAuth()
   return (
     <div>
       {/* Hero Section */}

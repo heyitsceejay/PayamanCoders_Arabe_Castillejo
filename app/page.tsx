@@ -1,40 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Hero from '@/components/LandingPage/Hero'
 import Features from '@/components/LandingPage/Features'
 import Stats from '@/components/LandingPage/Stats'
 import JobSeekerHomepage from '@/components/homepage/JobSeekerHomepage'
 import EmployerHomepage from '@/components/homepage/EmployerHomepage'
 import MentorHomepage from '@/components/homepage/MentorHomepage'
-
-interface User {
-  role: string
-  firstName: string
-  lastName: string
-}
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function HomePage() {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    checkUserRole()
-  }, [])
-
-  const checkUserRole = async () => {
-    try {
-      const response = await fetch('/api/user/profile')
-      if (response.ok) {
-        const data = await response.json()
-        setUser(data.user)
-      }
-    } catch (error) {
-      // User not authenticated, show default homepage
-    } finally {
-      setLoading(false)
-    }
-  }
+  const { user, loading } = useAuth()
 
   if (loading) {
     return (
@@ -48,13 +23,13 @@ export default function HomePage() {
   if (user) {
     switch (user.role) {
       case 'employer':
-        return <EmployerHomepage user={user} />
+        return <EmployerHomepage />
       case 'mentor':
-        return <MentorHomepage user={user} />
+        return <MentorHomepage />
       case 'job_seeker':
-        return <JobSeekerHomepage user={user} />
+        return <JobSeekerHomepage />
       default:
-        return <JobSeekerHomepage user={user} />
+        return <JobSeekerHomepage />
     }
   }
 

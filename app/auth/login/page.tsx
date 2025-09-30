@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -10,9 +11,9 @@ export default function LoginPage() {
     password: '',
   })
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const router = useRouter()
+  const { login, error } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,43 +24,24 @@ export default function LoginPage() {
     console.log('🔑 Password length:', formData.password.length)
     
     setLoading(true)
-    setError('')
     setSuccess('')
 
     try {
       console.log('📡 Sending login request...')
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-        credentials: 'include' // Ensure cookies are included
-      })
+      const result = await login(formData)
 
-      console.log('📨 Response status:', response.status)
-      console.log('📨 Response headers:', Object.fromEntries(response.headers.entries()))
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        console.error('❌ Login failed:', errorData.error)
-        setError(errorData.error || 'Login failed')
-        return
+      if (result.success) {
+        console.log('✅ Login successful!')
+        setSuccess('Login successful! Redirecting to your homepage...')
+        
+        // Redirect to homepage which will show role-specific content
+        setTimeout(() => {
+          router.push('/')
+        }, 1000)
       }
-
-      const data = await response.json()
-      console.log('✅ Login successful!')
-      
-      setSuccess('Login successful! Redirecting to your homepage...')
-      
-      // Redirect to homepage which will show role-specific content
-      setTimeout(() => {
-        router.push('/')
-      }, 1000)
         
     } catch (error) {
       console.error('💥 Login error:', error)
-      setError('An error occurred. Please try again.')
     } finally {
       setLoading(false)
     }

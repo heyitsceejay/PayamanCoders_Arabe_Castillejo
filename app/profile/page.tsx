@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { User, Mail, MapPin, Briefcase, GraduationCap, Clock, Globe } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface UserProfile {
   _id: string
@@ -22,6 +23,7 @@ interface UserProfile {
 }
 
 export default function ProfilePage() {
+  const { user: authUser, refreshUser } = useAuth()
   const [user, setUser] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
