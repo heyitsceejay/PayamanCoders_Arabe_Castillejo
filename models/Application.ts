@@ -6,14 +6,16 @@ export interface IApplication extends mongoose.Document {
   status: 'pending' | 'reviewed' | 'accepted' | 'rejected'
   coverLetter?: string
   resume?: string
-  feedback?: {
+  feedbacks?: {
     rating?: number
     comments?: string
     skills_assessment?: {
       skill: string
       rating: number
     }[]
-  }
+    employerId?: mongoose.Types.ObjectId
+    createdAt?: Date
+  }[]
   createdAt: Date
   updatedAt: Date
 }
@@ -36,7 +38,7 @@ const ApplicationSchema = new mongoose.Schema({
   },
   coverLetter: String,
   resume: String,
-  feedback: {
+  feedbacks: [{
     rating: {
       type: Number,
       min: 1,
@@ -51,7 +53,15 @@ const ApplicationSchema = new mongoose.Schema({
         max: 5,
       },
     }],
-  },
+    employerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  }],
 }, {
   timestamps: true,
 })
