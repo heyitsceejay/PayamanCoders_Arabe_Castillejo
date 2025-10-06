@@ -183,7 +183,7 @@ export default function JobsPage() {
                     {job.location} {job.remote && '(Remote)'}
                   </div>
                   
-                  {job.salary && (
+                  {job.salary && typeof job.salary.min === 'number' && typeof job.salary.max === 'number' && (
                     <div className="flex items-center text-gray-600">
                       <DollarSign className="w-4 h-4 mr-1" />
                       ${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}

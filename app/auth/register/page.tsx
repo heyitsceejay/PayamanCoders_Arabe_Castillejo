@@ -1,38 +1,38 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'job_seeker',
-  })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const router = useRouter()
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "job_seeker",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
-      setLoading(false)
-      return
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
     }
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           firstName: formData.firstName,
@@ -41,28 +41,30 @@ export default function RegisterPage() {
           password: formData.password,
           role: formData.role,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (response.ok) {
-        router.push('/auth/login?message=Registration successful')
+        router.push("/auth/login?message=Registration successful");
       } else {
-        setError(data.error || 'Registration failed')
+        setError(data.error || "Registration failed");
       }
     } catch (error) {
-      setError('An error occurred. Please try again.')
+      setError("An error occurred. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -72,24 +74,30 @@ export default function RegisterPage() {
             Create your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link href="/auth/login" className="font-medium text-primary-600 hover:text-primary-500">
+            Or{" "}
+            <Link
+              href="/auth/login"
+              className="font-medium text-primary-600 hover:text-primary-500"
+            >
               sign in to existing account
             </Link>
           </p>
         </div>
-        
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
               {error}
             </div>
           )}
-          
+
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="firstName"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   First Name
                 </label>
                 <input
@@ -102,9 +110,12 @@ export default function RegisterPage() {
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="lastName"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Last Name
                 </label>
                 <input
@@ -118,9 +129,12 @@ export default function RegisterPage() {
                 />
               </div>
             </div>
-            
+
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email address
               </label>
               <input
@@ -133,9 +147,12 @@ export default function RegisterPage() {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
-            
+
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="role"
+                className="block text-sm font-medium text-gray-700"
+              >
                 I am a
               </label>
               <select
@@ -147,12 +164,14 @@ export default function RegisterPage() {
               >
                 <option value="job_seeker">Job Seeker</option>
                 <option value="employer">Employer</option>
-                <option value="mentor">Mentor</option>
               </select>
             </div>
-            
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <input
@@ -165,9 +184,12 @@ export default function RegisterPage() {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
-            
+
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Confirm Password
               </label>
               <input
@@ -188,11 +210,11 @@ export default function RegisterPage() {
               disabled={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
             >
-              {loading ? 'Creating account...' : 'Create account'}
+              {loading ? "Creating account..." : "Create account"}
             </button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }

@@ -335,7 +335,7 @@ export default function DashboardPage() {
                   <p className="text-sm text-gray-600 mb-2">{job.company}</p>
                   <p className="text-sm text-gray-500 mb-2">
                     {job.location} {job.remote && "• Remote"}
-                    {job.salary &&
+                    {job.salary && typeof job.salary.min === 'number' && typeof job.salary.max === 'number' &&
                       ` • $${job.salary.min}-${job.salary.max}/hour`}
                   </p>
                   <Link

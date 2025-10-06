@@ -148,7 +148,7 @@ export default function JobDetailPage() {
               </div>
             </div>
 
-            {job.salary && (
+            {job.salary && typeof job.salary.min === 'number' && typeof job.salary.max === 'number' && (
               <div className="flex items-center text-gray-600">
                 <DollarSign className="w-5 h-5 mr-3" />
                 <div>
