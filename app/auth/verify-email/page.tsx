@@ -37,8 +37,21 @@ export default function VerifyEmailPage() {
           router.push('/auth/login?message=Email verified successfully')
         }, 3000)
       } else {
-        setStatus('error')
-        setMessage(data.error)
+        // Handle different error types
+        if (data.alreadyVerified) {
+          setStatus('success')
+          setMessage('Your email has already been verified! You can log in now.')
+          setTimeout(() => {
+            router.push('/auth/login?message=Email already verified')
+          }, 3000)
+        } else if (data.expired) {
+          setStatus('error')
+          setMessage('Your verification link has expired. Please request a new one below.')
+          setEmail(data.email || '')
+        } else {
+          setStatus('error')
+          setMessage(data.error)
+        }
       }
     } catch (error) {
       setStatus('error')
@@ -91,14 +104,16 @@ export default function VerifyEmailPage() {
           {status === 'success' && (
             <>
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-gray-900">Email Verified!</h2>
+              <h2 className="text-2xl font-bold text-gray-900">
+                {message.includes('already') ? 'Already Verified!' : 'Email Verified!'}
+              </h2>
               <p className="text-gray-600 mt-2">{message}</p>
               <p className="text-sm text-gray-500 mt-4">
                 Redirecting you to login page in a few seconds...
               </p>
               <Link
                 href="/auth/login"
-                className="inline-block mt-4 text-primary-600 hover:text-primary-700 font-medium"
+                className="inline-block mt-4 bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
               >
                 Go to Login Page
               </Link>

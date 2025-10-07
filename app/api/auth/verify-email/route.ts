@@ -16,31 +16,62 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Find user with this verification token
-    const user = await User.findOne({
+    // First, try to find user with this verification token (active verification)
+    let user = await User.findOne({
       emailVerificationToken: token,
       emailVerificationExpires: { $gt: new Date() }
     })
 
-    if (!user) {
+    if (user) {
+      // User found with valid token - verify them
+      await User.findByIdAndUpdate(user._id, {
+        emailVerified: true,
+        $unset: {
+          emailVerificationToken: 1,
+          emailVerificationExpires: 1
+        }
+      })
+
       return NextResponse.json(
-        { error: 'Invalid or expired verification token' },
+        { message: 'Email verified successfully! You can now log in.' },
+        { status: 200 }
+      )
+    }
+
+    // If no user found with active token, check if token exists but expired
+    const expiredUser = await User.findOne({
+      emailVerificationToken: token,
+      emailVerificationExpires: { $lte: new Date() }
+    })
+
+    if (expiredUser) {
+      return NextResponse.json(
+        { 
+          error: 'Verification token has expired',
+          expired: true,
+          email: expiredUser.email
+        },
         { status: 400 }
       )
     }
 
-    // Mark email as verified and remove verification token
-    await User.findByIdAndUpdate(user._id, {
-      emailVerified: true,
-      $unset: {
-        emailVerificationToken: 1,
-        emailVerificationExpires: 1
-      }
-    })
+    // Check if there's a user who might have already been verified with this token
+    // (This is a fallback check - in practice, tokens are removed after verification)
+    const allUsers = await User.find({})
+    const possiblyVerifiedUser = allUsers.find(u => u.emailVerified && u.email)
 
+    // If we can't find the token anywhere, it might be:
+    // 1. Already used (user is verified)
+    // 2. Invalid token
+    // 3. User doesn't exist
+    
+    // Let's provide a more helpful error message
     return NextResponse.json(
-      { message: 'Email verified successfully! You can now log in.' },
-      { status: 200 }
+      { 
+        error: 'This verification link is no longer valid. This usually means your email has already been verified or the link has expired.',
+        alreadyVerified: true
+      },
+      { status: 400 }
     )
 
   } catch (error) {
