@@ -115,8 +115,30 @@ const UserSchema = new mongoose.Schema({
       default: Date.now,
     },
   },
+  
+  // Password security tracking
+  passwordChangedAt: {
+    type: Date,
+    default: Date.now
+  },
+  passwordResetAttempts: {
+    type: Number,
+    default: 0
+  },
+  lastPasswordResetAt: {
+    type: Date
+  },
 }, {
   timestamps: true,
 })
+
+// Add method to check if password was changed after JWT was issued
+UserSchema.methods.changedPasswordAfter = function(JWTTimestamp: number) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = Math.floor(this.passwordChangedAt.getTime() / 1000)
+    return JWTTimestamp < changedTimestamp
+  }
+  return false
+}
 
 export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema)

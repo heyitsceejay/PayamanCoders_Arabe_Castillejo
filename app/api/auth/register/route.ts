@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import dbConnect from '@/lib/mongoose'
 import User from '@/models/User'
 import { generateVerificationToken, getVerificationTokenExpiry, sendVerificationEmail } from '@/lib/email'
+import { validatePassword } from '@/lib/password-validation'
 
 export async function POST(request: NextRequest) {
   try {
@@ -57,16 +58,54 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Validate password for local registration
-    if (!password || password.length < 6) {
+    // Validate password is provided
+    if (!password) {
       return NextResponse.json(
-        { error: 'Password must be at least 6 characters long' },
+        { 
+          error: 'Password is required',
+          passwordRequirements: [
+            'At least 12 characters long',
+            'At least one uppercase letter (A-Z)',
+            'At least one lowercase letter (a-z)',
+            'At least one numeric digit (0-9)',
+            'At least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)',
+            'Must not contain your username or email',
+            'Must not contain common dictionary words',
+            'Must not contain more than 3 repeated characters',
+            'Must not contain sequential characters (e.g., 123, abc)'
+          ]
+        },
         { status: 400 }
       )
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 12)
+    // Validate password strength and requirements
+    const username = email.split('@')[0] // Use email local part as username for validation
+    const passwordValidation = validatePassword(password, username, email)
+    
+    if (!passwordValidation.isValid) {
+      return NextResponse.json(
+        { 
+          error: 'Password does not meet security requirements',
+          passwordErrors: passwordValidation.errors,
+          passwordRequirements: [
+            'At least 12 characters long',
+            'At least one uppercase letter (A-Z)',
+            'At least one lowercase letter (a-z)',
+            'At least one numeric digit (0-9)',
+            'At least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)',
+            'Must not contain your username or email',
+            'Must not contain common dictionary words',
+            'Must not contain more than 3 repeated characters',
+            'Must not contain sequential characters (e.g., 123, abc)'
+          ]
+        },
+        { status: 400 }
+      )
+    }
+
+    // Hash password with higher cost for better security
+    const hashedPassword = await bcrypt.hash(password, 14)
 
     // Generate email verification token
     const verificationToken = generateVerificationToken()
@@ -83,6 +122,7 @@ export async function POST(request: NextRequest) {
       emailVerified: false,
       emailVerificationToken: verificationToken,
       emailVerificationExpires: verificationExpires,
+      passwordChangedAt: new Date(), // Track when password was set
     })
 
     // Send verification email
