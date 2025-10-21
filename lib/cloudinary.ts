@@ -67,14 +67,14 @@ export async function uploadToCloudinary(
           console.log("Cloudinary upload successful:", {
             public_id: result.public_id,
             resource_type: result.resource_type,
-            format: result.format,
+            format: result.format || "raw",
             bytes: result.bytes,
           });
           resolve({
             public_id: result.public_id,
             secure_url: result.secure_url,
             original_filename: result.original_filename || "unknown",
-            format: result.format,
+            format: result.format || "raw", // Fallback to "raw" if format is not detected
             bytes: result.bytes,
             created_at: result.created_at,
           });

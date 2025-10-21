@@ -69,13 +69,49 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Upload to Cloudinary
+    // Determine file extension for proper format detection
+    let fileExtension = 'pdf';
+    if (file.type === 'application/pdf') {
+      fileExtension = 'pdf';
+    } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      fileExtension = 'docx';
+    } else if (file.type === 'application/msword') {
+      fileExtension = 'doc';
+    } else {
+      // Fallback to file extension from filename
+      const extension = file.name.split('.').pop()?.toLowerCase();
+      if (extension && ['pdf', 'docx', 'doc'].includes(extension)) {
+        fileExtension = extension;
+      }
+    }
+
+    // Upload to Cloudinary - use 'image' resource type for PDFs to enable format detection
+    const resourceType = fileExtension === 'pdf' ? 'image' : 'raw';
+    
+    console.log(`Uploading ${file.name} as ${resourceType} resource type (detected: ${fileExtension})`);
+    
     const uploadResult = await uploadToCloudinary(buffer, {
       folder: 'workqit/resumes',
       public_id: `resume_${user._id}_${Date.now()}`,
-      resource_type: 'raw', // Use 'raw' for PDFs and documents
+      resource_type: resourceType, // Use 'image' for PDFs, 'raw' for other documents
       max_bytes: maxSize,
     });
+
+    // Determine file type from original file
+    let fileType = 'unknown';
+    if (file.type === 'application/pdf') {
+      fileType = 'pdf';
+    } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      fileType = 'docx';
+    } else if (file.type === 'application/msword') {
+      fileType = 'doc';
+    } else {
+      // Fallback to file extension
+      const extension = file.name.split('.').pop()?.toLowerCase();
+      if (extension && ['pdf', 'docx', 'doc'].includes(extension)) {
+        fileType = extension;
+      }
+    }
 
     // Update user with resume information
     const resumeData = {
@@ -84,7 +120,7 @@ export async function POST(request: NextRequest) {
       cloudinaryPublicId: uploadResult.public_id,
       cloudinaryUrl: uploadResult.secure_url,
       fileSize: uploadResult.bytes,
-      fileType: uploadResult.format,
+      fileType: fileType, // Use detected file type instead of uploadResult.format
       uploadedAt: new Date(),
     };
 
