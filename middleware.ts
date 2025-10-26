@@ -21,7 +21,7 @@ export function middleware(request: NextRequest) {
   console.log('🛡️ Middleware checking path:', path)
 
   // Define paths that require authentication
-  const protectedPaths = ['/dashboard', '/profile', '/applications']
+  const protectedPaths = ['/dashboard', '/profile', '/applications', '/team']
   
   // Define paths that should redirect to dashboard if user is already logged in
   const authPaths = ['/auth/login', '/auth/register']

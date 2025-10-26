@@ -50,7 +50,7 @@ export async function POST(
     }
 
     // Try to download the file using various methods
-    let fileBuffer;
+    let fileBuffer: Buffer | undefined;
     let downloadSuccess = false;
 
     // Method 1: Private download URL
@@ -61,12 +61,12 @@ export async function POST(
       
       const response = await fetch(downloadUrl);
       if (response.ok) {
-        fileBuffer = await response.arrayBuffer();
+        fileBuffer = Buffer.from(await response.arrayBuffer());
         downloadSuccess = true;
         console.log('Downloaded using private URL');
       }
     } catch (error) {
-      console.log('Private download failed:', error.message);
+      console.log('Private download failed:', error instanceof Error ? error.message : 'Unknown error');
     }
 
     // Method 2: Admin API with auth
@@ -81,12 +81,12 @@ export async function POST(
         });
         
         if (response.ok) {
-          fileBuffer = await response.arrayBuffer();
+          fileBuffer = Buffer.from(await response.arrayBuffer());
           downloadSuccess = true;
           console.log('Downloaded using admin auth');
         }
       } catch (error) {
-        console.log('Admin auth download failed:', error.message);
+        console.log('Admin auth download failed:', error instanceof Error ? error.message : 'Unknown error');
       }
     }
 
@@ -113,10 +113,10 @@ export async function POST(
       }, (error, result) => {
         if (error) reject(error);
         else resolve(result);
-      }).end(Buffer.from(fileBuffer));
+      }).end(fileBuffer!);
     });
 
-    console.log('Upload successful:', uploadResult.secure_url);
+    console.log('Upload successful:', (uploadResult as any)?.secure_url);
 
     // Update database records
     console.log('Updating database records...');
@@ -126,8 +126,8 @@ export async function POST(
       { 'resume.cloudinaryPublicId': publicId },
       { 
         $set: { 
-          'resume.cloudinaryPublicId': uploadResult.public_id,
-          'resume.cloudinaryUrl': uploadResult.secure_url,
+          'resume.cloudinaryPublicId': (uploadResult as any).public_id,
+          'resume.cloudinaryUrl': (uploadResult as any).secure_url,
           'resume.migratedAt': new Date(),
           'resume.migratedFrom': publicId
         } 
@@ -139,8 +139,8 @@ export async function POST(
       { 'resume.cloudinaryPublicId': publicId },
       { 
         $set: { 
-          'resume.cloudinaryPublicId': uploadResult.public_id,
-          'resume.cloudinaryUrl': uploadResult.secure_url,
+          'resume.cloudinaryPublicId': (uploadResult as any).public_id,
+          'resume.cloudinaryUrl': (uploadResult as any).secure_url,
           'resume.migratedAt': new Date(),
           'resume.migratedFrom': publicId
         } 
@@ -151,7 +151,7 @@ export async function POST(
     console.log(`Updated ${appUpdateResult.modifiedCount} application records`);
 
     // Test the new URL
-    const testResponse = await fetch(uploadResult.secure_url);
+    const testResponse = await fetch((uploadResult as any).secure_url);
     const isAccessible = testResponse.status === 200;
 
     if (isAccessible) {
@@ -160,7 +160,7 @@ export async function POST(
         await cloudinary.uploader.destroy(publicId, { resource_type: 'image' });
         console.log('Old resource deleted');
       } catch (deleteError) {
-        console.log('Could not delete old resource:', deleteError.message);
+        console.log('Could not delete old resource:', deleteError instanceof Error ? deleteError.message : 'Unknown error');
       }
     }
 
@@ -168,8 +168,8 @@ export async function POST(
       success: true,
       message: 'Migration completed successfully',
       oldPublicId: publicId,
-      newPublicId: uploadResult.public_id,
-      newUrl: uploadResult.secure_url,
+      newPublicId: (uploadResult as any).public_id,
+      newUrl: (uploadResult as any).secure_url,
       usersUpdated: userUpdateResult.modifiedCount,
       applicationsUpdated: appUpdateResult.modifiedCount,
       isAccessible
@@ -178,7 +178,7 @@ export async function POST(
   } catch (error) {
     console.error('Migration error:', error);
     return NextResponse.json(
-      { error: 'Migration failed', details: error.message },
+      { error: 'Migration failed', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
