@@ -164,37 +164,35 @@ export default function JobSeekerHomepage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
         {/* Navigation Bar */}
-        <nav className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex items-center">
-                <span className="text-2xl font-bold text-blue-600">
+        <nav className="border-b border-white/30 bg-white/60 shadow-lg shadow-primary-900/10 backdrop-blur-xl">
+          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center">
+              <span className="rounded-xl border border-white/40 bg-white/70 px-3 py-1 text-2xl font-bold text-primary-600 shadow-inner shadow-primary-900/5">
                   WorkQit
-                </span>
-              </div>
-              <div className="flex items-center space-x-8">
-                <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
-                <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
-                <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
-                <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
-              </div>
+              </span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="h-4 w-16 animate-pulse rounded-full bg-white/60"></div>
+              <div className="h-4 w-20 animate-pulse rounded-full bg-white/60"></div>
+              <div className="h-4 w-16 animate-pulse rounded-full bg-white/60"></div>
+              <div className="h-4 w-16 animate-pulse rounded-full bg-white/60"></div>
             </div>
           </div>
         </nav>
 
         {/* Loading Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <div className="h-32 bg-gray-200 rounded"></div>
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="animate-pulse space-y-6">
+            <div className="h-8 w-1/3 rounded-full bg-white/60"></div>
+            <div className="h-4 w-1/2 rounded-full bg-white/60"></div>
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+              <div className="rounded-2xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-primary-900/10">
+                <div className="h-32 rounded-2xl bg-white/70"></div>
               </div>
-              <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-sm">
-                <div className="h-64 bg-gray-200 rounded"></div>
+              <div className="rounded-2xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-primary-900/10 lg:col-span-2">
+                <div className="h-64 rounded-2xl bg-white/70"></div>
               </div>
             </div>
           </div>
@@ -205,13 +203,13 @@ export default function JobSeekerHomepage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-lg">
-          <h3 className="font-semibold mb-2">Error Loading Dashboard</h3>
-          <p>{error}</p>
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 px-4">
+        <div className="surface-panel max-w-md border-red-300/40 text-center text-red-600 shadow-red-900/10">
+          <h3 className="mb-3 text-lg font-semibold text-red-600">Error Loading Dashboard</h3>
+          <p className="text-sm text-red-500">{error}</p>
           <button
             onClick={fetchDashboardData}
-            className="mt-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+            className="btn-primary mt-6 bg-gradient-to-r from-red-600 to-red-500 px-6 py-2 text-sm hover:from-red-500 hover:to-red-600"
           >
             Try Again
           </button>
@@ -221,73 +219,79 @@ export default function JobSeekerHomepage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
 
       {/* Welcome Banner */}
-      <div className="bg-blue-50 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+      <div className="relative overflow-hidden border-b border-white/30 bg-white/60 backdrop-blur-xl">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute right-10 top-[-40%] h-56 w-56 rounded-full bg-primary-500/20 blur-3xl"></div>
+          <div className="absolute left-[-20%] top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-secondary-500/15 blur-3xl"></div>
+        </div>
+        <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <h1 className="mb-2 text-2xl font-bold text-gray-900">
             Welcome back, {userProfile?.firstName || "User"}!
           </h1>
-          <p className="text-gray-600">
+          <p className="text-secondary-600">
             Ready to find your next career opportunity? Here's what's new today.
           </p>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Left Column: User Profile Summary */}
           <div className="space-y-6">
             {/* Profile Card */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="text-center">
+            <div className="card text-center">
+              <div className="space-y-6">
                 {/* Profile Picture */}
-                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary-500/20 to-primary-500/5 text-primary-600 shadow-inner shadow-primary-900/10">
                   {userProfile?.profile?.profilePicture ? (
                     <img
                       src={userProfile.profile.profilePicture}
                       alt="Profile"
-                      className="w-20 h-20 rounded-full object-cover"
+                      className="h-20 w-20 rounded-full object-cover"
                     />
                   ) : (
-                    <User className="w-10 h-10 text-blue-600" />
+                    <User className="h-10 w-10" />
                   )}
                 </div>
 
                 {/* User Name */}
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">
                   {userProfile?.firstName} {userProfile?.lastName}
                 </h3>
 
                 {/* Application Summary */}
-                <div className="mb-6">
-                  <div className="text-3xl font-bold text-blue-600 mb-1">
+                <div>
+                  <div className="text-3xl font-bold text-primary-600">
                     {applicationStats.applications}
                   </div>
-                  <div className="text-sm text-gray-500">Applications</div>
+                  <div className="text-xs uppercase tracking-wide text-secondary-500">
+                    Applications
+                  </div>
                 </div>
 
                 {/* Career Interests */}
-                <div className="mb-6">
-                  <h4 className="text-sm font-medium text-gray-700 mb-3">
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium text-secondary-600">
                     Career Interests
                   </h4>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap justify-center gap-2">
                     {userProfile?.profile?.skills?.length ? (
                       userProfile.profile.skills
                         .slice(0, 4)
                         .map((skill, index) => (
                           <span
                             key={index}
-                            className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                            className="badge bg-primary-500/10 text-primary-600"
                           >
                             {skill}
                           </span>
                         ))
                     ) : (
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-secondary-500">
                         No skills added yet
                       </span>
                     )}
@@ -297,24 +301,24 @@ export default function JobSeekerHomepage() {
                 {/* Edit Profile Button */}
                 <Link
                   href="/profile"
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                  className="btn-primary px-6 py-2 text-sm"
                 >
-                  <Edit className="w-4 h-4 mr-2" />
+                  <Edit className="mr-2 h-4 w-4" />
                   Edit Profile
                 </Link>
               </div>
             </div>
 
             {/* Recent Applications */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex justify-between items-center mb-4">
+            <div className="card">
+              <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900">
                   Recent Applications
                 </h3>
                 {applications.length > 0 && (
                   <Link
                     href="/applications"
-                    className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                    className="text-sm font-medium text-primary-600 transition-colors hover:text-primary-500"
                   >
                     View All
                   </Link>
@@ -322,29 +326,29 @@ export default function JobSeekerHomepage() {
               </div>
               <div className="space-y-3">
                 {applications.length === 0 ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500 mb-4">
+                  <div className="rounded-2xl border border-dashed border-primary-500/40 bg-white/40 py-8 text-center backdrop-blur">
+                    <p className="mb-4 text-secondary-500">
                       No applications yet
                     </p>
                     <Link
                       href="/jobs"
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                      className="btn-secondary px-5 py-2 text-sm"
                     >
-                      Browse Jobs to Apply
+                      <span>Browse Jobs to Apply</span>
                     </Link>
                   </div>
                 ) : (
                   applications.slice(0, 3).map((app) => (
                     <div
                       key={app.id}
-                      className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between rounded-2xl border border-white/40 bg-white/60 p-4 shadow-inner shadow-primary-900/5 backdrop-blur transition-all duration-300 hover:border-primary-500/40"
                     >
                       <div>
                         <h4 className="font-medium text-gray-900">
                           {app.jobTitle}
                         </h4>
-                        <p className="text-sm text-gray-600">{app.company}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-sm text-secondary-600">{app.company}</p>
+                        <p className="text-xs text-secondary-500">
                           Applied {new Date(app.appliedDate).toLocaleDateString()}
                         </p>
                       </div>
@@ -370,35 +374,35 @@ export default function JobSeekerHomepage() {
             </div>
 
             {/* Notifications */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="card">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900">
                 Recent Notifications
               </h3>
               <div className="space-y-3">
                 {notifications.slice(0, 3).map((notification) => (
                   <div
                     key={notification.id}
-                    className="flex items-start space-x-3"
+                    className="flex items-start gap-3 rounded-2xl border border-white/30 bg-white/60 p-3 shadow-inner shadow-primary-900/5 backdrop-blur"
                   >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      notification.read ? 'bg-gray-100' : 'bg-blue-100'
+                    <div className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ${
+                      notification.read ? 'bg-white/50 text-secondary-500' : 'bg-primary-500/15 text-primary-600'
                     }`}>
-                      <Bell className={`w-4 h-4 ${
-                        notification.read ? 'text-gray-600' : 'text-blue-600'
+                      <Bell className={`h-4 w-4 ${
+                        notification.read ? '' : ''
                       }`} />
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p className={`text-sm ${
-                        notification.read ? 'text-gray-600' : 'text-gray-900'
+                        notification.read ? 'text-secondary-600' : 'text-gray-900'
                       }`}>
                         {notification.message}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="mt-1 text-xs text-secondary-500">
                         {new Date(notification.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                     {!notification.read && (
-                      <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0 mt-2"></div>
+                      <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-primary-500"></div>
                     )}
                   </div>
                 ))}
@@ -408,52 +412,52 @@ export default function JobSeekerHomepage() {
 
           {/* Right Column: Recommended Internships */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">
+            <div className="surface-panel">
+              <h2 className="mb-6 text-xl font-semibold text-gray-900">
                 Recommended Internships
               </h2>
 
               {/* Internships Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
                 {internships.length > 0 ? (
                   internships.map((internship) => (
                     <div
                       key={internship._id}
-                      className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      className="group rounded-2xl border border-white/40 bg-white/60 p-5 shadow-inner shadow-primary-900/5 backdrop-blur transition-all duration-400 hover:-translate-y-1 hover:border-primary-500/40 hover:shadow-xl hover:shadow-primary-900/10"
                     >
-                      <h3 className="font-semibold text-gray-900 mb-2">
+                      <h3 className="mb-2 text-lg font-semibold text-gray-900">
                         {internship.title}
                       </h3>
-                      <p className="text-sm text-gray-600 mb-2">
+                      <p className="mb-2 text-sm text-secondary-600">
                         {internship.company}
                       </p>
-                      <p className="text-sm text-gray-700 mb-4 line-clamp-2">
+                      <p className="mb-4 line-clamp-2 text-sm text-secondary-600">
                         {internship.description ||
                           "Exciting opportunity to grow your career and gain valuable experience."}
                       </p>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs uppercase tracking-wide text-secondary-500">
                           {internship.location}{" "}
                           {internship.remote && "• Remote"}
                         </span>
                         <Link
                           href={`/jobs/${internship._id}`}
-                          className="inline-flex items-center px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors"
+                          className="btn-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide"
                         >
                           Apply now
-                          <ChevronRight className="w-3 h-3 ml-1" />
+                          <ChevronRight className="ml-1 h-3 w-3" />
                         </Link>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-2 text-center py-8">
-                    <p className="text-gray-500 mb-4">
+                  <div className="col-span-2 rounded-3xl border border-dashed border-primary-500/40 bg-white/40 py-10 text-center backdrop-blur">
+                    <p className="mb-4 text-secondary-500">
                       No recommendations available at the moment
                     </p>
                     <Link
                       href="/jobs"
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                      className="btn-secondary px-5 py-2 text-sm"
                     >
                       Browse All Opportunities
                     </Link>
@@ -467,7 +471,7 @@ export default function JobSeekerHomepage() {
                   <button
                     onClick={loadMoreInternships}
                     disabled={loadingMore}
-                    className="inline-flex items-center px-6 py-2 border border-blue-600 text-blue-600 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50"
+                    className="btn-ghost px-6 py-2 text-sm uppercase tracking-wide disabled:opacity-50 disabled:shadow-none"
                   >
                     {loadingMore ? "Loading..." : "Load More Opportunities"}
                   </button>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import type { CSSProperties } from 'react'
 import { MapPin, Clock, DollarSign, Users } from 'lucide-react'
 import Link from 'next/link'
 
@@ -30,10 +31,16 @@ export default function JobsPage() {
     remote: '',
     skills: '',
   })
+  const [isEntering, setIsEntering] = useState(true)
 
   useEffect(() => {
     fetchJobs()
   }, [filters])
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setIsEntering(false), 900)
+    return () => clearTimeout(timeout)
+  }, [])
 
   const fetchJobs = async () => {
     try {
@@ -86,150 +93,171 @@ export default function JobsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Find Your Next Opportunity</h1>
-        <p className="text-gray-600">
-          Discover internships, apprenticeships, and job opportunities that match your skills and goals.
-        </p>
+    <div className="hero-gradient relative overflow-hidden py-24">
+      <div className="auth-background-grid" aria-hidden="true" />
+      {isEntering && <div className="auth-entry-overlay" />}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-[-10%] top-[-5%] h-[28rem] w-[28rem] rounded-full bg-primary-500/15 blur-3xl"></div>
+        <div className="absolute right-[-20%] bottom-[-5%] h-[30rem] w-[30rem] rounded-full bg-secondary-500/15 blur-[140px]"></div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Job Type</label>
-            <select
-              value={filters.type}
-              onChange={(e) => handleFilterChange('type', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-            >
-              <option value="">All Types</option>
-              <option value="internship">Internship</option>
-              <option value="apprenticeship">Apprenticeship</option>
-              <option value="full_time">Full Time</option>
-              <option value="part_time">Part Time</option>
-              <option value="contract">Contract</option>
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-            <input
-              type="text"
-              placeholder="Enter city or state"
-              value={filters.location}
-              onChange={(e) => handleFilterChange('location', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Remote Work</label>
-            <select
-              value={filters.remote}
-              onChange={(e) => handleFilterChange('remote', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-            >
-              <option value="">All Options</option>
-              <option value="true">Remote Only</option>
-              <option value="false">On-site Only</option>
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Skills</label>
-            <input
-              type="text"
-              placeholder="e.g. JavaScript, React"
-              value={filters.skills}
-              onChange={(e) => handleFilterChange('skills', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-            />
-          </div>
-        </div>
-      </div>
+      <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+        <div className={`hero-panel space-y-10 auth-panel-pulse ${isEntering ? 'auth-panel-enter' : ''}`}>
+          <div className="auth-holo-grid" aria-hidden="true" />
 
-      {/* Job Listings */}
-      {loading ? (
-        <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading jobs...</p>
-        </div>
-      ) : (
-        <div className="space-y-6">
-          {jobs.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-gray-600">No jobs found matching your criteria.</p>
+          <div className="space-y-5 text-center">
+            <h1 className="auth-title text-5xl md:text-[3.5rem]">Find Your Next Opportunity</h1>
+            <p className="auth-subtitle text-lg md:text-xl">
+              Discover internships, apprenticeships, and career opportunities aligned with your skills and growth goals.
+            </p>
+          </div>
+
+          <div className="space-y-6 rounded-[2.5rem] border border-white/35 bg-white/70 p-10 shadow-[0_55px_120px_-65px_rgba(37,99,235,0.55)] backdrop-blur-2xl">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
+              <div className="space-y-3 text-left">
+                <label className="auth-label" htmlFor="type">
+                  Job Type
+                </label>
+                <select
+                  id="type"
+                  value={filters.type}
+                  onChange={(e) => handleFilterChange('type', e.target.value)}
+                  className="glass-input"
+                >
+                  <option value="">All Types</option>
+                  <option value="internship">Internship</option>
+                  <option value="apprenticeship">Apprenticeship</option>
+                  <option value="full_time">Full Time</option>
+                  <option value="part_time">Part Time</option>
+                  <option value="contract">Contract</option>
+                </select>
+              </div>
+
+              <div className="space-y-3 text-left">
+                <label className="auth-label" htmlFor="location">
+                  Location
+                </label>
+                <input
+                  id="location"
+                  type="text"
+                  placeholder="Enter city or state"
+                  value={filters.location}
+                  onChange={(e) => handleFilterChange('location', e.target.value)}
+                  className="glass-input"
+                />
+              </div>
+
+              <div className="space-y-3 text-left">
+                <label className="auth-label" htmlFor="remote">
+                  Remote Work
+                </label>
+                <select
+                  id="remote"
+                  value={filters.remote}
+                  onChange={(e) => handleFilterChange('remote', e.target.value)}
+                  className="glass-input"
+                >
+                  <option value="">All Options</option>
+                  <option value="true">Remote Only</option>
+                  <option value="false">On-site Only</option>
+                </select>
+              </div>
+
+              <div className="space-y-3 text-left">
+                <label className="auth-label" htmlFor="skills">
+                  Skills
+                </label>
+                <input
+                  id="skills"
+                  type="text"
+                  placeholder="e.g. JavaScript, React"
+                  value={filters.skills}
+                  onChange={(e) => handleFilterChange('skills', e.target.value)}
+                  className="glass-input"
+                />
+              </div>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="flex flex-col items-center justify-center rounded-[2.5rem] border border-white/40 bg-white/70 py-16 shadow-[0_55px_120px_-65px_rgba(37,99,235,0.55)] backdrop-blur-2xl">
+              <div className="h-14 w-14 animate-spin rounded-full border-b-2 border-primary-600"></div>
+              <p className="mt-6 text-lg text-secondary-600">Loading jobs...</p>
             </div>
           ) : (
-            jobs.map((job) => (
-              <div key={job._id} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{job.title}</h3>
-                    <p className="text-gray-600 font-medium">{job.company}</p>
-                  </div>
-                  <span className="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm font-medium">
-                    {job.type.replace('_', ' ').toUpperCase()}
-                  </span>
+            <div className="space-y-6">
+              {jobs.length === 0 ? (
+                <div className="rounded-[2.5rem] border border-white/40 bg-white/70 py-16 text-center shadow-[0_50px_110px_-65px_rgba(37,99,235,0.55)] backdrop-blur-2xl">
+                  <p className="text-lg text-secondary-600">
+                    No jobs found matching your criteria. Try adjusting your filters or check back later.
+                  </p>
                 </div>
-                
-                <p className="text-gray-700 mb-4 line-clamp-3">{job.description}</p>
-                
-                <div className="flex flex-wrap items-center gap-4 mb-4">
-                  <div className="flex items-center text-gray-600">
-                    <MapPin className="w-4 h-4 mr-1" />
-                    {job.location} {job.remote && '(Remote)'}
-                  </div>
-                  
-                  {job.salary && typeof job.salary.min === 'number' && typeof job.salary.max === 'number' && (
-                    <div className="flex items-center text-gray-600">
-                      <DollarSign className="w-4 h-4 mr-1" />
-                      ${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}
+              ) : (
+                jobs.map((job, index) => (
+                  <div
+                    key={job._id}
+                    className="feature-card group space-y-6"
+                    style={{ '--float-delay': `${0.08 * index}s` } as CSSProperties}
+                  >
+                    <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
+                      <div>
+                        <h3 className="text-2xl font-semibold text-gray-900">{job.title}</h3>
+                        <p className="text-lg text-secondary-600">{job.company}</p>
+                      </div>
+                      <span className="rounded-full border border-primary-500/40 bg-primary-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-primary-600">
+                        {job.type.replace('_', ' ').toUpperCase()}
+                      </span>
                     </div>
-                  )}
-                  
-                  <div className="flex items-center text-gray-600">
-                    <Clock className="w-4 h-4 mr-1" />
-                    {new Date(job.createdAt).toLocaleDateString()}
-                  </div>
-                </div>
-                
-                {job.skills.length > 0 && (
-                  <div className="mb-4">
-                    <div className="flex flex-wrap gap-2">
-                      {job.skills.map((skill, index) => (
-                        <span
-                          key={index}
-                          className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm"
-                        >
-                          {skill}
+
+                    <p className="text-secondary-600">{job.description}</p>
+
+                    <div className="flex flex-wrap items-center gap-5 text-secondary-500">
+                      <span className="inline-flex items-center gap-2">
+                        <MapPin className="h-5 w-5 text-primary-500" />
+                        {job.location} {job.remote && '(Remote)'}
+                      </span>
+
+                      {job.salary && typeof job.salary.min === 'number' && typeof job.salary.max === 'number' && (
+                        <span className="inline-flex items-center gap-2">
+                          <DollarSign className="h-5 w-5 text-primary-500" />
+                          ${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}
                         </span>
-                      ))}
+                      )}
+
+                      <span className="inline-flex items-center gap-2">
+                        <Clock className="h-5 w-5 text-primary-500" />
+                        {new Date(job.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    {job.skills.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {job.skills.map((skill, idx) => (
+                          <span
+                            key={idx}
+                            className="rounded-full border border-primary-500/30 bg-white/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-primary-600"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between">
+                      <button onClick={() => handleApply(job._id)} className="btn-primary auth-button px-8 py-3">
+                        Apply Now
+                      </button>
+                      <Link href={`/jobs/${job._id}`} className="auth-link">
+                        View Details
+                      </Link>
                     </div>
                   </div>
-                )}
-                
-                <div className="flex justify-between items-center">
-                  <button 
-                    onClick={() => handleApply(job._id)}
-                    className="btn-primary"
-                  >
-                    Apply Now
-                  </button>
-                  <Link 
-                    href={`/jobs/${job._id}`}
-                    className="text-primary-600 hover:text-primary-700 font-medium"
-                  >
-                    View Details
-                  </Link>
-                </div>
-              </div>
-            ))
+                ))
+              )}
+            </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   )
 }

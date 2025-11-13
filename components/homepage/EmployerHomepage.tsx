@@ -120,318 +120,330 @@ export default function EmployerHomepage() {
   })
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Employer Portal{user ? ` — ${user.firstName}` : ''}
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Manage your company, job listings, applicants, and hiring analytics
-            from one place.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Link
-            href="/jobs/new"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700"
-          >
-            <PlusCircle className="w-4 h-4" />
-            Post a job
-          </Link>
-
-          <Link
-            href="/profile/company"
-            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
-          >
-            <Users className="w-4 h-4 text-gray-700" />
-            Company Settings
-          </Link>
-        </div>
-      </div>
-
-      {/* Quick stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-blue-50 rounded">
-            <Briefcase className="w-6 h-6 text-blue-600" />
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mb-8 flex flex-col gap-4 rounded-3xl border border-white/30 bg-white/60 p-6 shadow-xl shadow-primary-900/10 backdrop-blur-xl md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="text-sm text-gray-500">Active Jobs</div>
-            <div className="text-xl font-semibold text-gray-900">{stats.jobs}</div>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-green-50 rounded">
-            <FileText className="w-6 h-6 text-green-600" />
-          </div>
-          <div>
-            <div className="text-sm text-gray-500">Total Applicants</div>
-            <div className="text-xl font-semibold text-gray-900">{stats.applicants}</div>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-yellow-50 rounded">
-            <Clock className="w-6 h-6 text-yellow-600" />
-          </div>
-          <div>
-            <div className="text-sm text-gray-500">Interviews</div>
-            <div className="text-xl font-semibold text-gray-900">{stats.interviews}</div>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-indigo-50 rounded">
-            <BarChart2 className="w-6 h-6 text-indigo-600" />
-          </div>
-          <div>
-            <div className="text-sm text-gray-500">Offers</div>
-            <div className="text-xl font-semibold text-gray-900">{stats.offers}</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left: Company overview & help */}
-        <div className="space-y-6">
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-start justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">Company Overview</h3>
-                <p className="text-sm text-gray-600 mt-2">
-                  {user?.role === 'employer'
-                    ? 'Share your company mission, values, and what makes you a great place to work. Update your company profile to attract the right candidates.'
-                    : 'Complete your company profile to enable fuller features.'}
-                </p>
-              </div>
-              <div className="text-sm text-gray-500">Verified</div>
-            </div>
-
-            <div className="mt-4">
-              <Link
-                href="/profile/company"
-                className="text-sm text-blue-600 hover:underline"
-              >
-                Edit company profile
-              </Link>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Team & Collaboration</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Invite teammates, assign roles (recruiter, hiring manager), and collaborate on candidates.
+            <h1 className="text-3xl font-bold text-gray-900">
+              Employer Portal{user ? ` — ${user.firstName}` : ''}
+            </h1>
+            <p className="mt-2 text-sm text-secondary-600">
+              Manage your company, job listings, applicants, and hiring analytics
+              from one place.
             </p>
-            <div className="flex gap-2">
-              <Link
-                href="/team"
-                className="px-3 py-2 bg-gray-100 rounded text-sm hover:bg-gray-200"
-              >
-                Manage team
-              </Link>
-              <Link
-                href="/team/roles"
-                className="px-3 py-2 border border-gray-200 rounded text-sm hover:bg-gray-50"
-              >
-                Assign roles
-              </Link>
-            </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Help & Support</h3>
-            <ul className="text-sm text-gray-600 space-y-2">
-              <li>
-                <Link href="/help/faqs" className="text-blue-600 hover:underline">
-                  FAQs
-                </Link>
-              </li>
-              <li>
-                <Link href="/help/contact" className="text-blue-600 hover:underline">
-                  Contact support
-                </Link>
-              </li>
-              <li>
-                <Link href="/help/guides" className="text-blue-600 hover:underline">
-                  Hiring guides
-                </Link>
-              </li>
-            </ul>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/jobs/new"
+              className="btn-primary px-5 py-2"
+            >
+              <PlusCircle className="h-4 w-4" />
+              Post a job
+            </Link>
+
+            <Link
+              href="/profile/company"
+              className="btn-secondary px-5 py-2"
+            >
+              <Users className="h-4 w-4" />
+              Company Settings
+            </Link>
           </div>
         </div>
 
-        {/* Center: Jobs list with search & filters */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div className="relative flex items-center w-full sm:max-w-md">
-                <span className="absolute left-3 text-gray-400">
-                  <Search className="w-4 h-4" />
-                </span>
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="pl-9 pr-3 py-2 w-full border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="Search jobs or companies..."
-                />
+        {/* Quick stats */}
+        <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="card flex items-center gap-4 p-5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/15 text-primary-600 shadow-inner shadow-primary-900/10">
+              <Briefcase className="h-6 w-6" />
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wide text-secondary-500">Active Jobs</div>
+              <div className="text-xl font-semibold text-gray-900">{stats.jobs}</div>
+            </div>
+          </div>
+
+          <div className="card flex items-center gap-4 p-5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/15 text-primary-600 shadow-inner shadow-primary-900/10">
+              <FileText className="h-6 w-6" />
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wide text-secondary-500">Total Applicants</div>
+              <div className="text-xl font-semibold text-gray-900">{stats.applicants}</div>
+            </div>
+          </div>
+
+          <div className="card flex items-center gap-4 p-5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/15 text-primary-600 shadow-inner shadow-primary-900/10">
+              <Clock className="h-6 w-6" />
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wide text-secondary-500">Interviews</div>
+              <div className="text-xl font-semibold text-gray-900">{stats.interviews}</div>
+            </div>
+          </div>
+
+          <div className="card flex items-center gap-4 p-5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/15 text-primary-600 shadow-inner shadow-primary-900/10">
+              <BarChart2 className="h-6 w-6" />
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wide text-secondary-500">Offers</div>
+              <div className="text-xl font-semibold text-gray-900">{stats.offers}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          {/* Left: Company overview & help */}
+          <div className="space-y-6">
+            <div className="card">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Company Overview</h3>
+                  <p className="mt-3 text-sm text-secondary-600">
+                    {user?.role === 'employer'
+                      ? 'Share your company mission, values, and what makes you a great place to work. Update your company profile to attract the right candidates.'
+                      : 'Complete your company profile to enable fuller features.'}
+                  </p>
+                </div>
+                <div className="rounded-full border border-primary-500/40 bg-primary-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-600">
+                  Verified
+                </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <select
-                  value={filterStatus}
-                  onChange={(e) =>
-                    setFilterStatus(e.target.value as 'all' | 'active' | 'closed')
-                  }
-                  className="py-2 px-3 border rounded-md"
-                >
-                  <option value="all">All statuses</option>
-                  <option value="active">Active</option>
-                  <option value="closed">Closed</option>
-                </select>
-
+              <div className="mt-6">
                 <Link
-                  href="/jobs/new"
-                  className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md"
+                  href="/profile/company"
+                  className="text-sm font-semibold text-primary-600 transition-colors hover:text-primary-500"
                 >
-                  <PlusCircle className="w-4 h-4" />
-                  New job
+                  Edit company profile
                 </Link>
               </div>
             </div>
 
-            <div className="mt-4 border-t pt-4 space-y-3">
-              {loading ? (
-                <div className="text-sm text-gray-500">Loading jobs…</div>
-              ) : filteredJobs.length === 0 ? (
-                <div className="text-sm text-gray-500">No jobs found.</div>
-              ) : (
-                filteredJobs.map((job) => (
-                  <div
-                    key={job._id}
-                    className="flex items-center justify-between p-3 rounded hover:bg-gray-50"
+            <div className="card">
+              <h3 className="mb-3 text-lg font-semibold text-gray-900">Team & Collaboration</h3>
+              <p className="mb-4 text-sm text-secondary-600">
+                Invite teammates, assign roles (recruiter, hiring manager), and collaborate on candidates.
+              </p>
+              <div className="flex gap-3">
+                <Link
+                  href="/team"
+                  className="btn-secondary px-4 py-2 text-sm"
+                >
+                  Manage team
+                </Link>
+                <Link
+                  href="/team/roles"
+                  className="btn-ghost px-4 py-2 text-sm"
+                >
+                  Assign roles
+                </Link>
+              </div>
+            </div>
+
+            <div className="card">
+              <h3 className="mb-3 text-lg font-semibold text-gray-900">Help & Support</h3>
+              <ul className="space-y-2 text-sm text-secondary-600">
+                <li>
+                  <Link href="/help/faqs" className="text-primary-600 transition-colors hover:text-primary-500">
+                    FAQs
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/help/contact" className="text-primary-600 transition-colors hover:text-primary-500">
+                    Contact support
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/help/guides" className="text-primary-600 transition-colors hover:text-primary-500">
+                    Hiring guides
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Center: Jobs list with search & filters */}
+          <div className="space-y-6 lg:col-span-2">
+            <div className="surface-panel p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="relative flex w-full items-center sm:max-w-md">
+                  <span className="pointer-events-none absolute left-4 text-secondary-400">
+                    <Search className="h-4 w-4" />
+                  </span>
+                  <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    className="w-full rounded-xl border border-white/40 bg-white/70 py-2.5 pl-11 pr-4 text-sm text-secondary-700 shadow-inner shadow-primary-900/5 focus:border-primary-500/60 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+                    placeholder="Search jobs or companies..."
+                  />
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <select
+                    value={filterStatus}
+                    onChange={(e) =>
+                      setFilterStatus(e.target.value as 'all' | 'active' | 'closed')
+                    }
+                    className="rounded-xl border border-white/40 bg-white/70 px-3 py-2 text-sm text-secondary-600 shadow-inner shadow-primary-900/5 focus:border-primary-500/50 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
                   >
-                    <div>
-                      <div className="font-medium text-gray-900">{job.title}</div>
-                      <div className="text-sm text-gray-500">
-                        {job.company} • {job.location || 'Remote'} • {job.type || '—'}
-                      </div>
-                      {typeof job.applicantCount === 'number' && (
-                        <div className="text-sm text-blue-600 mt-1">
-                          {job.applicantCount} applicant{job.applicantCount !== 1 ? 's' : ''}
+                    <option value="all">All statuses</option>
+                    <option value="active">Active</option>
+                    <option value="closed">Closed</option>
+                  </select>
+
+                  <Link
+                    href="/jobs/new"
+                    className="btn-primary px-4 py-2 text-sm"
+                  >
+                    <PlusCircle className="h-4 w-4" />
+                    New job
+                  </Link>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-3 border-t border-white/30 pt-4">
+                {loading ? (
+                  <div className="text-sm text-secondary-500">Loading jobs…</div>
+                ) : filteredJobs.length === 0 ? (
+                  <div className="text-sm text-secondary-500">No jobs found.</div>
+                ) : (
+                  filteredJobs.map((job) => (
+                    <div
+                      key={job._id}
+                      className="flex items-center justify-between rounded-2xl border border-white/40 bg-white/60 p-4 shadow-inner shadow-primary-900/5 backdrop-blur transition-all duration-300 hover:border-primary-500/40 hover:bg-white/70"
+                    >
+                      <div>
+                        <div className="font-medium text-gray-900">{job.title}</div>
+                        <div className="text-sm text-secondary-500">
+                          {job.company} • {job.location || 'Remote'} • {job.type || '—'}
                         </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          job.status === 'active'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-700'
-                        }`}
-                      >
-                        {job.status || 'active'}
-                      </span>
-
-                      <Link
-                        href={`/jobs/${job._id}/applicants`}
-                        className="text-sm text-blue-600 hover:underline"
-                      >
-                        View Applicants
-                      </Link>
-                      
-                      <Link
-                        href={`/jobs/${job._id}`}
-                        className="text-sm text-gray-600 hover:underline"
-                      >
-                        Edit
-                      </Link>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* Applicant management */}
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-gray-700" />
-                <h3 className="text-lg font-semibold text-gray-900">Recent Applicants</h3>
-              </div>
-              <Link href="/applications" className="text-sm text-blue-600 hover:underline">
-                View all
-              </Link>
-            </div>
-
-            <div className="space-y-3">
-              {applicants.length === 0 ? (
-                <div className="text-sm text-gray-500">No recent applicants</div>
-              ) : (
-                applicants.map((a) => (
-                  <div
-                    key={a._id}
-                    className="flex items-center justify-between p-3 rounded hover:bg-gray-50"
-                  >
-                    <div>
-                      <div className="font-medium text-gray-900">
-                        {a.firstName} {a.lastName}
+                        {typeof job.applicantCount === 'number' && (
+                          <div className="mt-1 text-sm font-medium text-primary-600">
+                            {job.applicantCount} applicant{job.applicantCount !== 1 ? 's' : ''}
+                          </div>
+                        )}
                       </div>
-                      <div className="text-sm text-gray-500">
-                        Applied to {a.role || '—'} • {new Date(a.appliedAt || Date.now()).toLocaleDateString()}
+
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`rounded-full px-2 py-1 text-xs ${
+                            job.status === 'active'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-gray-100 text-gray-700'
+                          }`}
+                        >
+                          {job.status || 'active'}
+                        </span>
+
+                        <Link
+                          href={`/jobs/${job._id}/applicants`}
+                          className="text-sm font-semibold text-primary-600 transition-colors hover:text-primary-500"
+                        >
+                          View Applicants
+                        </Link>
+
+                        <Link
+                          href={`/jobs/${job._id}`}
+                          className="text-sm text-secondary-500 transition-colors hover:text-primary-500"
+                        >
+                          Edit
+                        </Link>
                       </div>
                     </div>
+                  ))
+                )}
+              </div>
+            </div>
 
-                    <div className="flex items-center gap-2">
-                      <Link
-                        href={`/applications/${a._id}`}
-                        className="text-sm text-blue-600 hover:underline"
-                      >
-                        Review
-                      </Link>
-                      <button
-                        onClick={() => {
-                          // quick shortlist (optimistic UI)
-                          // in a real implementation call API here
-                          alert(`Shortlisted ${a.firstName} ${a.lastName}`)
-                        }}
-                        className="px-3 py-1 text-sm bg-green-50 text-green-700 rounded"
-                      >
-                        Shortlist
-                      </button>
-                    </div>
+            {/* Applicant management */}
+            <div className="surface-panel p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Users className="h-5 w-5 text-primary-600" />
+                  <h3 className="text-lg font-semibold text-gray-900">Recent Applicants</h3>
+                </div>
+                <Link
+                  href="/applications"
+                  className="text-sm font-semibold text-primary-600 transition-colors hover:text-primary-500"
+                >
+                  View all
+                </Link>
+              </div>
+
+              <div className="space-y-3">
+                {applicants.length === 0 ? (
+                  <div className="rounded-2xl border border-dashed border-primary-500/40 bg-white/50 p-6 text-center text-sm text-secondary-500 backdrop-blur">
+                    No recent applicants
                   </div>
-                ))
-              )}
-            </div>
-          </div>
+                ) : (
+                  applicants.map((a) => (
+                    <div
+                      key={a._id}
+                      className="flex items-center justify-between rounded-2xl border border-white/40 bg-white/60 p-4 shadow-inner shadow-primary-900/5 backdrop-blur transition-all duration-300 hover:border-primary-500/40"
+                    >
+                      <div>
+                        <div className="font-medium text-gray-900">
+                          {a.firstName} {a.lastName}
+                        </div>
+                        <div className="text-sm text-secondary-500">
+                          Applied to {a.role || '—'} • {new Date(a.appliedAt || Date.now()).toLocaleDateString()}
+                        </div>
+                      </div>
 
-          {/* Analytics preview */}
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <BarChart2 className="w-5 h-5 text-indigo-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Hiring Analytics</h3>
+                      <div className="flex items-center gap-3">
+                        <Link
+                          href={`/applications/${a._id}`}
+                          className="text-sm font-semibold text-primary-600 transition-colors hover:text-primary-500"
+                        >
+                          Review
+                        </Link>
+                        <button
+                          onClick={() => {
+                            // quick shortlist (optimistic UI)
+                            // in a real implementation call API here
+                            alert(`Shortlisted ${a.firstName} ${a.lastName}`)
+                          }}
+                          className="rounded-full bg-green-100/80 px-3 py-1 text-sm font-medium text-green-700 shadow-inner"
+                        >
+                          Shortlist
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
-              <Link href="/analytics" className="text-sm text-blue-600 hover:underline">
-                See full report
-              </Link>
             </div>
 
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="p-3 border rounded"> 
-                <div className="text-xs text-gray-500">Applications / Week</div>
-                <div className="text-lg font-semibold text-gray-900">34</div>
-                <div className="text-xs text-green-600 mt-1">+8% vs last week</div>
+            {/* Analytics preview */}
+            <div className="surface-panel p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <BarChart2 className="h-5 w-5 text-primary-600" />
+                  <h3 className="text-lg font-semibold text-gray-900">Hiring Analytics</h3>
+                </div>
+                <Link
+                  href="/analytics"
+                  className="text-sm font-semibold text-primary-600 transition-colors hover:text-primary-500"
+                >
+                  See full report
+                </Link>
               </div>
-              <div className="p-3 border rounded">
-                <div className="text-xs text-gray-500">Avg Time to Hire</div>
-                <div className="text-lg font-semibold text-gray-900">21 days</div>
-                <div className="text-xs text-red-600 mt-1">+2 days vs target</div>
+
+              <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="rounded-2xl border border-white/40 bg-white/60 p-4 shadow-inner shadow-primary-900/5 backdrop-blur">
+                  <div className="text-xs uppercase tracking-wide text-secondary-500">Applications / Week</div>
+                  <div className="mt-2 text-2xl font-semibold text-gray-900">34</div>
+                  <div className="mt-1 text-xs font-medium text-green-600">+8% vs last week</div>
+                </div>
+                <div className="rounded-2xl border border-white/40 bg-white/60 p-4 shadow-inner shadow-primary-900/5 backdrop-blur">
+                  <div className="text-xs uppercase tracking-wide text-secondary-500">Avg Time to Hire</div>
+                  <div className="mt-2 text-2xl font-semibold text-gray-900">21 days</div>
+                  <div className="mt-1 text-xs font-medium text-red-500">+2 days vs target</div>
+                </div>
               </div>
             </div>
           </div>

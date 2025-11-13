@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import type { CSSProperties } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { MapPin, Clock, DollarSign, Building, Users, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -39,6 +40,7 @@ export default function JobDetailPage() {
   const [error, setError] = useState('')
   const [showApplicationModal, setShowApplicationModal] = useState(false)
   const [hasApplied, setHasApplied] = useState(false)
+  const [isEntering, setIsEntering] = useState(true)
 
   useEffect(() => {
     if (params.id) {
@@ -48,6 +50,11 @@ export default function JobDetailPage() {
       }
     }
   }, [params.id, user])
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setIsEntering(false), 900)
+    return () => clearTimeout(timeout)
+  }, [])
 
   const fetchJob = async (jobId: string) => {
     try {
@@ -126,142 +133,175 @@ export default function JobDetailPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-6">
-        <Link 
-          href="/jobs"
-          className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-4"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Jobs
-        </Link>
-        
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{job.title}</h1>
-              <div className="flex items-center text-gray-600 mb-4">
-                <Building className="w-5 h-5 mr-2" />
-                <span className="text-lg font-medium">{job.company}</span>
-              </div>
-            </div>
-            <span className="bg-primary-100 text-primary-800 px-4 py-2 rounded-full text-sm font-medium">
-              {job.type.replace('_', ' ').toUpperCase()}
-            </span>
-          </div>
+    <div className="hero-gradient relative overflow-hidden py-24">
+      <div className="auth-background-grid" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-[-12%] top-[-10%] h-[26rem] w-[26rem] rounded-full bg-primary-500/15 blur-3xl"></div>
+        <div className="absolute right-[-18%] bottom-[-10%] h-[28rem] w-[28rem] rounded-full bg-secondary-500/15 blur-[130px]"></div>
+      </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="flex items-center text-gray-600">
-              <MapPin className="w-5 h-5 mr-3" />
+      <div className="relative mx-auto max-w-4xl px-6 sm:px-8 lg:px-12">
+        <div className={`hero-panel space-y-10 auth-panel-pulse ${isEntering ? 'auth-panel-enter' : ''}`}>
+          <div className="auth-holo-grid" aria-hidden="true" />
+
+          <Link 
+            href="/jobs"
+            className="auth-link inline-flex items-center gap-3 uppercase tracking-[0.3em]"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            Back to Jobs
+          </Link>
+          
+          <div className="space-y-10 rounded-[2.5rem] border border-white/30 bg-white/70 p-10 shadow-[0_55px_120px_-65px_rgba(37,99,235,0.55)] backdrop-blur-2xl">
+            <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
               <div>
-                <p className="font-medium">Location</p>
-                <p>{job.location} {job.remote && '(Remote)'}</p>
-              </div>
-            </div>
-
-            {job.salary && typeof job.salary.min === 'number' && typeof job.salary.max === 'number' && (
-              <div className="flex items-center text-gray-600">
-                <DollarSign className="w-5 h-5 mr-3" />
-                <div>
-                  <p className="font-medium">Salary</p>
-                  <p>${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}</p>
+                <h1 className="auth-title text-[2.75rem] md:text-[3rem]">{job.title}</h1>
+                <div className="mt-4 flex items-center gap-3 text-lg font-semibold text-secondary-600">
+                  <Building className="h-6 w-6 text-primary-500" />
+                  {job.company}
                 </div>
               </div>
-            )}
+              <span className="rounded-full border border-primary-500/40 bg-primary-500/12 px-5 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-primary-600">
+                {job.type.replace('_', ' ').toUpperCase()}
+              </span>
+            </div>
 
-            <div className="flex items-center text-gray-600">
-              <Clock className="w-5 h-5 mr-3" />
-              <div>
-                <p className="font-medium">Posted</p>
-                <p>{new Date(job.createdAt).toLocaleDateString()}</p>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              <div
+                className="card group space-y-2 border-white/25 bg-white/70 p-7"
+                style={{ '--float-delay': '0.05s' } as CSSProperties}
+              >
+                <span className="text-xs font-semibold uppercase tracking-[0.35em] text-secondary-500">Location</span>
+                <span className="flex items-center gap-2 text-secondary-600">
+                  <MapPin className="h-5 w-5 text-primary-500" />
+                  {job.location} {job.remote && '(Remote)'}
+                </span>
               </div>
-            </div>
-          </div>
 
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Job Description</h2>
-            <div className="prose max-w-none">
-              <p className="text-gray-700 whitespace-pre-line">{job.description}</p>
-            </div>
-          </div>
-
-          {job.requirements.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Requirements</h2>
-              <ul className="list-disc list-inside space-y-2">
-                {job.requirements.map((req, index) => (
-                  <li key={index} className="text-gray-700">{req}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {job.skills.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Required Skills</h2>
-              <div className="flex flex-wrap gap-2">
-                {job.skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm font-medium"
-                  >
-                    {skill}
+              {job.salary && typeof job.salary.min === 'number' && typeof job.salary.max === 'number' && (
+                <div
+                  className="card group space-y-2 border-white/25 bg-white/70 p-7"
+                  style={{ '--float-delay': '0.12s' } as CSSProperties}
+                >
+                  <span className="text-xs font-semibold uppercase tracking-[0.35em] text-secondary-500">Salary</span>
+                  <span className="flex items-center gap-2 text-secondary-600">
+                    <DollarSign className="h-5 w-5 text-primary-500" />
+                    ${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}
                   </span>
-                ))}
+                </div>
+              )}
+
+              <div
+                className="card group space-y-2 border-white/25 bg-white/70 p-7"
+                style={{ '--float-delay': '0.19s' } as CSSProperties}
+              >
+                <span className="text-xs font-semibold uppercase tracking-[0.35em] text-secondary-500">Posted</span>
+                <span className="flex items-center gap-2 text-secondary-600">
+                  <Clock className="h-5 w-5 text-primary-500" />
+                  {new Date(job.createdAt).toLocaleDateString()}
+                </span>
               </div>
             </div>
-          )}
 
-          <div className="border-t pt-8">
-            <div className="flex justify-between items-center">
-              <div className="text-sm text-gray-500">
-                Posted by {job.employerId.firstName} {job.employerId.lastName}
-              </div>
-              
-              {user?.role === 'job_seeker' ? (
-                hasApplied ? (
-                  <div className="flex items-center space-x-2">
-                    <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
-                      ✓ Applied
-                    </span>
-                    <Link
-                      href="/applications"
-                      className="text-primary-600 hover:text-primary-700 text-sm font-medium"
-                    >
-                      View Application
-                    </Link>
+            <div className="space-y-8">
+              <section
+                className="card space-y-4 border-white/25 bg-white/70 p-10"
+                style={{ '--float-delay': '0.24s' } as CSSProperties}
+              >
+                <h2 className="text-2xl font-semibold text-gray-900">Job Description</h2>
+                <p className="text-secondary-600 whitespace-pre-line">{job.description}</p>
+              </section>
+
+              {job.requirements.length > 0 && (
+                <section
+                  className="card space-y-4 border-white/25 bg-white/70 p-10"
+                  style={{ '--float-delay': '0.32s' } as CSSProperties}
+                >
+                  <h2 className="text-2xl font-semibold text-gray-900">Requirements</h2>
+                  <ul className="space-y-2 text-secondary-600">
+                    {job.requirements.map((req, index) => (
+                      <li key={index} className="flex items-center gap-3">
+                        <span className="h-2 w-2 rounded-full bg-primary-500"></span>
+                        {req}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {job.skills.length > 0 && (
+                <section
+                  className="card space-y-4 border-white/25 bg-white/70 p-10"
+                  style={{ '--float-delay': '0.4s' } as CSSProperties}
+                >
+                  <h2 className="text-2xl font-semibold text-gray-900">Required Skills</h2>
+                  <div className="flex flex-wrap gap-3">
+                    {job.skills.map((skill, index) => (
+                      <span
+                        key={index}
+                        className="rounded-full border border-primary-500/40 bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-primary-600"
+                      >
+                        {skill}
+                      </span>
+                    ))}
                   </div>
-                ) : (
-                  <button
-                    onClick={handleApplyClick}
-                    className="btn-primary"
-                  >
-                    Apply Now
-                  </button>
-                )
-              ) : user?.role === 'employer' ? (
-                <div className="text-sm text-gray-500">
+                </section>
+              )}
+            </div>
+
+            <div
+              className="card border-white/25 bg-white/70 p-10"
+              style={{ '--float-delay': '0.48s' } as CSSProperties}
+            >
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="text-sm uppercase tracking-[0.3em] text-secondary-500">
+                  Posted by {job.employerId.firstName} {job.employerId.lastName}
+                </div>
+                
+                {user?.role === 'job_seeker' ? (
+                  hasApplied ? (
+                    <div className="flex flex-col items-center gap-3 text-sm uppercase tracking-[0.3em] text-secondary-600 md:flex-row">
+                      <span className="inline-flex items-center gap-2 rounded-full border border-green-500/40 bg-green-100/60 px-4 py-2 text-green-700">
+                        ✓ Applied
+                      </span>
+                      <Link
+                        href="/applications"
+                        className="auth-link"
+                      >
+                        View Application
+                      </Link>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleApplyClick}
+                      className="btn-primary auth-button px-10 py-3"
+                    >
+                      Apply Now
+                    </button>
+                  )
+                ) : user?.role === 'employer' ? (
                   <Link
                     href={`/jobs/${job._id}/applicants`}
-                    className="text-primary-600 hover:text-primary-700 font-medium"
+                    className="auth-link"
                   >
                     View Applicants
                   </Link>
-                </div>
-              ) : (
-                <Link
-                  href="/auth/login"
-                  className="btn-primary"
-                >
-                  Login to Apply
-                </Link>
-              )}
+                ) : (
+                  <Link
+                    href="/auth/login"
+                    className="btn-secondary auth-button px-10 py-3"
+                  >
+                    Login to Apply
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Job Application Modal */}
+      {/* Job Application Modal */
+      }
       {job && (
         <JobApplicationModal
           isOpen={showApplicationModal}

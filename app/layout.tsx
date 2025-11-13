@@ -1,11 +1,11 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Space_Grotesk } from 'next/font/google'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import Providers from '@/components/Providers'
 import AuthDebug from '@/components/AuthDebug'
 
-const inter = Inter({ subsets: ['latin'] })
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk' })
 
 export const metadata = {
   title: 'WorkQit - Connecting Talent with Opportunity',
@@ -18,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className={spaceGrotesk.variable}>
+      <body className="min-h-screen bg-transparent font-[family-name:var(--font-space-grotesk)]">
         <Providers>
           <div className="min-h-screen flex flex-col">
             <Navbar />

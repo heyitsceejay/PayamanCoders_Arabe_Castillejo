@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { CheckCircle, Users, BarChart3, MapPin, MessageSquare, Building } from 'lucide-react'
 
 const features = [
@@ -35,26 +36,35 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    <section className="hero-gradient relative overflow-hidden py-24">
+      <div className="auth-background-grid" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-[-20%] top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-primary-500/12 blur-3xl"></div>
+        <div className="absolute right-[-15%] top-16 h-80 w-80 rounded-full bg-secondary-500/12 blur-3xl"></div>
+      </div>
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto mb-20 max-w-3xl text-center">
+          <h2 className="feature-heading">
             Everything You Need to Succeed
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="feature-subheading">
             Our comprehensive platform provides tools for job seekers, employers, and mentors 
             to create meaningful connections and career growth opportunities.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
-            <div key={index} className="card hover:shadow-lg transition-shadow">
-              <div className="bg-primary-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                <feature.icon className="w-6 h-6 text-primary-600" />
+            <div
+              key={index}
+              className="feature-card group"
+              style={{ '--float-delay': `${index * 0.08}s` } as CSSProperties}
+            >
+              <div className="feature-icon mb-5">
+                <feature.icon className="h-10 w-10" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
+              <h3 className="text-2xl font-semibold text-gray-900">{feature.title}</h3>
+              <p className="text-lg text-secondary-600">{feature.description}</p>
             </div>
           ))}
         </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Menu, X, User, Briefcase, Users, BookOpen, LogOut, Settings, FileText } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -10,9 +10,16 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
   const { user, loading, logout } = useAuth()
 
   const isAuthenticated = !!user
+
+  const isActive = (href: string) => {
+    if (!pathname) return false
+    if (href === '/') return pathname === '/'
+    return pathname === href || pathname.startsWith(`${href}/`)
+  }
 
   const handleLogout = async () => {
     try {
@@ -27,41 +34,41 @@ export default function Navbar() {
   const AuthenticatedNav = () => (
     <>
       <div className="hidden md:block">
-        <div className="ml-10 flex items-baseline space-x-4">
+        <div className="ml-10 flex items-baseline space-x-3">
           <Link
             href="/dashboard"
-            className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            className={`nav-link ${isActive('/dashboard') ? 'nav-link-active' : ''}`}
           >
             Dashboard
           </Link>
           <Link
             href="/counter-demo"
-            className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            className={`nav-link ${isActive('/counter-demo') ? 'nav-link-active' : ''}`}
           >
             Counter Demo
           </Link>
           <Link
             href="/counter-comparison"
-            className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            className={`nav-link ${isActive('/counter-comparison') ? 'nav-link-active' : ''}`}
           >
             Props vs Context
           </Link>
-          <Link href="/jobs" className="flex items-center text-gray-700 hover:text-primary-600">
-            <Briefcase className="w-4 h-4 mr-1" />
+          <Link href="/jobs" className={`nav-link group ${isActive('/jobs') ? 'nav-link-active' : ''}`}>
+            <Briefcase className="nav-icon text-secondary-500 group-hover:text-primary-500" />
             Jobs
           </Link>
           {user?.role === 'job_seeker' && (
-            <Link href="/applications" className="flex items-center text-gray-700 hover:text-primary-600">
-              <FileText className="w-4 h-4 mr-1" />
+            <Link href="/applications" className={`nav-link group ${isActive('/applications') ? 'nav-link-active' : ''}`}>
+              <FileText className="nav-icon text-secondary-500 group-hover:text-primary-500" />
               My Applications
             </Link>
           )}
-          <Link href="/career-map" className="flex items-center text-gray-700 hover:text-primary-600">
-            <BookOpen className="w-4 h-4 mr-1" />
+          <Link href="/career-map" className={`nav-link group ${isActive('/career-map') ? 'nav-link-active' : ''}`}>
+            <BookOpen className="nav-icon text-secondary-500 group-hover:text-primary-500" />
             Career Map
           </Link>
-          <Link href="/community" className="flex items-center text-gray-700 hover:text-primary-600">
-            <Users className="w-4 h-4 mr-1" />
+          <Link href="/community" className={`nav-link group ${isActive('/community') ? 'nav-link-active' : ''}`}>
+            <Users className="nav-icon text-secondary-500 group-hover:text-primary-500" />
             Community
           </Link>
         </div>
@@ -70,33 +77,33 @@ export default function Navbar() {
       <div className="relative">
         <button
           onClick={() => setShowUserMenu(!showUserMenu)}
-          className="flex items-center space-x-2 text-gray-700 hover:text-primary-600 focus:outline-none"
+          className="flex items-center gap-3 rounded-full border border-white/40 bg-white/60 px-3 py-2 text-secondary-700 shadow-lg shadow-primary-900/10 backdrop-blur focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:text-primary-600 transition-all duration-300"
         >
-          <div className="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-primary-600 to-primary-500 text-base font-semibold text-white shadow-inner shadow-primary-900/10">
             {user?.firstName?.[0]}{user?.lastName?.[0]}
           </div>
-          <span className="hidden lg:block">{user?.firstName}</span>
+          <span className="hidden text-base font-semibold lg:block">{user?.firstName}</span>
         </button>
 
         {showUserMenu && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
-            <div className="px-4 py-2 text-sm text-gray-700 border-b">
-              <div className="font-medium">{user?.firstName} {user?.lastName}</div>
-              <div className="text-gray-500">{user?.email}</div>
+          <div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-2xl border border-white/30 bg-white/70 p-3 shadow-2xl shadow-primary-900/10 backdrop-blur-xl">
+            <div className="rounded-xl border border-white/30 bg-white/60 px-4 py-3 text-base text-secondary-600 shadow-inner shadow-primary-900/5">
+              <div className="text-lg font-semibold text-primary-600">{user?.firstName} {user?.lastName}</div>
+              <div className="text-sm text-secondary-500">{user?.email}</div>
             </div>
             <Link
               href="/profile"
-              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="mt-2 flex items-center gap-3 rounded-xl px-4 py-2.5 text-base text-secondary-600 transition-colors duration-300 hover:bg-white/70 hover:text-primary-600"
               onClick={() => setShowUserMenu(false)}
             >
-              <Settings className="w-4 h-4 mr-2" />
+              <Settings className="nav-icon text-primary-500" />
               Profile Settings
             </Link>
             <button
               onClick={handleLogout}
-              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-base text-red-500 transition-colors duration-300 hover:bg-red-50/80"
             >
-              <LogOut className="w-4 h-4 mr-2" />
+              <LogOut className="nav-icon text-red-500" />
               Sign Out
             </button>
           </div>
@@ -107,16 +114,16 @@ export default function Navbar() {
 
   const UnauthenticatedNav = () => (
     <>
-      <Link href="/jobs" className="flex items-center text-gray-700 hover:text-primary-600">
-        <Briefcase className="w-4 h-4 mr-1" />
+      <Link href="/jobs" className={`nav-link group ${isActive('/jobs') ? 'nav-link-active' : ''}`}>
+        <Briefcase className="nav-icon text-secondary-500 group-hover:text-primary-500" />
         Jobs
       </Link>
-      <Link href="/career-map" className="flex items-center text-gray-700 hover:text-primary-600">
-        <BookOpen className="w-4 h-4 mr-1" />
+      <Link href="/career-map" className={`nav-link group ${isActive('/career-map') ? 'nav-link-active' : ''}`}>
+        <BookOpen className="nav-icon text-secondary-500 group-hover:text-primary-500" />
         Career Map
       </Link>
-      <Link href="/community" className="flex items-center text-gray-700 hover:text-primary-600">
-        <Users className="w-4 h-4 mr-1" />
+      <Link href="/community" className={`nav-link group ${isActive('/community') ? 'nav-link-active' : ''}`}>
+        <Users className="nav-icon text-secondary-500 group-hover:text-primary-500" />
         Community
       </Link>
       <Link href="/auth/login" className="btn-primary">
@@ -130,33 +137,33 @@ export default function Navbar() {
 
   const MobileAuthenticatedNav = () => (
     <>
-      <Link href="/jobs" className="block px-3 py-2 text-gray-700 hover:text-primary-600">
+      <Link href="/jobs" className={`nav-link-block ${isActive('/jobs') ? 'nav-link-block-active' : ''}`}>
         Jobs
       </Link>
       {user?.role === 'job_seeker' && (
-        <Link href="/applications" className="block px-3 py-2 text-gray-700 hover:text-primary-600">
+        <Link href="/applications" className={`nav-link-block ${isActive('/applications') ? 'nav-link-block-active' : ''}`}>
           My Applications
         </Link>
       )}
-      <Link href="/career-map" className="block px-3 py-2 text-gray-700 hover:text-primary-600">
+      <Link href="/career-map" className={`nav-link-block ${isActive('/career-map') ? 'nav-link-block-active' : ''}`}>
         Career Map
       </Link>
-      <Link href="/community" className="block px-3 py-2 text-gray-700 hover:text-primary-600">
+      <Link href="/community" className={`nav-link-block ${isActive('/community') ? 'nav-link-block-active' : ''}`}>
         Community
       </Link>
-      <Link href="/dashboard" className="block px-3 py-2 text-gray-700 hover:text-primary-600">
+      <Link href="/dashboard" className={`nav-link-block ${isActive('/dashboard') ? 'nav-link-block-active' : ''}`}>
         Dashboard
       </Link>
-      <Link href="/profile" className="block px-3 py-2 text-gray-700 hover:text-primary-600">
+      <Link href="/profile" className={`nav-link-block ${isActive('/profile') ? 'nav-link-block-active' : ''}`}>
         Profile Settings
       </Link>
-      <div className="border-t pt-2 mt-2">
-        <div className="px-3 py-2 text-sm text-gray-500">
+      <div className="mt-3 border-t border-white/50 pt-3">
+        <div className="px-3 py-2 text-base font-medium text-secondary-600">
           {user?.firstName} {user?.lastName}
         </div>
         <button
           onClick={handleLogout}
-          className="block w-full text-left px-3 py-2 text-red-600 hover:bg-red-50"
+          className="nav-link-block text-left text-red-500 hover:bg-red-50/80"
         >
           Sign Out
         </button>
@@ -166,19 +173,19 @@ export default function Navbar() {
 
   const MobileUnauthenticatedNav = () => (
     <>
-      <Link href="/jobs" className="block px-3 py-2 text-gray-700 hover:text-primary-600">
+      <Link href="/jobs" className={`nav-link-block ${isActive('/jobs') ? 'nav-link-block-active' : ''}`}>
         Jobs
       </Link>
-      <Link href="/career-map" className="block px-3 py-2 text-gray-700 hover:text-primary-600">
+      <Link href="/career-map" className={`nav-link-block ${isActive('/career-map') ? 'nav-link-block-active' : ''}`}>
         Career Map
       </Link>
-      <Link href="/community" className="block px-3 py-2 text-gray-700 hover:text-primary-600">
+      <Link href="/community" className={`nav-link-block ${isActive('/community') ? 'nav-link-block-active' : ''}`}>
         Community
       </Link>
-      <Link href="/auth/login" className="block px-3 py-2 text-primary-600 font-medium">
+      <Link href="/auth/login" className="nav-link-block font-semibold text-primary-600">
         Sign In
       </Link>
-      <Link href="/auth/register" className="block px-3 py-2 text-gray-700 hover:text-primary-600">
+      <Link href="/auth/register" className="nav-link-block">
         Sign Up
       </Link>
     </>
@@ -197,22 +204,24 @@ export default function Navbar() {
   }, [showUserMenu])
 
   return (
-    <nav className="bg-white shadow-lg border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-primary-600">WorkQit</span>
+    <nav className="relative z-50 border-b border-white/30 bg-white/60 shadow-lg shadow-primary-900/10 backdrop-blur-2xl transition-all duration-500">
+      <div className="mx-auto flex max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="group flex items-center gap-3">
+              <span className="brand-logo group-hover:-translate-y-0.5 group-hover:scale-[1.06] group-hover:shadow-[0_0_25px_rgba(59,130,246,0.35)] group-hover:animate-brandPulse">
+                WorkQit
+              </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden items-center gap-4 md:flex">
             {loading ? (
-              <div className="animate-pulse flex space-x-4">
-                <div className="h-4 bg-gray-200 rounded w-16"></div>
-                <div className="h-4 bg-gray-200 rounded w-20"></div>
-                <div className="h-8 bg-gray-200 rounded w-24"></div>
+              <div className="flex space-x-4 animate-pulse">
+                <div className="h-4 w-16 rounded-full bg-white/60"></div>
+                <div className="h-4 w-20 rounded-full bg-white/60"></div>
+                <div className="h-8 w-24 rounded-full bg-white/60"></div>
               </div>
             ) : isAuthenticated ? (
               <AuthenticatedNav />
@@ -222,10 +231,10 @@ export default function Navbar() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="flex items-center md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-primary-600"
+              className="rounded-xl border border-white/40 bg-white/70 p-2 text-secondary-700 shadow-lg shadow-primary-900/10 backdrop-blur transition-all duration-300 hover:text-primary-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -233,14 +242,16 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div
+          className={`md:hidden transition-all duration-300 ${isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
+        >
+          <div className="mt-2 rounded-2xl border border-white/40 bg-white/70 p-3 shadow-2xl shadow-primary-900/10 backdrop-blur-xl">
+            <div className="space-y-1">
               {loading ? (
                 <div className="animate-pulse space-y-2">
-                  <div className="h-4 bg-gray-200 rounded w-20"></div>
-                  <div className="h-4 bg-gray-200 rounded w-24"></div>
-                  <div className="h-4 bg-gray-200 rounded w-16"></div>
+                  <div className="h-4 w-20 rounded-full bg-white/70"></div>
+                  <div className="h-4 w-24 rounded-full bg-white/70"></div>
+                  <div className="h-4 w-16 rounded-full bg-white/70"></div>
                 </div>
               ) : isAuthenticated ? (
                 <MobileAuthenticatedNav />
@@ -249,7 +260,7 @@ export default function Navbar() {
               )}
             </div>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   )
