@@ -195,9 +195,7 @@ const UserSchema = new mongoose.Schema({
     status: {
       type: String,
       enum: ['unverified', 'pending', 'verified', 'rejected', 'suspended'],
-      default: function(this: IUser) {
-        return this.role === 'employer' ? 'unverified' : 'verified'
-      }
+      default: 'verified'
     },
     verifiedAt: Date,
     rejectedAt: Date,
