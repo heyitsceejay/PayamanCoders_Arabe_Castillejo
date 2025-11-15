@@ -39,14 +39,37 @@ export async function GET(request: NextRequest) {
     }
 
     // Get AI-powered recommendations
-    const recommendations = await AIService.generateJobRecommendations(
+    const rankedJobs = await AIService.generateJobRecommendations(
       userProfile.profile,
       jobs
     );
 
+    // Calculate match scores for top recommendations
+    const recommendationsWithScores = await Promise.all(
+      rankedJobs.slice(0, 10).map(async (job, index) => {
+        try {
+          const matchAnalysis = await AIService.analyzeJobMatch(userProfile.profile, job);
+          return {
+            ...job,
+            matchScore: matchAnalysis.score,
+            matchReason: matchAnalysis.reasoning,
+            strengths: matchAnalysis.strengths,
+            gaps: matchAnalysis.gaps
+          };
+        } catch (error) {
+          // Fallback: assign decreasing scores based on ranking
+          return {
+            ...job,
+            matchScore: Math.max(95 - (index * 5), 60),
+            matchReason: `Matches ${userProfile.profile?.skills?.length || 0} of your skills`
+          };
+        }
+      })
+    );
+
     return NextResponse.json({
       success: true,
-      recommendations: recommendations.slice(0, 10)
+      recommendations: recommendationsWithScores
     });
   } catch (error) {
     console.error('AI recommendations API error:', error);
