@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, CSSProperties } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { ArrowLeft, Save, Eye } from 'lucide-react'
+import { ArrowLeft, Save, Eye, Plus, X } from 'lucide-react'
 import Link from 'next/link'
 
 export default function NewJobPage() {
@@ -34,11 +34,13 @@ export default function NewJobPage() {
   // Redirect if not employer
   if (user && user.role !== 'employer') {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-lg">
-          <h3 className="font-semibold mb-2">Access Denied</h3>
-          <p>Only employers can post jobs. Please contact support if you need to change your account type.</p>
-          <Link href="/" className="mt-4 inline-block text-red-700 hover:underline">
+      <div className="min-h-screen hero-gradient flex items-center justify-center relative overflow-hidden">
+        <div className="auth-background-grid"></div>
+        <div className="auth-entry-overlay"></div>
+        <div className="card p-8 max-w-md mx-auto relative z-10">
+          <h3 className="feature-heading text-2xl font-bold mb-3 text-red-600">Access Denied</h3>
+          <p className="auth-subtitle text-base mb-6">Only employers can post jobs. Please contact support if you need to change your account type.</p>
+          <Link href="/" className="btn-primary inline-flex items-center">
             Return to Homepage
           </Link>
         </div>
@@ -147,309 +149,341 @@ export default function NewJobPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <Link 
-          href="/" 
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Dashboard
-        </Link>
-        <h1 className="text-3xl font-bold text-gray-900">Post a New Job</h1>
-        <p className="text-gray-600 mt-2">
-          Create a job posting to attract qualified candidates for your organization.
-        </p>
-      </div>
+    <div className="min-h-screen hero-gradient relative overflow-hidden">
+      <div className="auth-background-grid"></div>
+      <div className="auth-entry-overlay"></div>
+      
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
+        {/* Header */}
+        <div className="mb-8 auth-panel" style={{ '--float-delay': '0.1s' } as CSSProperties}>
+          <Link 
+            href="/" 
+            className="inline-flex items-center text-secondary-600 hover:text-primary-600 mb-6 group/back transition-all duration-300"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2 group-hover/back:-translate-x-1 transition-transform duration-300" />
+            <span className="font-semibold group-hover/back:text-primary-600 transition-colors duration-300">Back to Dashboard</span>
+          </Link>
+          <h1 className="auth-title text-4xl font-bold mb-3">Post a New Job</h1>
+          <p className="auth-subtitle text-base text-secondary-600/90">
+            Create a job posting to attract qualified candidates for your organization.
+          </p>
+        </div>
 
       {/* Messages */}
       {error && (
-        <div className="mb-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+        <div className="mb-6 card p-4 border-red-500/40 bg-red-500/10 text-red-600 animate-[floatUp_0.6s_ease-out_0.2s_both]" style={{ '--float-delay': '0.15s' } as CSSProperties}>
           {error}
         </div>
       )}
 
       {success && (
-        <div className="mb-6 bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg">
+        <div className="mb-6 card p-4 border-green-500/40 bg-green-500/10 text-green-600 animate-[floatUp_0.6s_ease-out_0.2s_both]" style={{ '--float-delay': '0.15s' } as CSSProperties}>
           {success}
         </div>
       )}
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-10">
         {/* Basic Information */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Basic Information</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                Job Title *
-              </label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                required
-                value={formData.title}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="e.g. Frontend Developer Intern"
-              />
+        <div className="card p-10 relative overflow-hidden group animate-[floatUp_0.6s_ease-out_0.2s_both]" style={{ '--float-delay': '0.2s' } as CSSProperties}>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative">
+            <h2 className="feature-heading text-3xl font-bold mb-8">Basic Information</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <label htmlFor="title" className="auth-label block mb-4 text-lg">
+                  Job Title *
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  required
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  className="glass-input w-full text-base px-5 py-4"
+                  placeholder="e.g. Frontend Developer Intern"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="company" className="auth-label block mb-4 text-lg">
+                  Company Name *
+                </label>
+                <input
+                  type="text"
+                  id="company"
+                  name="company"
+                  required
+                  value={formData.company}
+                  onChange={handleInputChange}
+                  className="glass-input w-full text-base px-5 py-4"
+                  placeholder="e.g. TechCorp Inc."
+                />
+              </div>
+
+              <div>
+                <label htmlFor="type" className="auth-label block mb-4 text-lg">
+                  Job Type *
+                </label>
+                <select
+                  id="type"
+                  name="type"
+                  required
+                  value={formData.type}
+                  onChange={handleInputChange}
+                  className="glass-input w-full text-base px-5 py-4"
+                >
+                  <option value="internship">Internship</option>
+                  <option value="apprenticeship">Apprenticeship</option>
+                  <option value="full_time">Full Time</option>
+                  <option value="part_time">Part Time</option>
+                  <option value="contract">Contract</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="location" className="auth-label block mb-4 text-lg">
+                  Location *
+                </label>
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  required
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  className="glass-input w-full text-base px-5 py-4"
+                  placeholder="e.g. San Francisco, CA"
+                />
+              </div>
             </div>
 
-            <div>
-              <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-                Company Name *
+            <div className="mt-8">
+              <label className="flex items-center group/checkbox cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="remote"
+                  checked={formData.remote}
+                  onChange={handleInputChange}
+                  className="sr-only"
+                />
+                <div className="relative flex items-center justify-center w-6 h-6 rounded border-2 border-primary-500/40 bg-white/70 group-hover/checkbox:border-primary-500/60 transition-all duration-300 group-hover/checkbox:scale-110">
+                  {formData.remote && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-secondary-500 rounded flex items-center justify-center">
+                      <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
+                    </div>
+                  )}
+                </div>
+                <span className="ml-4 text-lg font-medium text-secondary-700 group-hover/checkbox:text-primary-600 transition-colors duration-300">This is a remote position</span>
               </label>
-              <input
-                type="text"
-                id="company"
-                name="company"
-                required
-                value={formData.company}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="e.g. TechCorp Inc."
-              />
             </div>
-
-            <div>
-              <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
-                Job Type *
-              </label>
-              <select
-                id="type"
-                name="type"
-                required
-                value={formData.type}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="internship">Internship</option>
-                <option value="apprenticeship">Apprenticeship</option>
-                <option value="full_time">Full Time</option>
-                <option value="part_time">Part Time</option>
-                <option value="contract">Contract</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-                Location *
-              </label>
-              <input
-                type="text"
-                id="location"
-                name="location"
-                required
-                value={formData.location}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="e.g. San Francisco, CA"
-              />
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                name="remote"
-                checked={formData.remote}
-                onChange={handleInputChange}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="ml-2 text-sm text-gray-700">This is a remote position</span>
-            </label>
           </div>
         </div>
 
         {/* Job Description */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Job Description</h2>
-          
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              Description *
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              required
-              rows={6}
-              value={formData.description}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Describe the role, responsibilities, and what the candidate will learn or accomplish..."
-            />
+        <div className="card p-10 relative overflow-hidden group animate-[floatUp_0.6s_ease-out_0.3s_both]" style={{ '--float-delay': '0.3s' } as CSSProperties}>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative">
+            <h2 className="feature-heading text-3xl font-bold mb-8">Job Description</h2>
+            
+            <div>
+              <label htmlFor="description" className="auth-label block mb-4 text-lg">
+                Description *
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                required
+                rows={8}
+                value={formData.description}
+                onChange={handleInputChange}
+                className="glass-input w-full resize-none text-base px-5 py-4"
+                placeholder="Describe the role, responsibilities, and what the candidate will learn or accomplish..."
+              />
+            </div>
           </div>
         </div>
 
         {/* Requirements */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Requirements</h2>
-          
-          <div className="space-y-3">
-            {formData.requirements.map((requirement, index) => (
-              <div key={index} className="flex gap-2">
-                <input
-                  type="text"
-                  value={requirement}
-                  onChange={(e) => handleArrayChange('requirements', index, e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="e.g. Basic knowledge of HTML, CSS, and JavaScript"
-                />
-                {formData.requirements.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeArrayItem('requirements', index)}
-                    className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-md"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => addArrayItem('requirements')}
-              className="text-blue-600 hover:text-blue-700 text-sm"
-            >
-              + Add Requirement
-            </button>
+        <div className="card p-10 relative overflow-hidden group animate-[floatUp_0.6s_ease-out_0.4s_both]" style={{ '--float-delay': '0.4s' } as CSSProperties}>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative">
+            <h2 className="feature-heading text-3xl font-bold mb-8">Requirements</h2>
+            
+            <div className="space-y-5">
+              {formData.requirements.map((requirement, index) => (
+                <div key={index} className="flex gap-4">
+                  <input
+                    type="text"
+                    value={requirement}
+                    onChange={(e) => handleArrayChange('requirements', index, e.target.value)}
+                    className="glass-input flex-1 text-base px-5 py-4"
+                    placeholder="e.g. Basic knowledge of HTML, CSS, and JavaScript"
+                  />
+                  {formData.requirements.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeArrayItem('requirements', index)}
+                      className="px-5 py-4 text-red-600 hover:text-white hover:bg-red-500/80 border border-red-500/40 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 group/remove"
+                    >
+                      <X className="w-5 h-5 group-hover/remove:scale-110 transition-transform duration-300" />
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => addArrayItem('requirements')}
+                className="inline-flex items-center gap-3 text-primary-600 hover:text-primary-500 font-semibold text-lg group/add transition-all duration-300"
+              >
+                <Plus className="w-6 h-6 group-hover/add:scale-110 group-hover/add:rotate-90 transition-all duration-300" />
+                <span>Add Requirement</span>
+                <div className="h-2 w-2 rounded-full bg-primary-500/80 group-hover/add:bg-primary-500 animate-pulse"></div>
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Skills */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Required Skills</h2>
-          
-          <div className="space-y-3">
-            {formData.skills.map((skill, index) => (
-              <div key={index} className="flex gap-2">
-                <input
-                  type="text"
-                  value={skill}
-                  onChange={(e) => handleArrayChange('skills', index, e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="e.g. JavaScript, React, Node.js"
-                />
-                {formData.skills.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeArrayItem('skills', index)}
-                    className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-md"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => addArrayItem('skills')}
-              className="text-blue-600 hover:text-blue-700 text-sm"
-            >
-              + Add Skill
-            </button>
+        <div className="card p-10 relative overflow-hidden group animate-[floatUp_0.6s_ease-out_0.5s_both]" style={{ '--float-delay': '0.5s' } as CSSProperties}>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative">
+            <h2 className="feature-heading text-3xl font-bold mb-8">Required Skills</h2>
+            
+            <div className="space-y-5">
+              {formData.skills.map((skill, index) => (
+                <div key={index} className="flex gap-4">
+                  <input
+                    type="text"
+                    value={skill}
+                    onChange={(e) => handleArrayChange('skills', index, e.target.value)}
+                    className="glass-input flex-1 text-base px-5 py-4"
+                    placeholder="e.g. JavaScript, React, Node.js"
+                  />
+                  {formData.skills.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeArrayItem('skills', index)}
+                      className="px-5 py-4 text-red-600 hover:text-white hover:bg-red-500/80 border border-red-500/40 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 group/remove"
+                    >
+                      <X className="w-5 h-5 group-hover/remove:scale-110 transition-transform duration-300" />
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => addArrayItem('skills')}
+                className="inline-flex items-center gap-3 text-primary-600 hover:text-primary-500 font-semibold text-lg group/add transition-all duration-300"
+              >
+                <Plus className="w-6 h-6 group-hover/add:scale-110 group-hover/add:rotate-90 transition-all duration-300" />
+                <span>Add Skill</span>
+                <div className="h-2 w-2 rounded-full bg-primary-500/80 group-hover/add:bg-primary-500 animate-pulse"></div>
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Compensation & Details */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Compensation & Details</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="salary.min" className="block text-sm font-medium text-gray-700 mb-2">
-                Minimum Salary (per hour)
-              </label>
-              <input
-                type="number"
-                id="salary.min"
-                name="salary.min"
-                value={formData.salary.min}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="15"
-              />
-            </div>
+        <div className="card p-10 relative overflow-hidden group animate-[floatUp_0.6s_ease-out_0.6s_both]" style={{ '--float-delay': '0.6s' } as CSSProperties}>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative">
+            <h2 className="feature-heading text-3xl font-bold mb-8">Compensation & Details</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <label htmlFor="salary.min" className="auth-label block mb-4 text-lg">
+                  Minimum Salary (per hour)
+                </label>
+                <input
+                  type="number"
+                  id="salary.min"
+                  name="salary.min"
+                  value={formData.salary.min}
+                  onChange={handleInputChange}
+                  className="glass-input w-full text-base px-5 py-4"
+                  placeholder="15"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="salary.max" className="block text-sm font-medium text-gray-700 mb-2">
-                Maximum Salary (per hour)
-              </label>
-              <input
-                type="number"
-                id="salary.max"
-                name="salary.max"
-                value={formData.salary.max}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="25"
-              />
-            </div>
+              <div>
+                <label htmlFor="salary.max" className="auth-label block mb-4 text-lg">
+                  Maximum Salary (per hour)
+                </label>
+                <input
+                  type="number"
+                  id="salary.max"
+                  name="salary.max"
+                  value={formData.salary.max}
+                  onChange={handleInputChange}
+                  className="glass-input w-full text-base px-5 py-4"
+                  placeholder="25"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
-                Duration
-              </label>
-              <input
-                type="text"
-                id="duration"
-                name="duration"
-                value={formData.duration}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="e.g. 3 months, 6 months, Ongoing"
-              />
-            </div>
+              <div>
+                <label htmlFor="duration" className="auth-label block mb-4 text-lg">
+                  Duration
+                </label>
+                <input
+                  type="text"
+                  id="duration"
+                  name="duration"
+                  value={formData.duration}
+                  onChange={handleInputChange}
+                  className="glass-input w-full text-base px-5 py-4"
+                  placeholder="e.g. 3 months, 6 months, Ongoing"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="applicationDeadline" className="block text-sm font-medium text-gray-700 mb-2">
-                Application Deadline
-              </label>
-              <input
-                type="date"
-                id="applicationDeadline"
-                name="applicationDeadline"
-                value={formData.applicationDeadline}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
+              <div>
+                <label htmlFor="applicationDeadline" className="auth-label block mb-4 text-lg">
+                  Application Deadline
+                </label>
+                <input
+                  type="date"
+                  id="applicationDeadline"
+                  name="applicationDeadline"
+                  value={formData.applicationDeadline}
+                  onChange={handleInputChange}
+                  className="glass-input w-full text-base px-5 py-4"
+                />
+              </div>
             </div>
           </div>
         </div>
 
         {/* Submit Buttons */}
-        <div className="flex justify-end gap-4">
+        <div className="flex justify-end gap-5 animate-[floatUp_0.6s_ease-out_0.7s_both]" style={{ '--float-delay': '0.7s' } as CSSProperties}>
           <Link
             href="/"
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+            className="btn-secondary px-8 py-4 text-lg font-semibold group/btn inline-flex items-center gap-2"
           >
-            Cancel
+            <span>Cancel</span>
           </Link>
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary px-8 py-4 text-lg font-semibold group/btn inline-flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Posting...
+                <div className="animate-spin rounded-full h-6 w-6 border-2 border-white/30 border-t-white"></div>
+                <span>Posting...</span>
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 mr-2" />
-                Post Job
+                <Save className="w-6 h-6 group-hover/btn:scale-110 transition-transform duration-300" />
+                <span>Post Job</span>
+                <div className="h-2 w-2 rounded-full bg-white/80 group-hover/btn:bg-white animate-pulse"></div>
               </>
             )}
           </button>
         </div>
       </form>
+      </div>
     </div>
   )
 }

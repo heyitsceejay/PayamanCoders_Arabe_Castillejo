@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, CSSProperties } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft, User, Mail, MapPin, Briefcase, FileText, CheckCircle, XCircle, Clock, Eye } from 'lucide-react'
 import Link from 'next/link'
@@ -160,17 +160,11 @@ export default function JobApplicantsPage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
-          <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="bg-white p-6 rounded-lg shadow-md">
-                <div className="h-20 bg-gray-200 rounded"></div>
-              </div>
-            ))}
-          </div>
+      <div className="min-h-screen hero-gradient flex items-center justify-center relative overflow-hidden">
+        <div className="auth-background-grid"></div>
+        <div className="auth-entry-overlay"></div>
+        <div className="futuristic-loader">
+          <div className="futuristic-loader-inner"></div>
         </div>
       </div>
     )
@@ -178,46 +172,59 @@ export default function JobApplicantsPage() {
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
-          {error}
+      <div className="min-h-screen hero-gradient flex items-center justify-center relative overflow-hidden">
+        <div className="auth-background-grid"></div>
+        <div className="auth-entry-overlay"></div>
+        <div className="card p-8 max-w-md mx-auto">
+          <div className="text-red-600 text-center">
+            {error}
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <Link 
-          href="/"
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Dashboard
-        </Link>
-        
-        {jobInfo && (
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Applicants for "{jobInfo.title}"
-            </h1>
-            <p className="text-gray-600">
-              {jobInfo.company} • {applicants.length} applicant{applicants.length !== 1 ? 's' : ''}
-            </p>
-          </div>
-        )}
-      </div>
+    <div className="min-h-screen hero-gradient relative overflow-hidden">
+      <div className="auth-background-grid"></div>
+      <div className="auth-entry-overlay"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
+        {/* Header */}
+        <div className="mb-8 auth-panel" style={{ '--float-delay': '0.1s' } as CSSProperties}>
+          <Link 
+            href="/"
+            className="inline-flex items-center text-secondary-600 hover:text-primary-600 mb-6 group/back transition-all duration-300"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2 group-hover/back:-translate-x-1 transition-transform duration-300" />
+            <span className="font-semibold group-hover/back:text-primary-600 transition-colors duration-300">Back to Dashboard</span>
+          </Link>
+          
+          {jobInfo && (
+            <div>
+              <h1 className="auth-title text-4xl font-bold mb-3">
+                Applicants for "{jobInfo.title}"
+              </h1>
+              <p className="auth-subtitle text-base text-secondary-600/90">
+                {jobInfo.company} • {applicants.length} applicant{applicants.length !== 1 ? 's' : ''}
+              </p>
+            </div>
+          )}
+        </div>
 
       {/* Applicants List */}
       {applicants.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No applicants yet</h3>
-          <p className="text-gray-600">
-            When candidates apply to this job, they will appear here.
-          </p>
+        <div className="card p-12 text-center relative overflow-hidden group/empty animate-[floatUp_0.6s_ease-out_0.3s_both]" style={{ '--float-delay': '0.2s' } as CSSProperties}>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover/empty:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative">
+            <div className="feature-icon mx-auto mb-6 w-20 h-20 group-hover/empty:scale-110 transition-transform duration-500">
+              <User className="h-10 w-10" />
+            </div>
+            <h3 className="feature-heading text-2xl font-bold mb-3">No applicants yet</h3>
+            <p className="auth-subtitle text-base max-w-md mx-auto">
+              When candidates apply to this job, they will appear here.
+            </p>
+          </div>
         </div>
       ) : (
         <div className="space-y-6">
@@ -507,6 +514,7 @@ export default function JobApplicantsPage() {
           applicantName={previewResume.applicantName}
         />
       )}
+      </div>
     </div>
   )
 }
