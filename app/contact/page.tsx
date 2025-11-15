@@ -65,14 +65,14 @@ export default function ContactPage() {
                   </div>
                 </div>
                 
-                <div className="feature-card p-8 group/item hover:scale-[1.02] transition-all duration-300">
-                  <div className="flex items-start gap-5">
-                    <div className="feature-icon flex-shrink-0 w-14 h-14">
-                      <MapPin className="h-7 w-7" />
+                <div className="feature-card p-6 group/item hover:scale-[1.02] transition-all duration-300">
+                  <div className="flex items-start gap-4">
+                    <div className="feature-icon flex-shrink-0 w-12 h-12 flex items-center justify-center">
+                      <MapPin className="h-6 w-6" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover/item:text-primary-600 transition-colors duration-300">Address</h3>
-                      <p className="text-lg text-secondary-600/90 leading-relaxed">
+                      <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover/item:text-primary-600 transition-colors duration-300">Address</h3>
+                      <p className="text-base text-secondary-600/90 leading-relaxed">
                         WorkQit Platform<br />
                         123 Business Street<br />
                         City, State 12345
