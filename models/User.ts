@@ -22,6 +22,15 @@ export interface IUser extends mongoose.Document {
     remote?: boolean
     profilePicture?: string
   }
+  onboarding?: {
+    completed: boolean
+    currentStep: number
+    skippedSteps: string[]
+    completedAt?: Date
+    skillsAdded: boolean
+    assessmentTaken: boolean
+    certificateEarned: boolean
+  }
   companyProfile?: {
     companyName?: string
     industry?: string
@@ -296,6 +305,32 @@ const UserSchema = new mongoose.Schema({
   lastPasswordResetAt: {
     type: Date
   },
+  
+  // Onboarding tracking
+  onboarding: {
+    completed: {
+      type: Boolean,
+      default: false
+    },
+    currentStep: {
+      type: Number,
+      default: 0
+    },
+    skippedSteps: [String],
+    completedAt: Date,
+    skillsAdded: {
+      type: Boolean,
+      default: false
+    },
+    assessmentTaken: {
+      type: Boolean,
+      default: false
+    },
+    certificateEarned: {
+      type: Boolean,
+      default: false
+    }
+  }
 }, {
   timestamps: true,
 })

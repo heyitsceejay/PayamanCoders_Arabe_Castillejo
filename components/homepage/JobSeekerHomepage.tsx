@@ -12,6 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import OnboardingModal from "@/components/onboarding/OnboardingModal";
 
 interface UserProfile {
   _id: string;
@@ -60,6 +61,7 @@ interface Internship {
 
 export default function JobSeekerHomepage() {
   const { user } = useAuth();
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [applicationStats, setApplicationStats] = useState<ApplicationStats>({
     applications: 0,
@@ -74,6 +76,38 @@ export default function JobSeekerHomepage() {
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
+  useEffect(() => {
+    // Check onboarding status when user is available
+    if (user?.role === 'job_seeker') {
+      checkOnboardingStatus();
+    }
+  }, [user]);
+
+  const checkOnboardingStatus = async () => {
+    try {
+      console.log('🔍 Checking onboarding status...');
+      const response = await fetch('/api/onboarding/status');
+      console.log('📡 Onboarding API response status:', response.status);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ Onboarding status data:', data);
+        
+        // Show onboarding if not completed
+        if (!data.onboarding?.completed) {
+          console.log('🎯 Opening onboarding modal - onboarding not completed');
+          setShowOnboarding(true);
+        } else {
+          console.log('✔️ Onboarding already completed, skipping modal');
+        }
+      } else {
+        console.error('❌ Onboarding API returned error:', response.status);
+      }
+    } catch (error) {
+      console.error('❌ Failed to check onboarding status:', error);
+    }
+  };
 
   const fetchDashboardData = async () => {
     try {
@@ -219,7 +253,17 @@ export default function JobSeekerHomepage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+    <>
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        onComplete={() => {
+          setShowOnboarding(false);
+          fetchDashboardData();
+        }}
+      />
+      
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
 
       {/* Welcome Banner */}
       <div className="relative overflow-hidden border-b border-white/30 bg-white/60 backdrop-blur-xl">
@@ -482,5 +526,6 @@ export default function JobSeekerHomepage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
