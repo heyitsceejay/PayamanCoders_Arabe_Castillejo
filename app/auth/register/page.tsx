@@ -250,6 +250,7 @@ export default function RegisterPage() {
               >
                 <option value="job_seeker">Job Seeker</option>
                 <option value="employer">Employer</option>
+                <option value="mentor">Mentor</option>
               </select>
             </div>
           </div>
