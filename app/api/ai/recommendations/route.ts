@@ -38,38 +38,75 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Get AI-powered recommendations
-    const rankedJobs = await AIService.generateJobRecommendations(
-      userProfile.profile,
-      jobs
-    );
-
-    // Calculate match scores for top recommendations
-    const recommendationsWithScores = await Promise.all(
-      rankedJobs.slice(0, 10).map(async (job, index) => {
-        try {
-          const matchAnalysis = await AIService.analyzeJobMatch(userProfile.profile, job);
-          return {
-            ...job,
-            matchScore: matchAnalysis.score,
-            matchReason: matchAnalysis.reasoning,
-            strengths: matchAnalysis.strengths,
-            gaps: matchAnalysis.gaps
-          };
-        } catch (error) {
-          // Fallback: assign decreasing scores based on ranking
-          return {
-            ...job,
-            matchScore: Math.max(95 - (index * 5), 60),
-            matchReason: `Matches ${userProfile.profile?.skills?.length || 0} of your skills`
-          };
-        }
-      })
-    );
+    // Calculate skill-based match scores (fast, no AI calls needed)
+    const userSkills = (userProfile.profile?.skills || []).map((s: string) => s.toLowerCase());
+    
+    const jobsWithScores = jobs.map((job: any) => {
+      const jobSkills = (job.skills || []).map((s: string) => s.toLowerCase());
+      const matchingSkills = userSkills.filter((skill: string) => 
+        jobSkills.some((jobSkill: string) => 
+          jobSkill.includes(skill) || skill.includes(jobSkill)
+        )
+      );
+      
+      // Calculate match score based on skill overlap
+      const skillMatchRatio = jobSkills.length > 0 
+        ? (matchingSkills.length / jobSkills.length) * 100 
+        : 0;
+      
+      // Boost score if user has more matching skills
+      const userSkillRatio = userSkills.length > 0
+        ? (matchingSkills.length / userSkills.length) * 100
+        : 0;
+      
+      const matchScore = Math.round((skillMatchRatio * 0.7 + userSkillRatio * 0.3));
+      
+      // Generate match reason
+      let matchReason = '';
+      if (matchingSkills.length > 0) {
+        const displaySkills = matchingSkills.slice(0, 3).join(', ');
+        matchReason = `Strong match for your ${displaySkills}${matchingSkills.length > 3 ? ` and ${matchingSkills.length - 3} more` : ''} skills`;
+      } else if (userSkills.length === 0) {
+        matchReason = 'Add skills to your profile for better matches';
+      } else {
+        matchReason = 'Good opportunity to learn new skills';
+      }
+      
+      return {
+        ...job,
+        matchScore: Math.min(matchScore, 99), // Cap at 99%
+        matchReason,
+        matchingSkills
+      };
+    });
+    
+    // Sort by match score (highest first)
+    const sortedJobs = jobsWithScores.sort((a, b) => b.matchScore - a.matchScore);
+    
+    // Use AI to re-rank only the top candidates (optional, faster)
+    let finalRecommendations = sortedJobs.slice(0, 10);
+    
+    // Try AI ranking for better results, but don't wait too long
+    try {
+      const aiRanked = await Promise.race([
+        AIService.generateJobRecommendations(userProfile.profile, sortedJobs.slice(0, 15)),
+        new Promise((resolve) => setTimeout(() => resolve(sortedJobs.slice(0, 10)), 3000))
+      ]);
+      
+      if (Array.isArray(aiRanked) && aiRanked.length > 0) {
+        // Merge AI ranking with our scores
+        finalRecommendations = aiRanked.slice(0, 10).map((job: any) => {
+          const scored = jobsWithScores.find((j: any) => j._id.toString() === job._id.toString());
+          return scored || job;
+        });
+      }
+    } catch (error) {
+      console.log('AI ranking skipped, using skill-based ranking');
+    }
 
     return NextResponse.json({
       success: true,
-      recommendations: recommendationsWithScores
+      recommendations: finalRecommendations
     });
   } catch (error) {
     console.error('AI recommendations API error:', error);
