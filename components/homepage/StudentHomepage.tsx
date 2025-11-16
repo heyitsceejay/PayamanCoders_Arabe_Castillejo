@@ -100,28 +100,28 @@ export default function StudentHomepage() {
           </Link>
 
           <Link
-            href="/assessments"
+            href="/interview-prep"
             className="card group flex flex-col items-center gap-3 text-center transition-all hover:-translate-y-1 hover:shadow-xl"
           >
             <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-100 text-blue-600 transition-all group-hover:scale-110">
-              <Award className="h-7 w-7" />
+              <Target className="h-7 w-7" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Skill Assessments</h3>
-              <p className="text-sm text-secondary-600">Test your knowledge</p>
+              <h3 className="font-semibold text-gray-900">Interview Prep</h3>
+              <p className="text-sm text-secondary-600">AI-powered tips</p>
             </div>
           </Link>
 
           <Link
-            href="/jobs?type=internship"
+            href="/mentors"
             className="card group flex flex-col items-center gap-3 text-center transition-all hover:-translate-y-1 hover:shadow-xl"
           >
             <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-green-100 text-green-600 transition-all group-hover:scale-110">
-              <Briefcase className="h-7 w-7" />
+              <Users className="h-7 w-7" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Internships</h3>
-              <p className="text-sm text-secondary-600">Gain experience</p>
+              <h3 className="font-semibold text-gray-900">Find Mentors</h3>
+              <p className="text-sm text-secondary-600">Get guidance</p>
             </div>
           </Link>
 

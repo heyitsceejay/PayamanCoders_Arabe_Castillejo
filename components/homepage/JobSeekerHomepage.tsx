@@ -427,28 +427,47 @@ export default function JobSeekerHomepage() {
               </div>
             </div>
 
-            {/* Career Webinars */}
-            <div className="card border-purple-200/50 bg-gradient-to-br from-purple-50/50 to-white">
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  📚 Career Webinars
-                </h3>
+            {/* Career Resources */}
+            <div className="space-y-4">
+              {/* Career Webinars */}
+              <div className="card border-purple-200/50 bg-gradient-to-br from-purple-50/50 to-white">
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    📚 Career Webinars
+                  </h3>
+                  <Link
+                    href="/webinars"
+                    className="text-sm font-medium text-primary-600 transition-colors hover:text-primary-500"
+                  >
+                    View All
+                  </Link>
+                </div>
+                <p className="mb-4 text-sm text-secondary-600">
+                  Learn from industry experts and mentors through live webinars
+                </p>
                 <Link
                   href="/webinars"
-                  className="text-sm font-medium text-primary-600 transition-colors hover:text-primary-500"
+                  className="btn-secondary w-full px-4 py-2 text-sm"
                 >
-                  View All
+                  Browse Webinars
                 </Link>
               </div>
-              <p className="mb-4 text-sm text-secondary-600">
-                Learn from industry experts and mentors through live webinars
-              </p>
-              <Link
-                href="/webinars"
-                className="btn-secondary w-full px-4 py-2 text-sm"
-              >
-                Browse Webinars
-              </Link>
+
+              {/* Interview Prep */}
+              <div className="card border-blue-200/50 bg-gradient-to-br from-blue-50/50 to-white">
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                  🎯 Interview Preparation
+                </h3>
+                <p className="mb-4 text-sm text-secondary-600">
+                  Get AI-powered interview tips tailored to your target role
+                </p>
+                <Link
+                  href="/interview-prep"
+                  className="btn-primary w-full px-4 py-2 text-sm"
+                >
+                  Prepare for Interviews
+                </Link>
+              </div>
             </div>
 
             {/* Notifications */}
