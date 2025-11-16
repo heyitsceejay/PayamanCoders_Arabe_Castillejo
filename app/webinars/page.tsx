@@ -92,49 +92,59 @@ export default function WebinarsPage() {
     <div className="hero-gradient relative min-h-screen overflow-hidden">
       <div className="auth-background-grid" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-purple-500/20 blur-3xl"></div>
-        <div className="absolute right-[-10%] top-20 h-72 w-72 rounded-full bg-blue-500/15 blur-3xl"></div>
+        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-purple-500/30 blur-3xl animate-pulse"></div>
+        <div className="absolute right-[-10%] top-20 h-72 w-72 rounded-full bg-blue-500/25 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute left-[-10%] bottom-20 h-80 w-80 rounded-full bg-purple-400/20 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 right-1/4 h-96 w-96 rounded-full bg-blue-400/15 blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="mb-3 flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/25">
-                  <Video className="h-7 w-7" />
+        <div className="mb-10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="relative overflow-hidden group/header">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-blue-500/5 to-purple-500/5 opacity-0 group-hover/header:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+              <div className="relative flex items-center gap-4">
+                <div className="relative flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 via-purple-600 to-blue-500 text-white shadow-xl shadow-purple-500/40 group/icon flex-shrink-0">
+                  <Video className="h-8 w-8 md:h-10 md:w-10 relative z-10 group-hover/icon:scale-110 group-hover/icon:rotate-12 transition-all duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-400/50 to-blue-400/50 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute -inset-1 bg-gradient-to-br from-purple-400/30 to-blue-400/30 rounded-2xl blur-xl opacity-0 group-hover/icon:opacity-100 animate-pulse transition-opacity duration-300"></div>
                 </div>
-                <h1 className="text-3xl font-bold text-gray-900 animate-[floatUp_0.85s_ease-out]">
-                  Career Webinars
-                </h1>
+                <div>
+                  <h1 className="text-4xl md:text-5xl font-bold text-gray-900 animate-[floatUp_0.85s_ease-out] mb-2">
+                    Career Webinars
+                  </h1>
+                  <p className="text-lg md:text-xl text-secondary-600">
+                    Learn from industry experts and mentors
+                  </p>
+                </div>
               </div>
-              <p className="text-secondary-600">
-                Learn from industry experts and mentors
-              </p>
             </div>
             {user && ['mentor', 'admin'].includes(user.role) && (
               <Link
                 href="/webinars/create"
-                className="btn-primary flex items-center gap-2"
+                className="relative flex items-center justify-center gap-3 px-8 py-4 text-base md:text-lg font-bold rounded-[2rem] border border-primary-500/50 bg-white/60 backdrop-blur-xl text-primary-600 shadow-xl shadow-primary-500/30 transition-all duration-500 group/btn hover:scale-110 hover:shadow-2xl hover:shadow-primary-500/50 hover:border-primary-500/70 hover:bg-white/80 overflow-hidden flex-shrink-0"
               >
-                <Plus className="h-4 w-4" />
-                Create Webinar
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 rounded-[2rem]"></div>
+                <Plus className="w-5 h-5 md:w-6 md:h-6 relative z-10 group-hover/btn:rotate-90 group-hover/btn:scale-125 transition-all duration-500" />
+                <span className="relative z-10">Create Webinar</span>
+                <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-full transition-all duration-1000"></div>
               </Link>
             )}
           </div>
         </div>
 
         {/* Filters */}
-        <div className="mb-8 card">
-          <div className="flex flex-wrap items-center gap-6">
+        <div className="mb-10 card relative overflow-hidden group/filter hover:shadow-2xl hover:shadow-primary-500/30 transition-all duration-500">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover/filter:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative flex flex-wrap items-center gap-6 p-6">
             <div className="flex items-center gap-3">
-              <Filter className="h-5 w-5 text-primary-500" />
-              <span className="text-sm font-semibold text-gray-700">Status:</span>
+              <Filter className="h-6 w-6 text-primary-500 group-hover/filter:scale-110 transition-transform duration-300" />
+              <span className="text-base font-bold text-gray-700">Status:</span>
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="rounded-lg border border-white/40 bg-white/60 px-4 py-2 text-sm font-medium text-gray-700 shadow-sm backdrop-blur transition-all hover:border-primary-300 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                className="rounded-xl border-2 border-primary-500/30 bg-white/70 px-5 py-3 text-base font-semibold text-gray-700 shadow-lg backdrop-blur-xl transition-all hover:border-primary-400 hover:bg-white/90 hover:scale-105 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
               >
                 <option value="all">All</option>
                 <option value="scheduled">Upcoming</option>
@@ -144,11 +154,11 @@ export default function WebinarsPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold text-gray-700">Category:</span>
+              <span className="text-base font-bold text-gray-700">Category:</span>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="rounded-lg border border-white/40 bg-white/60 px-4 py-2 text-sm font-medium text-gray-700 shadow-sm backdrop-blur transition-all hover:border-primary-300 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                className="rounded-xl border-2 border-primary-500/30 bg-white/70 px-5 py-3 text-base font-semibold text-gray-700 shadow-lg backdrop-blur-xl transition-all hover:border-primary-400 hover:bg-white/90 hover:scale-105 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
               >
                 <option value="all">All Categories</option>
                 <option value="career_development">Career Development</option>
@@ -186,72 +196,80 @@ export default function WebinarsPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {webinars.map((webinar) => (
               <Link
                 key={webinar._id}
                 href={`/webinars/${webinar._id}`}
-                className="feature-card group p-6 transition-all hover:-translate-y-1"
+                className="feature-card group relative p-8 transition-all hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary-500/30 overflow-hidden"
               >
-                <div className="mb-3 flex items-center gap-2">
-                  {/* Status Badge */}
-                  {webinar.status === 'live' && (
-                    <div className="inline-flex items-center gap-1.5 rounded-full bg-red-500 px-2.5 py-1 text-xs font-semibold text-white">
-                      <span className="h-2 w-2 animate-pulse rounded-full bg-white"></span>
-                      LIVE NOW
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-secondary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                
+                <div className="relative">
+                  <div className="mb-4 flex items-center gap-2 flex-wrap">
+                    {/* Status Badge */}
+                    {webinar.status === 'live' && (
+                      <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-red-500 to-red-600 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-red-500/40">
+                        <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-white"></span>
+                        LIVE NOW
+                      </div>
+                    )}
+
+                    {/* Category */}
+                    <span
+                      className={`inline-block rounded-full px-4 py-2 text-sm font-bold shadow-md ${getCategoryColor(
+                        webinar.category
+                      )}`}
+                    >
+                      {getCategoryLabel(webinar.category)}
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="mb-3 text-xl md:text-2xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
+                    {webinar.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="mb-6 line-clamp-2 text-base text-secondary-600 leading-relaxed">
+                    {webinar.description}
+                  </p>
+
+                  {/* Host */}
+                  <div className="mb-6 flex items-center gap-4">
+                    <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 text-base font-bold text-white shadow-lg shadow-primary-500/40 group-hover/host:scale-110 transition-transform duration-300">
+                      {webinar.host.name.charAt(0)}
+                      <div className="absolute -inset-1 bg-gradient-to-br from-primary-400/30 to-secondary-400/30 rounded-full blur-lg opacity-0 group-hover/host:opacity-100 transition-opacity duration-300"></div>
                     </div>
-                  )}
-
-                  {/* Category */}
-                  <span
-                    className={`inline-block rounded-full px-2.5 py-1 text-xs font-medium ${getCategoryColor(
-                      webinar.category
-                    )}`}
-                  >
-                    {getCategoryLabel(webinar.category)}
-                  </span>
-                </div>
-
-                {/* Title */}
-                <h3 className="mb-2 text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
-                  {webinar.title}
-                </h3>
-
-                {/* Description */}
-                <p className="mb-4 line-clamp-2 text-sm text-secondary-600">
-                  {webinar.description}
-                </p>
-
-                {/* Host */}
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 text-sm font-semibold text-white">
-                    {webinar.host.name.charAt(0)}
+                    <div>
+                      <p className="text-base font-bold text-gray-900">
+                        {webinar.host.name}
+                      </p>
+                      <p className="text-sm text-secondary-500 font-medium">
+                        {webinar.host.role}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      {webinar.host.name}
-                    </p>
-                    <p className="text-xs text-secondary-500">
-                      {webinar.host.role}
-                    </p>
-                  </div>
-                </div>
 
-                {/* Details */}
-                <div className="space-y-2 border-t border-white/40 pt-4">
-                  <div className="flex items-center gap-2 text-sm text-secondary-600">
-                    <Calendar className="h-4 w-4 text-purple-500" />
-                    {formatDate(webinar.scheduledDate)}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-secondary-600">
-                    <Clock className="h-4 w-4 text-blue-500" />
-                    {webinar.duration} minutes
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-secondary-600">
-                    <Users className="h-4 w-4 text-green-500" />
-                    {webinar.attendees.length}
-                    {webinar.maxAttendees && ` / ${webinar.maxAttendees}`}{' '}
-                    registered
+                  {/* Details */}
+                  <div className="space-y-3 border-t border-white/40 pt-5">
+                    <div className="flex items-center gap-3 text-base text-secondary-600">
+                      <Calendar className="h-5 w-5 text-purple-500 group-hover:scale-110 transition-transform duration-300" />
+                      <span className="font-medium">{formatDate(webinar.scheduledDate)}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-base text-secondary-600">
+                      <Clock className="h-5 w-5 text-blue-500 group-hover:scale-110 transition-transform duration-300" />
+                      <span className="font-medium">{webinar.duration} minutes</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-base text-secondary-600">
+                      <Users className="h-5 w-5 text-green-500 group-hover:scale-110 transition-transform duration-300" />
+                      <span className="font-medium">
+                        {webinar.attendees.length}
+                        {webinar.maxAttendees && ` / ${webinar.maxAttendees}`}{' '}
+                        registered
+                      </span>
+                    </div>
                   </div>
                 </div>
               </Link>

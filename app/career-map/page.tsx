@@ -211,18 +211,22 @@ export default function CareerMapPage() {
       <div className="auth-background-grid" aria-hidden="true" />
       {isEntering && <div className="auth-entry-overlay" />}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-yellow-500/20 blur-3xl"></div>
-        <div className="absolute right-[-10%] top-20 h-72 w-72 rounded-full bg-amber-500/15 blur-3xl"></div>
+        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-yellow-500/30 blur-3xl animate-pulse"></div>
+        <div className="absolute right-[-10%] top-20 h-72 w-72 rounded-full bg-amber-500/25 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute left-[-10%] bottom-20 h-80 w-80 rounded-full bg-yellow-400/20 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 right-1/4 h-96 w-96 rounded-full bg-amber-400/15 blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
       </div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className={`mb-8 flex flex-col md:flex-row md:items-center gap-4 ${isEntering ? 'auth-panel-enter' : ''}`}>
-          <div className="auth-panel flex-1">
-            <div className="flex items-center gap-4">
+          <div className="auth-panel flex-1 relative overflow-hidden group/panel">
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 via-amber-500/5 to-yellow-500/5 opacity-0 group-hover/panel:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative flex items-center gap-4">
               <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-yellow-500 via-amber-500 to-yellow-600 text-white shadow-xl shadow-yellow-500/40 group/icon flex-shrink-0">
-                <MapPin className="h-8 w-8 relative z-10 group-hover/icon:scale-110 transition-transform duration-300" />
+                <MapPin className="h-8 w-8 relative z-10 group-hover/icon:scale-110 group-hover/icon:rotate-12 transition-all duration-300" />
                 <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/50 to-amber-400/50 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute -inset-1 bg-gradient-to-br from-yellow-400/30 to-amber-400/30 rounded-2xl blur-xl opacity-0 group-hover/icon:opacity-100 animate-pulse transition-opacity duration-300"></div>
           </div>
               <div className="min-w-0 flex-1">
                 <h1 className="auth-title text-4xl md:text-5xl font-bold animate-[floatUp_0.85s_ease-out]">
@@ -406,15 +410,18 @@ export default function CareerMapPage() {
 
         {/* Selected Career Details */}
         {selectedCareer && (
-          <div className="card mb-8 relative overflow-hidden group/card hover:scale-[1.01] hover:shadow-2xl hover:shadow-primary-500/30 transition-all duration-500">
+          <div className="card mb-8 relative overflow-hidden group/card hover:scale-[1.01] hover:shadow-2xl hover:shadow-primary-500/40 transition-all duration-500">
             <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-secondary-500/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.15),transparent_60%)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(14,165,233,0.15),transparent_60%)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-700" style={{ transitionDelay: '0.1s' }}></div>
             
             <div className="relative p-6 md:p-8 border-b border-white/40">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div className="relative flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 text-white shadow-xl shadow-primary-500/40 group/icon flex-shrink-0">
-                    <Target className="h-7 w-7 md:h-8 md:w-8 relative z-10 group-hover/icon:scale-110 transition-transform duration-300" />
+                    <Target className="h-7 w-7 md:h-8 md:w-8 relative z-10 group-hover/icon:scale-110 group-hover/icon:rotate-12 transition-all duration-300" />
                     <div className="absolute inset-0 bg-gradient-to-br from-primary-400/50 to-secondary-400/50 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute -inset-1 bg-gradient-to-br from-primary-400/30 to-secondary-400/30 rounded-2xl blur-xl opacity-0 group-hover/icon:opacity-100 animate-pulse transition-opacity duration-300"></div>
                   </div>
                   <div className="min-w-0 flex-1">
                     <h2 className="feature-heading text-2xl md:text-3xl lg:text-4xl font-bold mb-1 break-words">{selectedCareer.title}</h2>
@@ -441,8 +448,9 @@ export default function CareerMapPage() {
                 <p className="text-base md:text-lg text-secondary-700 mb-6 leading-relaxed">{selectedCareer.description}</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                  <div className="relative p-5 md:p-6 rounded-2xl border border-green-500/30 bg-gradient-to-br from-green-50/80 to-emerald-50/80 backdrop-blur-xl shadow-lg shadow-green-500/20 hover:scale-[1.03] md:hover:scale-[1.05] hover:shadow-xl hover:shadow-green-500/30 transition-all duration-500 group/metric flex flex-col h-full">
+                  <div className="relative p-5 md:p-6 rounded-2xl border border-green-500/30 bg-gradient-to-br from-green-50/80 to-emerald-50/80 backdrop-blur-xl shadow-lg shadow-green-500/20 hover:scale-[1.03] md:hover:scale-[1.05] hover:shadow-xl hover:shadow-green-500/40 transition-all duration-500 group/metric flex flex-col h-full overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl opacity-0 group-hover/metric:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.15),transparent_70%)] opacity-0 group-hover/metric:opacity-100 transition-opacity duration-700"></div>
                     <div className="relative flex flex-col gap-3 flex-1">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/40 group-hover/metric:scale-110 transition-transform duration-300 flex-shrink-0">
@@ -459,8 +467,9 @@ export default function CareerMapPage() {
                     </div>
                   </div>
 
-                  <div className="relative p-5 md:p-6 rounded-2xl border border-blue-500/30 bg-gradient-to-br from-blue-50/80 to-cyan-50/80 backdrop-blur-xl shadow-lg shadow-blue-500/20 hover:scale-[1.03] md:hover:scale-[1.05] hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-500 group/metric flex flex-col h-full">
+                  <div className="relative p-5 md:p-6 rounded-2xl border border-blue-500/30 bg-gradient-to-br from-blue-50/80 to-cyan-50/80 backdrop-blur-xl shadow-lg shadow-blue-500/20 hover:scale-[1.03] md:hover:scale-[1.05] hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-500 group/metric flex flex-col h-full overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-2xl opacity-0 group-hover/metric:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15),transparent_70%)] opacity-0 group-hover/metric:opacity-100 transition-opacity duration-700"></div>
                     <div className="relative flex flex-col gap-3 flex-1">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 text-white shadow-lg shadow-blue-500/40 group-hover/metric:scale-110 transition-transform duration-300 flex-shrink-0">
@@ -484,8 +493,9 @@ export default function CareerMapPage() {
                     </div>
                   </div>
 
-                  <div className="relative p-5 md:p-6 rounded-2xl border border-purple-500/30 bg-gradient-to-br from-purple-50/80 to-pink-50/80 backdrop-blur-xl shadow-lg shadow-purple-500/20 hover:scale-[1.03] md:hover:scale-[1.05] hover:shadow-xl hover:shadow-purple-500/30 transition-all duration-500 group/metric flex flex-col h-full">
+                  <div className="relative p-5 md:p-6 rounded-2xl border border-purple-500/30 bg-gradient-to-br from-purple-50/80 to-pink-50/80 backdrop-blur-xl shadow-lg shadow-purple-500/20 hover:scale-[1.03] md:hover:scale-[1.05] hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-500 group/metric flex flex-col h-full overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl opacity-0 group-hover/metric:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.15),transparent_70%)] opacity-0 group-hover/metric:opacity-100 transition-opacity duration-700"></div>
                     <div className="relative flex flex-col gap-3 flex-1">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/40 group-hover/metric:scale-110 transition-transform duration-300 flex-shrink-0">
@@ -518,15 +528,17 @@ export default function CareerMapPage() {
 
         {/* Learning Resources Section */}
         {selectedCareer && (
-          <div className="card mb-8 relative overflow-hidden group/card hover:scale-[1.01] hover:shadow-2xl hover:shadow-primary-500/30 transition-all duration-500">
+          <div className="card mb-8 relative overflow-hidden group/card hover:scale-[1.01] hover:shadow-2xl hover:shadow-primary-500/40 transition-all duration-500">
             <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-secondary-500/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.15),transparent_60%)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"></div>
             
             <div className="relative p-8 border-b border-white/40">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 text-white shadow-xl shadow-blue-500/40 group/icon">
-                    <BookOpen className="h-7 w-7 relative z-10 group-hover/icon:scale-110 transition-transform duration-300" />
+                    <BookOpen className="h-7 w-7 relative z-10 group-hover/icon:scale-110 group-hover/icon:rotate-12 transition-all duration-300" />
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-400/50 to-cyan-400/50 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute -inset-1 bg-gradient-to-br from-blue-400/30 to-cyan-400/30 rounded-2xl blur-xl opacity-0 group-hover/icon:opacity-100 animate-pulse transition-opacity duration-300"></div>
                   </div>
                   <div>
                     <h3 className="feature-heading text-2xl md:text-3xl font-bold">AI-Curated Learning Resources</h3>
@@ -661,14 +673,16 @@ export default function CareerMapPage() {
 
         {/* Find a Mentor - Always visible */}
         {selectedCareer && (
-          <div className="card mb-8 relative overflow-hidden group/card hover:scale-[1.01] hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500">
+          <div className="card mb-8 relative overflow-hidden group/card hover:scale-[1.01] hover:shadow-2xl hover:shadow-green-500/40 transition-all duration-500">
             <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-emerald-500/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.15),transparent_60%)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-700"></div>
             
             <div className="relative p-8">
               <div className="flex items-center gap-4 mb-6">
                 <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-xl shadow-green-500/40 group/icon">
-                  <Target className="h-7 w-7 relative z-10 group-hover/icon:scale-110 transition-transform duration-300" />
+                  <Target className="h-7 w-7 relative z-10 group-hover/icon:scale-110 group-hover/icon:rotate-12 transition-all duration-300" />
                   <div className="absolute inset-0 bg-gradient-to-br from-green-400/50 to-emerald-400/50 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute -inset-1 bg-gradient-to-br from-green-400/30 to-emerald-400/30 rounded-2xl blur-xl opacity-0 group-hover/icon:opacity-100 animate-pulse transition-opacity duration-300"></div>
                 </div>
                 <h3 className="feature-heading text-2xl md:text-3xl font-bold">Find a Mentor</h3>
               </div>
