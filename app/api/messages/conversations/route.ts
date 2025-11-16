@@ -7,11 +7,15 @@ import { verifyToken } from '@/lib/auth'
 export async function GET(req: NextRequest) {
   try {
     const currentUser = await verifyToken(req)
+    console.log('GET conversations - User ID:', currentUser?.userId)
+    
     if (!currentUser?.userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     await dbConnect()
+
+    console.log('Searching for conversations with participant:', currentUser.userId)
 
     const conversations = await Conversation.find({
       participants: currentUser.userId,
@@ -19,6 +23,8 @@ export async function GET(req: NextRequest) {
       .populate('participants', 'firstName lastName email profile role')
       .sort({ lastMessageAt: -1 })
       .lean()
+
+    console.log('Found conversations:', conversations.length)
 
     // Calculate unread count for each conversation
     const conversationsWithUnread = conversations.map((conv: any) => {
@@ -32,6 +38,8 @@ export async function GET(req: NextRequest) {
         unreadCount,
       }
     })
+
+    console.log('Returning conversations with unread counts')
 
     return NextResponse.json({ conversations: conversationsWithUnread })
   } catch (error) {

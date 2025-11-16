@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { MessageCircle, X } from 'lucide-react'
+import { MessageCircle, X, RefreshCw } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
 interface Conversation {
@@ -39,6 +39,14 @@ export default function MessagesDropdown({
     }
   }, [isOpen, user])
 
+  // Auto-refresh conversations every 10 seconds when dropdown is open
+  useEffect(() => {
+    if (isOpen && user) {
+      const interval = setInterval(fetchConversations, 10000)
+      return () => clearInterval(interval)
+    }
+  }, [isOpen, user])
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -56,10 +64,16 @@ export default function MessagesDropdown({
   const fetchConversations = async () => {
     try {
       setLoading(true)
+      console.log('Fetching conversations...')
       const response = await fetch('/api/messages/conversations')
+      console.log('Conversations response status:', response.status)
       if (response.ok) {
         const data = await response.json()
+        console.log('Conversations data:', data)
+        console.log('Number of conversations:', data.conversations?.length || 0)
         setConversations(data.conversations || [])
+      } else {
+        console.error('Failed to fetch conversations:', response.status)
       }
     } catch (error) {
       console.error('Error fetching conversations:', error)
@@ -104,12 +118,22 @@ export default function MessagesDropdown({
             {/* Header */}
             <div className="flex items-center justify-between border-b border-gray-200 p-4">
               <h3 className="font-semibold text-gray-900">Messages</h3>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={fetchConversations}
+                  disabled={loading}
+                  className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 disabled:opacity-50"
+                  title="Refresh conversations"
+                >
+                  <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
 
             {/* Conversations List */}

@@ -419,7 +419,7 @@ export default function MentorsPage() {
                   {/* Action Button */}
                   <button
                     onClick={() => handleRequestMentorship(mentor)}
-                    disabled={!user || user.role === 'mentor'}
+                    disabled={!user || !['job_seeker', 'student'].includes(user.role)}
                     className="relative w-full flex items-center justify-center gap-3 px-6 py-4 text-base font-bold rounded-2xl border-2 border-primary-500/50 bg-white/60 backdrop-blur-xl text-primary-600 shadow-xl shadow-primary-500/30 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-primary-500/50 hover:border-primary-500/70 hover:bg-white/80 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed group/btn"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 rounded-2xl"></div>

@@ -4,6 +4,8 @@ import dbConnect from '@/lib/mongoose'
 import Application from '@/models/Application'
 import Job from '@/models/Job'
 import User from '@/models/User'
+import Conversation from '@/models/Conversation'
+import Notification from '@/models/Notification'
 import { verifyToken } from '@/lib/auth'
 
 export async function GET(
@@ -237,13 +239,64 @@ export async function PUT(
       applicationId,
       updateData,
       { new: true }
-    )
+    ).populate('applicantId', 'firstName lastName email')
 
     if (!updatedApplication) {
       return NextResponse.json(
         { error: 'Application not found' },
         { status: 404 }
       )
+    }
+
+    // If accepted, automatically create conversation
+    if (status === 'accepted') {
+      try {
+        console.log('Creating conversation for accepted application')
+        console.log('Applicant ID:', updatedApplication.applicantId._id)
+        console.log('Employer ID:', user.userId)
+
+        // Check if conversation already exists
+        const existingConversation = await Conversation.findOne({
+          participants: { $all: [updatedApplication.applicantId._id, user.userId] },
+        })
+
+        console.log('Existing conversation:', existingConversation ? 'Found' : 'Not found')
+
+        if (!existingConversation) {
+          const welcomeMessage = `Hi ${updatedApplication.applicantId.firstName}! Congratulations on your application for ${job.title}. We'd like to discuss the next steps with you.`
+
+          // Create new conversation with welcome message
+          const newConversation = await Conversation.create({
+            participants: [updatedApplication.applicantId._id, user.userId],
+            messages: [
+              {
+                sender: user.userId,
+                content: welcomeMessage,
+                read: false,
+                createdAt: new Date(),
+              },
+            ],
+            lastMessage: welcomeMessage.substring(0, 100),
+            lastMessageAt: new Date(),
+          })
+
+          console.log('Conversation created successfully:', newConversation._id)
+
+          // Create notification for applicant
+          await Notification.create({
+            recipient: updatedApplication.applicantId._id,
+            sender: user.userId,
+            type: 'comment',
+            message: `Congratulations! Your application for ${job.title} at ${job.company} has been accepted!`,
+            read: false,
+          })
+        } else {
+          console.log('Conversation already exists, skipping creation')
+        }
+      } catch (convError) {
+        console.error('Error creating conversation:', convError)
+        // Don't fail the whole request if conversation creation fails
+      }
     }
 
     return NextResponse.json({

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import dbConnect from '@/lib/mongoose'
 import MentorshipRequest from '@/models/MentorshipRequest'
 import Notification from '@/models/Notification'
+import Conversation from '@/models/Conversation'
 import { verifyToken } from '@/lib/auth'
 
 export async function POST(
@@ -64,6 +65,48 @@ export async function POST(
       message: notificationMessage,
       read: false,
     })
+
+    // If accepted, automatically create conversation
+    if (status === 'accepted') {
+      try {
+        console.log('Creating conversation for accepted mentorship request')
+        console.log('Mentee ID:', mentorshipRequest.mentee._id)
+        console.log('Mentor ID:', mentorshipRequest.mentor._id)
+
+        // Check if conversation already exists
+        const existingConversation = await Conversation.findOne({
+          participants: { $all: [mentorshipRequest.mentee._id, mentorshipRequest.mentor._id] },
+        })
+
+        console.log('Existing conversation:', existingConversation ? 'Found' : 'Not found')
+
+        if (!existingConversation) {
+          const welcomeMessage = `Hi ${mentorshipRequest.mentee.firstName}! I'm excited to be your mentor. ${response || "Let's start our mentorship journey together!"}`
+          
+          // Create new conversation with welcome message
+          const newConversation = await Conversation.create({
+            participants: [mentorshipRequest.mentee._id, mentorshipRequest.mentor._id],
+            messages: [
+              {
+                sender: mentorshipRequest.mentor._id,
+                content: welcomeMessage,
+                read: false,
+                createdAt: new Date(),
+              },
+            ],
+            lastMessage: welcomeMessage.substring(0, 100),
+            lastMessageAt: new Date(),
+          })
+
+          console.log('Conversation created successfully:', newConversation._id)
+        } else {
+          console.log('Conversation already exists, skipping creation')
+        }
+      } catch (convError) {
+        console.error('Error creating conversation:', convError)
+        // Don't fail the whole request if conversation creation fails
+      }
+    }
 
     return NextResponse.json({
       success: true,
