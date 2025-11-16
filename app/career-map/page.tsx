@@ -504,27 +504,25 @@ export default function CareerMapPage() {
                     <p className="text-sm text-secondary-600">Personalized resources for {selectedCareer.title}</p>
                   </div>
                 </div>
-                {!showResources && (
-                  <button 
-                    onClick={getLearningResources}
-                    disabled={loadingResources}
-                    className="btn-primary flex items-center gap-2"
-                  >
-                    {loadingResources ? (
-                      <>
-                        <div className="futuristic-loader" style={{ width: '16px', height: '16px' }}>
-                          <div className="futuristic-loader-inner"></div>
-                        </div>
-                        Searching...
-                      </>
-                    ) : (
-                      <>
-                        <Star className="w-4 h-4" />
-                        Get Resources
-                      </>
-                    )}
-                  </button>
-                )}
+                <button 
+                  onClick={getLearningResources}
+                  disabled={loadingResources}
+                  className="btn-primary flex items-center gap-2"
+                >
+                  {loadingResources ? (
+                    <>
+                      <div className="futuristic-loader" style={{ width: '16px', height: '16px' }}>
+                        <div className="futuristic-loader-inner"></div>
+                      </div>
+                      Searching...
+                    </>
+                  ) : (
+                    <>
+                      <Star className="w-4 h-4" />
+                      {showResources ? 'Refresh Resources' : 'Get Resources'}
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
