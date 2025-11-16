@@ -107,7 +107,7 @@ export default function JobSeekerHomepage() {
   const checkOnboardingStatus = async () => {
     try {
       console.log('🔍 Checking onboarding status...');
-      const response = await fetch('/api/onboarding/status');
+      const response = await fetch('/api/onboarding/status', { credentials: 'include' });
       console.log('📡 Onboarding API response status:', response.status);
       
       if (response.ok) {
@@ -136,10 +136,10 @@ export default function JobSeekerHomepage() {
       // Fetch all data in parallel
       const [profileRes, statsRes, applicationsRes, notificationsRes] =
         await Promise.all([
-          fetch("/api/user/profile"),
-          fetch("/api/dashboard/stats"),
-          fetch("/api/dashboard/applications"),
-          fetch("/api/notifications"),
+          fetch("/api/user/profile", { credentials: 'include' }),
+          fetch("/api/dashboard/stats", { credentials: 'include' }),
+          fetch("/api/dashboard/applications", { credentials: 'include' }),
+          fetch("/api/notifications", { credentials: 'include' }),
         ]);
 
       if (profileRes.ok) {
@@ -206,7 +206,7 @@ export default function JobSeekerHomepage() {
       setLoadingRecommendations(true);
       console.log('🤖 Fetching AI-powered recommendations based on skills...');
       
-      const response = await fetch('/api/ai/recommendations');
+      const response = await fetch('/api/ai/recommendations', { credentials: 'include' });
       
       if (response.ok) {
         const data = await response.json();
@@ -215,7 +215,7 @@ export default function JobSeekerHomepage() {
       } else {
         console.error('❌ Failed to fetch AI recommendations:', response.status);
         // Fallback to regular recommendations if AI fails
-        const fallbackRes = await fetch('/api/dashboard/recommendations?limit=6');
+        const fallbackRes = await fetch('/api/dashboard/recommendations?limit=6', { credentials: 'include' });
         if (fallbackRes.ok) {
           const fallbackData = await fallbackRes.json();
           setRecommendations(fallbackData.recommendations || []);
