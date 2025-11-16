@@ -172,46 +172,56 @@ export default function MentorsPage() {
     <div className="hero-gradient relative min-h-screen overflow-hidden">
       <div className="auth-background-grid" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-purple-500/20 blur-3xl"></div>
-        <div className="absolute right-[-10%] top-20 h-72 w-72 rounded-full bg-blue-500/15 blur-3xl"></div>
+        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-purple-500/30 blur-3xl animate-pulse"></div>
+        <div className="absolute right-[-10%] top-20 h-72 w-72 rounded-full bg-blue-500/25 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute left-[-10%] bottom-20 h-80 w-80 rounded-full bg-purple-400/20 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 right-1/4 h-96 w-96 rounded-full bg-blue-400/15 blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="mb-3 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/25">
-              <Users className="h-7 w-7" />
+        <div className="mb-10">
+          <div className="relative overflow-hidden group/header mb-4">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-blue-500/5 to-purple-500/5 opacity-0 group-hover/header:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+            <div className="relative flex items-center gap-4">
+              <div className="relative flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 via-purple-600 to-blue-500 text-white shadow-xl shadow-purple-500/40 group/icon flex-shrink-0">
+                <Users className="h-8 w-8 md:h-10 md:w-10 relative z-10 group-hover/icon:scale-110 group-hover/icon:rotate-12 transition-all duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-400/50 to-blue-400/50 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute -inset-1 bg-gradient-to-br from-purple-400/30 to-blue-400/30 rounded-2xl blur-xl opacity-0 group-hover/icon:opacity-100 animate-pulse transition-opacity duration-300"></div>
+              </div>
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 animate-[floatUp_0.85s_ease-out] mb-2">
+                  Find Your Mentor 🎯
+                </h1>
+                <p className="text-lg md:text-xl text-secondary-600">
+                  Connect with experienced professionals who can guide your career journey
+                </p>
+              </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 animate-[floatUp_0.85s_ease-out]">
-              Find Your Mentor 🎯
-            </h1>
           </div>
-          <p className="text-secondary-600">
-            Connect with experienced professionals who can guide your career journey
-          </p>
         </div>
         {/* Search and Filters */}
-        <div className="mb-8 space-y-4">
+        <div className="mb-10 space-y-6">
           <div className="flex gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-400" />
+            <div className="relative flex-1 group/search">
+              <Search className="absolute left-5 top-1/2 h-6 w-6 -translate-y-1/2 text-primary-500 group-hover/search:scale-110 transition-transform duration-300" />
               <input
                 type="text"
                 placeholder="Search mentors by name, skills, or expertise..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-white/40 bg-white/60 py-3 pl-12 pr-4 text-gray-900 placeholder-secondary-400 shadow-sm backdrop-blur transition-all hover:border-primary-300 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                className="w-full rounded-2xl border-2 border-primary-500/30 bg-white/70 py-4 pl-14 pr-5 text-lg text-gray-900 placeholder-secondary-400 shadow-lg backdrop-blur-xl transition-all hover:border-primary-400 hover:bg-white/90 hover:scale-[1.02] focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
               />
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="btn-secondary flex items-center gap-2 px-6 whitespace-nowrap"
+              className="relative flex items-center justify-center gap-3 px-8 py-4 text-base font-bold rounded-2xl border-2 border-primary-500/50 bg-white/60 backdrop-blur-xl text-primary-600 shadow-xl shadow-primary-500/30 transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-primary-500/50 hover:border-primary-500/70 hover:bg-white/80 overflow-hidden whitespace-nowrap group/filter"
             >
-              <Filter className="h-5 w-5" />
-              Filters
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover/filter:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+              <Filter className="h-6 w-6 relative z-10 group-hover/filter:rotate-90 transition-transform duration-500" />
+              <span className="relative z-10">Filters</span>
               {selectedSkills.length > 0 && (
-                <span className="ml-1 rounded-full bg-primary-500 px-2 py-0.5 text-xs font-semibold text-white shadow-lg shadow-primary-500/25">
+                <span className="relative z-10 ml-1 rounded-full bg-primary-500 px-3 py-1 text-sm font-bold text-white shadow-lg shadow-primary-500/40">
                   {selectedSkills.length}
                 </span>
               )}
@@ -284,7 +294,7 @@ export default function MentorsPage() {
         </div>
 
         {/* Results Count */}
-        <div className="mb-6 text-sm text-secondary-600 font-medium">
+        <div className="mb-8 text-base md:text-lg text-secondary-600 font-bold">
           Showing {filteredMentors.length} of {mentors.length} mentors
         </div>
 
@@ -313,94 +323,111 @@ export default function MentorsPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {filteredMentors.map((mentor) => (
               <div
                 key={mentor._id}
-                className="feature-card group transition-all hover:-translate-y-1"
+                className="feature-card group relative transition-all hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary-500/30 overflow-hidden"
               >
-                {/* Profile Picture */}
-                <div className="mb-4 flex items-center gap-3">
-                  {mentor.profile.profilePicture ? (
-                    <img
-                      src={mentor.profile.profilePicture}
-                      alt={`${mentor.firstName} ${mentor.lastName}`}
-                      className="h-16 w-16 rounded-full object-cover ring-2 ring-white/50"
-                    />
-                  ) : (
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 text-xl font-bold text-white shadow-lg shadow-primary-500/25">
-                      {mentor.firstName[0]}
-                      {mentor.lastName[0]}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-secondary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                
+                <div className="relative p-8">
+                  {/* Profile Picture */}
+                  <div className="mb-6 flex items-center gap-4">
+                    {mentor.profile.profilePicture ? (
+                      <div className="relative group/avatar">
+                        <img
+                          src={mentor.profile.profilePicture}
+                          alt={`${mentor.firstName} ${mentor.lastName}`}
+                          className="h-20 w-20 rounded-full object-cover ring-4 ring-white/50 shadow-xl group-hover/avatar:scale-110 transition-transform duration-300"
+                        />
+                        <div className="absolute -inset-1 bg-gradient-to-br from-primary-400/30 to-secondary-400/30 rounded-full blur-lg opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+                    ) : (
+                      <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 text-2xl font-bold text-white shadow-xl shadow-primary-500/40 group/avatar hover:scale-110 transition-transform duration-300">
+                        {mentor.firstName[0]}
+                        {mentor.lastName[0]}
+                        <div className="absolute -inset-1 bg-gradient-to-br from-primary-400/30 to-secondary-400/30 rounded-full blur-lg opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors mb-1">
+                        {mentor.firstName} {mentor.lastName}
+                      </h3>
+                      {mentor.profile.location && (
+                        <p className="flex items-center gap-2 text-base text-secondary-600 font-medium">
+                          <MapPin className="h-4 w-4" />
+                          {mentor.profile.location}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Experience */}
+                  {mentor.profile.experience && (
+                    <div className="mb-4 flex items-center gap-3 text-base text-secondary-600">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30">
+                        <Briefcase className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <span className="font-semibold">{mentor.profile.experience}</span>
                     </div>
                   )}
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
-                      {mentor.firstName} {mentor.lastName}
-                    </h3>
-                    {mentor.profile.location && (
-                      <p className="flex items-center gap-1 text-sm text-secondary-600">
-                        <MapPin className="h-3.5 w-3.5" />
-                        {mentor.profile.location}
-                      </p>
+
+                  {/* Bio */}
+                  {mentor.profile.bio && (
+                    <p className="mb-6 line-clamp-3 text-base text-secondary-700 leading-relaxed">
+                      {mentor.profile.bio}
+                    </p>
+                  )}
+
+                  {/* Skills */}
+                  <div className="mb-6 flex flex-wrap gap-3">
+                    {mentor.profile.skills.slice(0, 4).map((skill, idx) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-primary-500/20 to-secondary-500/20 text-primary-700 border border-primary-500/40 text-sm font-bold shadow-md hover:scale-110 hover:shadow-lg hover:shadow-primary-500/30 hover:from-primary-500/30 hover:to-secondary-500/30 transition-all duration-300 cursor-default"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                    {mentor.profile.skills.length > 4 && (
+                      <span className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-secondary-500/20 to-gray-500/20 text-secondary-700 border border-secondary-500/40 text-sm font-bold shadow-md">
+                        +{mentor.profile.skills.length - 4} more
+                      </span>
                     )}
                   </div>
-                </div>
 
-                {/* Experience */}
-                {mentor.profile.experience && (
-                  <div className="mb-3 flex items-center gap-2 text-sm text-secondary-600">
-                    <Briefcase className="h-4 w-4 text-blue-500" />
-                    <span>{mentor.profile.experience}</span>
-                  </div>
-                )}
-
-                {/* Bio */}
-                {mentor.profile.bio && (
-                  <p className="mb-4 line-clamp-3 text-sm text-secondary-700">
-                    {mentor.profile.bio}
-                  </p>
-                )}
-
-                {/* Skills */}
-                <div className="mb-4 flex flex-wrap gap-2">
-                  {mentor.profile.skills.slice(0, 4).map((skill, idx) => (
-                    <span
-                      key={idx}
-                      className="rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                  {mentor.profile.skills.length > 4 && (
-                    <span className="rounded-full bg-secondary-100 px-2.5 py-1 text-xs font-medium text-secondary-700">
-                      +{mentor.profile.skills.length - 4} more
-                    </span>
+                  {/* Stats */}
+                  {mentor.stats && (
+                    <div className="mb-6 flex items-center gap-6 border-t border-white/40 pt-6">
+                      <div className="flex items-center gap-2 text-base text-secondary-600">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30">
+                          <Award className="h-5 w-5 text-purple-600" />
+                        </div>
+                        <span className="font-semibold">{mentor.stats.webinars} webinars</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-base text-secondary-600">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30">
+                          <Users className="h-5 w-5 text-green-600" />
+                        </div>
+                        <span className="font-semibold">{mentor.stats.mentees} mentees</span>
+                      </div>
+                    </div>
                   )}
+
+                  {/* Action Button */}
+                  <button
+                    onClick={() => handleRequestMentorship(mentor)}
+                    disabled={!user || user.role === 'mentor'}
+                    className="relative w-full flex items-center justify-center gap-3 px-6 py-4 text-base font-bold rounded-2xl border-2 border-primary-500/50 bg-white/60 backdrop-blur-xl text-primary-600 shadow-xl shadow-primary-500/30 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-primary-500/50 hover:border-primary-500/70 hover:bg-white/80 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed group/btn"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                    <MessageCircle className="h-5 w-5 relative z-10 group-hover/btn:scale-125 transition-transform duration-300" />
+                    <span className="relative z-10">Request Mentorship</span>
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-full transition-all duration-1000"></div>
+                  </button>
                 </div>
-
-                {/* Stats */}
-                {mentor.stats && (
-                  <div className="mb-4 flex items-center gap-4 border-t border-white/40 pt-4 text-sm">
-                    <div className="flex items-center gap-1.5 text-secondary-600">
-                      <Award className="h-4 w-4 text-purple-500" />
-                      <span>{mentor.stats.webinars} webinars</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-secondary-600">
-                      <Users className="h-4 w-4 text-green-500" />
-                      <span>{mentor.stats.mentees} mentees</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Action Button */}
-                <button
-                  onClick={() => handleRequestMentorship(mentor)}
-                  disabled={!user || user.role === 'mentor'}
-                  className="btn-primary w-full flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  Request Mentorship
-                </button>
               </div>
             ))}
           </div>
