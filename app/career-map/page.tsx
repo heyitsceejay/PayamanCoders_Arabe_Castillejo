@@ -627,6 +627,29 @@ export default function CareerMapPage() {
           </div>
         )}
 
+        {/* Find a Mentor - Always visible */}
+        {selectedCareer && (
+          <div className="card mb-8">
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-100 text-green-600">
+                  <Target className="h-5 w-5" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Find a Mentor</h3>
+              </div>
+              <p className="text-secondary-600 mb-4">
+                Connect with experienced {selectedCareer.title} professionals who can guide you in your career journey
+              </p>
+              <a 
+                href={`/mentors?skills=${encodeURIComponent(selectedCareer.requiredSkills?.join(',') || '')}`}
+                className="btn-primary w-full block text-center"
+              >
+                Find {selectedCareer.title} Mentors
+              </a>
+            </div>
+          </div>
+        )}
+
         {/* Other Resources */}
         {!selectedCareer && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -658,7 +681,12 @@ export default function CareerMapPage() {
                 <p className="text-secondary-600 mb-4">
                   Connect with experienced professionals in your field
                 </p>
-                <button className="btn-secondary w-full">Find Mentors</button>
+                <a 
+                  href="/mentors"
+                  className="btn-secondary w-full block text-center"
+                >
+                  Find Mentors
+                </a>
               </div>
             </div>
           </div>

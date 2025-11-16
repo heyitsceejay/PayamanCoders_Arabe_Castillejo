@@ -42,12 +42,24 @@ export default function MentorsPage() {
   const [showFilters, setShowFilters] = useState(false)
   const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null)
   const [showRequestModal, setShowRequestModal] = useState(false)
+  const [careerField, setCareerField] = useState<string>('')
   const [requestForm, setRequestForm] = useState({
     message: '',
     goals: '',
     preferredTopics: '',
     meetingFrequency: 'monthly' as 'weekly' | 'biweekly' | 'monthly'
   })
+
+  // Get career skills from URL query parameter
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const skillsParam = params.get('skills')
+    if (skillsParam) {
+      const skills = skillsParam.split(',').filter(s => s.trim())
+      setSelectedSkills(skills)
+      setCareerField(skills.join(', '))
+    }
+  }, [])
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
@@ -205,6 +217,38 @@ export default function MentorsPage() {
               )}
             </button>
           </div>
+
+          {/* Active Filters Display */}
+          {selectedSkills.length > 0 && (
+            <div className="card animate-[floatUp_0.85s_ease-out]">
+              <div className="mb-3 flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-gray-900">Active Filters:</h3>
+                <button
+                  onClick={() => setSelectedSkills([])}
+                  className="auth-link text-sm flex items-center gap-1"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  Clear all
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {selectedSkills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-primary-500 bg-primary-500 px-3 py-1.5 text-sm font-medium text-white shadow-lg shadow-primary-500/25"
+                  >
+                    {skill}
+                    <button
+                      onClick={() => toggleSkillFilter(skill)}
+                      className="hover:bg-white/20 rounded-full p-0.5 transition-colors"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Filters Panel */}
           {showFilters && (
