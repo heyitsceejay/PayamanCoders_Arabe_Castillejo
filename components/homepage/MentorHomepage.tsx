@@ -31,6 +31,7 @@ interface Stats {
   upcomingWebinars: number
   totalAttendees: number
   completedWebinars: number
+  pendingRequests?: number
 }
 
 export default function MentorHomepage() {
@@ -91,11 +92,24 @@ export default function MentorHomepage() {
         const completed = myWebinars.filter((w: Webinar) => w.status === 'completed').length
         const totalAttendees = myWebinars.reduce((sum: number, w: Webinar) => sum + w.attendees.length, 0)
         
+        // Fetch mentorship requests count
+        let pendingRequests = 0
+        try {
+          const requestsRes = await fetch('/api/mentorship/request?type=received')
+          if (requestsRes.ok) {
+            const requestsData = await requestsRes.json()
+            pendingRequests = (requestsData.requests || []).filter((r: any) => r.status === 'pending').length
+          }
+        } catch (err) {
+          console.error('Error fetching mentorship requests:', err)
+        }
+        
         setStats({
           totalWebinars: myWebinars.length,
           upcomingWebinars: upcoming,
           totalAttendees,
           completedWebinars: completed,
+          pendingRequests,
         })
       }
     } catch (error) {
@@ -200,7 +214,7 @@ export default function MentorHomepage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Link
             href="/webinars/create"
             className="card group flex items-center gap-4 transition-all hover:-translate-y-1 hover:shadow-xl"
@@ -225,6 +239,24 @@ export default function MentorHomepage() {
               <h3 className="font-semibold text-gray-900">All Webinars</h3>
               <p className="text-sm text-secondary-600">View all sessions</p>
             </div>
+          </Link>
+
+          <Link
+            href="/mentorship/requests"
+            className="card group flex items-center gap-4 transition-all hover:-translate-y-1 hover:shadow-xl relative"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-600">
+              <Users className="h-6 w-6" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-gray-900">Mentorship Requests</h3>
+              <p className="text-sm text-secondary-600">View requests</p>
+            </div>
+            {stats.pendingRequests && stats.pendingRequests > 0 && (
+              <div className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white shadow-lg ring-2 ring-white">
+                {stats.pendingRequests}
+              </div>
+            )}
           </Link>
 
           <Link

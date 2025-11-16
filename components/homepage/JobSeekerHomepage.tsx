@@ -570,9 +570,23 @@ export default function JobSeekerHomepage() {
               </Link>
 
               <Link
-                href="/webinars"
+                href="/mentors"
                 className="feature-card p-6 group"
                 style={{ '--float-delay': '0.2s' } as CSSProperties}
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-600 mb-4 group-hover:scale-110 transition-transform">
+                  <Users className="h-6 w-6" />
+                </div>
+                <h3 className="font-semibold text-base text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
+                  Find Mentors
+                </h3>
+                <p className="text-sm text-secondary-600">Get career guidance</p>
+              </Link>
+
+              <Link
+                href="/webinars"
+                className="feature-card p-6 group"
+                style={{ '--float-delay': '0.3s' } as CSSProperties}
               >
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-purple-600 mb-4 group-hover:scale-110 transition-transform">
                   <BookOpen className="h-6 w-6" />
@@ -586,7 +600,7 @@ export default function JobSeekerHomepage() {
               <Link
                 href="/interview-prep"
                 className="feature-card p-6 group"
-                style={{ '--float-delay': '0.3s' } as CSSProperties}
+                style={{ '--float-delay': '0.4s' } as CSSProperties}
               >
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-600 mb-4 group-hover:scale-110 transition-transform">
                   <Target className="h-6 w-6" />
@@ -596,21 +610,34 @@ export default function JobSeekerHomepage() {
                 </h3>
                 <p className="text-sm text-secondary-600">AI-powered tips</p>
               </Link>
-
-              <Link
-                href="/resume-builder"
-                className="feature-card p-6 group"
-                style={{ '--float-delay': '0.4s' } as CSSProperties}
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-600 mb-4 group-hover:scale-110 transition-transform">
-                  <Edit className="h-6 w-6" />
-                </div>
-                <h3 className="font-semibold text-base text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
-                  Resume Builder
-                </h3>
-                <p className="text-sm text-secondary-600">Create your resume</p>
-              </Link>
             </div>
+          </div>
+
+          {/* Mentorship Status Card */}
+          <div className="mb-8">
+            <Link href="/my-mentorship" className="card group hover:shadow-xl transition-all">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 text-white shadow-lg">
+                    <Users className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+                      My Mentorship Requests
+                    </h3>
+                    <p className="text-sm text-secondary-600">
+                      Track your mentorship journey and connect with mentors
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-secondary-600">View All</span>
+                  <svg className="h-5 w-5 text-secondary-400 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
           </div>
 
           {/* Notifications Section */}

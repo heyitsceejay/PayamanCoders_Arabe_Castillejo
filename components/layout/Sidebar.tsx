@@ -70,6 +70,18 @@ export default function Sidebar() {
     { label: 'Career Map', href: '/career-map', icon: TrendingUp },
     { label: 'Webinars', href: '/webinars', icon: Video },
     { label: 'Mentors', href: '/mentors', icon: Users },
+    { 
+      label: 'My Mentorship', 
+      href: '/my-mentorship', 
+      icon: UserPlus,
+      roles: ['job_seeker', 'student']
+    },
+    { 
+      label: 'Mentorship Requests', 
+      href: '/mentorship/requests', 
+      icon: Users,
+      roles: ['mentor']
+    },
     { label: 'Community', href: '/community', icon: MessageCircle },
     { 
       label: 'Assessments', 

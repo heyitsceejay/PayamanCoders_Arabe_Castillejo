@@ -10,12 +10,12 @@ const NotificationSchema = new mongoose.Schema(
     sender: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: false,
     },
     type: {
       type: String,
       required: true,
-      enum: ['like', 'comment', 'mention', 'follow'],
+      enum: ['like', 'comment', 'mention', 'follow', 'mentorship_request', 'mentorship_response'],
     },
     post: {
       type: mongoose.Schema.Types.ObjectId,
