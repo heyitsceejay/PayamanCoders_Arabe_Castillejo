@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import type { CSSProperties } from 'react'
 import Link from 'next/link'
 import {
   GraduationCap,
@@ -13,6 +14,7 @@ import {
   Target,
   Users,
   FileText,
+  Sparkles,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -24,24 +26,57 @@ interface Webinar {
   host: { name: string }
 }
 
+interface Stats {
+  webinarsAttended: number
+  assessmentsTaken: number
+  certificatesEarned: number
+  learningHours: number
+}
+
 export default function StudentHomepage() {
   const { user } = useAuth()
   const [upcomingWebinars, setUpcomingWebinars] = useState<Webinar[]>([])
+  const [stats, setStats] = useState<Stats>({
+    webinarsAttended: 0,
+    assessmentsTaken: 0,
+    certificatesEarned: 0,
+    learningHours: 0,
+  })
   const [loading, setLoading] = useState(true)
+  const [isEntering, setIsEntering] = useState(true)
 
   useEffect(() => {
-    fetchUpcomingWebinars()
+    const timeout = setTimeout(() => setIsEntering(false), 900)
+    return () => clearTimeout(timeout)
   }, [])
 
-  const fetchUpcomingWebinars = async () => {
+  useEffect(() => {
+    fetchDashboardData()
+  }, [])
+
+  const fetchDashboardData = async () => {
     try {
-      const response = await fetch('/api/webinars?status=scheduled&limit=3')
-      if (response.ok) {
-        const data = await response.json()
+      setLoading(true)
+      
+      const [webinarsRes, certificatesRes] = await Promise.all([
+        fetch('/api/webinars?status=scheduled&limit=3'),
+        fetch('/api/certificates/user')
+      ])
+
+      if (webinarsRes.ok) {
+        const data = await webinarsRes.json()
         setUpcomingWebinars(data.webinars || [])
       }
+
+      if (certificatesRes.ok) {
+        const data = await certificatesRes.json()
+        setStats(prev => ({
+          ...prev,
+          certificatesEarned: data.certificates?.length || 0
+        }))
+      }
     } catch (error) {
-      console.error('Error fetching webinars:', error)
+      console.error('Error fetching dashboard data:', error)
     } finally {
       setLoading(false)
     }
@@ -57,324 +92,395 @@ export default function StudentHomepage() {
     })
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
-      {/* Welcome Banner */}
-      <div className="relative overflow-hidden border-b border-white/30 bg-white/60 backdrop-blur-xl">
+  if (loading) {
+    return (
+      <div className="hero-gradient relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="auth-background-grid" aria-hidden="true" />
+        {isEntering && <div className="auth-entry-overlay" />}
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute right-10 top-[-40%] h-56 w-56 rounded-full bg-purple-500/20 blur-3xl"></div>
-          <div className="absolute left-[-20%] top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-blue-500/15 blur-3xl"></div>
+          <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-500/20 blur-3xl animate-pulse"></div>
+          <div
+            className="absolute right-1/4 top-1/3 h-72 w-72 rounded-full bg-blue-500/15 blur-3xl animate-pulse"
+            style={{ animationDelay: '0.5s' }}
+          ></div>
         </div>
-        <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
+        <div className="text-center relative z-10 animate-[floatUp_0.85s_ease-out]">
+          <div className="futuristic-loader mx-auto mb-6">
+            <div className="futuristic-loader-inner"></div>
+          </div>
+          <h2 className="auth-title text-2xl font-bold mb-3">
+            Loading Dashboard...
+          </h2>
+          <p className="auth-subtitle">Please wait while we fetch your data</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="hero-gradient relative min-h-screen overflow-hidden">
+      <div className="auth-background-grid" aria-hidden="true" />
+      {isEntering && <div className="auth-entry-overlay" />}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-purple-500/20 blur-3xl"></div>
+        <div className="absolute right-[-10%] top-20 h-72 w-72 rounded-full bg-blue-500/15 blur-3xl"></div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className={`mb-8 ${isEntering ? 'auth-panel-enter' : ''}`}>
+          <div className="flex items-center gap-3 mb-2">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 text-white">
               <GraduationCap className="h-7 w-7" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Welcome, {user?.firstName || 'Student'}! 🎓
-              </h1>
-              <p className="text-secondary-600">
-                Your journey to career success starts here
-              </p>
+            <h1 className="auth-title text-3xl font-bold animate-[floatUp_0.85s_ease-out]">
+              Welcome, {user?.firstName || 'Student'}! 🎓
+            </h1>
+          </div>
+          <p className="auth-subtitle">
+            Your journey to career success starts here
+          </p>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div
+            className="stat-card"
+            style={{ '--float-delay': '0.1s' } as CSSProperties}
+          >
+            <div className="p-6">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-purple-500/35 bg-purple-500/15 text-purple-500 shadow-inner shadow-purple-700/25">
+                    <Video className="h-7 w-7" />
+                  </div>
+                </div>
+                <div className="ml-5 flex-1 min-w-0">
+                  <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                    Webinars
+                  </p>
+                  <p className="stat-number">{stats.webinarsAttended}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="stat-card"
+            style={{ '--float-delay': '0.2s' } as CSSProperties}
+          >
+            <div className="p-6">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-500/35 bg-blue-500/15 text-blue-500 shadow-inner shadow-blue-700/25">
+                    <FileText className="h-7 w-7" />
+                  </div>
+                </div>
+                <div className="ml-5 flex-1 min-w-0">
+                  <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                    Assessments
+                  </p>
+                  <p className="stat-number">{stats.assessmentsTaken}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="stat-card"
+            style={{ '--float-delay': '0.3s' } as CSSProperties}
+          >
+            <div className="p-6">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-green-500/35 bg-green-500/15 text-green-500 shadow-inner shadow-green-700/25">
+                    <Award className="h-7 w-7" />
+                  </div>
+                </div>
+                <div className="ml-5 flex-1 min-w-0">
+                  <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                    Certificates
+                  </p>
+                  <p className="stat-number">{stats.certificatesEarned}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="stat-card"
+            style={{ '--float-delay': '0.4s' } as CSSProperties}
+          >
+            <div className="p-6">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-orange-500/35 bg-orange-500/15 text-orange-500 shadow-inner shadow-orange-700/25">
+                    <TrendingUp className="h-7 w-7" />
+                  </div>
+                </div>
+                <div className="ml-5 flex-1 min-w-0">
+                  <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                    Learning Hours
+                  </p>
+                  <p className="stat-number">{stats.learningHours}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        {/* Quick Actions Grid */}
-        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Link
-            href="/webinars"
-            className="card group flex flex-col items-center gap-3 text-center transition-all hover:-translate-y-1 hover:shadow-xl"
-          >
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-purple-100 text-purple-600 transition-all group-hover:scale-110">
-              <Video className="h-7 w-7" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Career Webinars</h3>
+        {/* Quick Actions */}
+        <div className="mb-8">
+          <h2 className="feature-heading text-xl font-semibold mb-6 animate-[floatUp_0.85s_ease-out]">
+            Quick Actions
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Link
+              href="/webinars"
+              className="feature-card p-6 group"
+              style={{ '--float-delay': '0.1s' } as CSSProperties}
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-purple-600 mb-4 group-hover:scale-110 transition-transform">
+                <Video className="h-6 w-6" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
+                Career Webinars
+              </h3>
               <p className="text-sm text-secondary-600">Learn from experts</p>
-            </div>
-          </Link>
+            </Link>
 
-          <Link
-            href="/interview-prep"
-            className="card group flex flex-col items-center gap-3 text-center transition-all hover:-translate-y-1 hover:shadow-xl"
-          >
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-100 text-blue-600 transition-all group-hover:scale-110">
-              <Target className="h-7 w-7" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Interview Prep</h3>
+            <Link
+              href="/interview-prep"
+              className="feature-card p-6 group"
+              style={{ '--float-delay': '0.2s' } as CSSProperties}
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-600 mb-4 group-hover:scale-110 transition-transform">
+                <Target className="h-6 w-6" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
+                Interview Prep
+              </h3>
               <p className="text-sm text-secondary-600">AI-powered tips</p>
-            </div>
-          </Link>
+            </Link>
 
-          <Link
-            href="/mentors"
-            className="card group flex flex-col items-center gap-3 text-center transition-all hover:-translate-y-1 hover:shadow-xl"
-          >
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-green-100 text-green-600 transition-all group-hover:scale-110">
-              <Users className="h-7 w-7" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Find Mentors</h3>
+            <Link
+              href="/mentors"
+              className="feature-card p-6 group"
+              style={{ '--float-delay': '0.3s' } as CSSProperties}
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-600 mb-4 group-hover:scale-110 transition-transform">
+                <Users className="h-6 w-6" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
+                Find Mentors
+              </h3>
               <p className="text-sm text-secondary-600">Get guidance</p>
-            </div>
-          </Link>
+            </Link>
 
-          <Link
-            href="/resume-builder"
-            className="card group flex flex-col items-center gap-3 text-center transition-all hover:-translate-y-1 hover:shadow-xl"
-          >
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-orange-100 text-orange-600 transition-all group-hover:scale-110">
-              <FileText className="h-7 w-7" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Resume Builder</h3>
+            <Link
+              href="/resume-builder"
+              className="feature-card p-6 group"
+              style={{ '--float-delay': '0.4s' } as CSSProperties}
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-orange-600 mb-4 group-hover:scale-110 transition-transform">
+                <FileText className="h-6 w-6" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
+                Resume Builder
+              </h3>
               <p className="text-sm text-secondary-600">Create your resume</p>
-            </div>
-          </Link>
+            </Link>
+          </div>
         </div>
 
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          {/* Left Column */}
-          <div className="space-y-6 lg:col-span-2">
-            {/* Learning Path */}
-            <div className="card">
-              <div className="mb-4 flex items-center gap-2">
-                <Target className="h-5 w-5 text-purple-600" />
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Your Learning Path
-                </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Learning Path */}
+          <div className="card">
+            <div className="flex items-center gap-2 mb-6 animate-[floatUp_0.85s_ease-out]">
+              <Target className="h-5 w-5 text-purple-600" />
+              <h2 className="feature-heading text-xl font-semibold">
+                Your Learning Path
+              </h2>
+            </div>
+            <div className="space-y-4">
+              <div
+                className="feature-card flex items-center gap-4 p-4"
+                style={{ '--float-delay': '0.1s' } as CSSProperties}
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-600 text-white">
+                  <span className="text-sm font-bold">1</span>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900">
+                    Complete Your Profile
+                  </h3>
+                  <p className="text-sm text-secondary-600">
+                    Add your skills and experience
+                  </p>
+                </div>
+                <Link href="/profile" className="btn-secondary px-4 py-2 text-sm">
+                  Start
+                </Link>
               </div>
-              <div className="space-y-4">
-                <div className="flex items-center gap-4 rounded-xl border border-purple-200 bg-purple-50 p-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-600 text-white">
-                    <span className="text-sm font-bold">1</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">
-                      Build Your Profile
-                    </h3>
-                    <p className="text-sm text-secondary-600">
-                      Add your skills, education, and interests
-                    </p>
-                  </div>
-                  <Link
-                    href="/profile"
-                    className="btn-secondary px-4 py-2 text-sm"
-                  >
-                    Start
-                  </Link>
-                </div>
 
-                <div className="flex items-center gap-4 rounded-xl border border-blue-200 bg-blue-50 p-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-white">
-                    <span className="text-sm font-bold">2</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">
-                      Take Skill Assessments
-                    </h3>
-                    <p className="text-sm text-secondary-600">
-                      Earn certificates to showcase your abilities
-                    </p>
-                  </div>
-                  <Link
-                    href="/assessments"
-                    className="btn-secondary px-4 py-2 text-sm"
-                  >
-                    Explore
-                  </Link>
+              <div
+                className="feature-card flex items-center gap-4 p-4"
+                style={{ '--float-delay': '0.2s' } as CSSProperties}
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-white">
+                  <span className="text-sm font-bold">2</span>
                 </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900">
+                    Take Skill Assessments
+                  </h3>
+                  <p className="text-sm text-secondary-600">
+                    Test your knowledge and earn certificates
+                  </p>
+                </div>
+                <Link href="/assessments" className="btn-secondary px-4 py-2 text-sm">
+                  Start
+                </Link>
+              </div>
 
-                <div className="flex items-center gap-4 rounded-xl border border-green-200 bg-green-50 p-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-600 text-white">
-                    <span className="text-sm font-bold">3</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">
-                      Apply for Internships
-                    </h3>
-                    <p className="text-sm text-secondary-600">
-                      Get real-world experience in your field
-                    </p>
-                  </div>
-                  <Link
-                    href="/jobs?type=internship"
-                    className="btn-secondary px-4 py-2 text-sm"
-                  >
-                    Browse
-                  </Link>
+              <div
+                className="feature-card flex items-center gap-4 p-4"
+                style={{ '--float-delay': '0.3s' } as CSSProperties}
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-600 text-white">
+                  <span className="text-sm font-bold">3</span>
                 </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900">
+                    Attend Webinars
+                  </h3>
+                  <p className="text-sm text-secondary-600">
+                    Learn from industry professionals
+                  </p>
+                </div>
+                <Link href="/webinars" className="btn-secondary px-4 py-2 text-sm">
+                  Browse
+                </Link>
+              </div>
+
+              <div
+                className="feature-card flex items-center gap-4 p-4"
+                style={{ '--float-delay': '0.4s' } as CSSProperties}
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-600 text-white">
+                  <span className="text-sm font-bold">4</span>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900">
+                    Apply for Internships
+                  </h3>
+                  <p className="text-sm text-secondary-600">
+                    Gain real-world experience
+                  </p>
+                </div>
+                <Link href="/jobs?type=internship" className="btn-secondary px-4 py-2 text-sm">
+                  Search
+                </Link>
               </div>
             </div>
+          </div>
 
-            {/* Upcoming Webinars */}
-            <div className="card">
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Video className="h-5 w-5 text-purple-600" />
-                  <h2 className="text-xl font-semibold text-gray-900">
-                    Upcoming Webinars
-                  </h2>
+          {/* Upcoming Webinars */}
+          <div className="card">
+            <div className="flex justify-between items-center mb-6 animate-[floatUp_0.85s_ease-out]">
+              <h2 className="feature-heading text-xl font-semibold">
+                Upcoming Webinars
+              </h2>
+              <Link href="/webinars" className="auth-link text-sm font-medium">
+                View All
+              </Link>
+            </div>
+
+            {upcomingWebinars.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="feature-icon mx-auto mb-4 w-16 h-16">
+                  <Video className="w-8 h-8 text-primary-500" />
                 </div>
+                <p className="auth-subtitle mb-6">No upcoming webinars</p>
                 <Link
                   href="/webinars"
-                  className="text-sm font-medium text-primary-600 hover:text-primary-500"
+                  className="btn-primary inline-flex items-center gap-2"
                 >
-                  View All
+                  Browse Webinars
                 </Link>
               </div>
-
-              {loading ? (
-                <div className="space-y-3">
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      className="animate-pulse rounded-xl bg-white/50 p-4"
-                    >
-                      <div className="mb-2 h-5 w-3/4 rounded bg-white/70"></div>
-                      <div className="h-4 w-1/2 rounded bg-white/70"></div>
-                    </div>
-                  ))}
-                </div>
-              ) : upcomingWebinars.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-purple-300 bg-purple-50/50 py-8 text-center">
-                  <Video className="mx-auto mb-2 h-10 w-10 text-purple-400" />
-                  <p className="text-sm text-secondary-600">
-                    No upcoming webinars
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {upcomingWebinars.map((webinar) => (
-                    <Link
-                      key={webinar._id}
-                      href={`/webinars/${webinar._id}`}
-                      className="block rounded-xl border border-white/40 bg-white/60 p-4 transition-all hover:border-purple-500/40 hover:shadow-lg"
-                    >
-                      <h3 className="mb-1 font-semibold text-gray-900">
-                        {webinar.title}
-                      </h3>
-                      <div className="flex items-center gap-4 text-sm text-secondary-600">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          {formatDate(webinar.scheduledDate)}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Users className="h-4 w-4" />
-                          {webinar.host.name}
-                        </span>
+            ) : (
+              <div className="space-y-4">
+                {upcomingWebinars.map((webinar, index) => (
+                  <Link
+                    key={webinar._id}
+                    href={`/webinars/${webinar._id}`}
+                    className="feature-card p-5 group block"
+                    style={
+                      { '--float-delay': `${0.1 + index * 0.08}s` } as CSSProperties
+                    }
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
+                        <Video className="h-5 w-5" />
                       </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-primary-600 transition-colors">
+                          {webinar.title}
+                        </h3>
+                        <p className="text-sm text-secondary-600 mb-2">
+                          by {webinar.host.name}
+                        </p>
+                        <div className="flex items-center gap-2 text-xs text-secondary-500">
+                          <Calendar className="h-3.5 w-3.5" />
+                          {formatDate(webinar.scheduledDate)}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Tips Section */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="card border-blue-200/50 bg-gradient-to-br from-blue-50/50 to-white">
+            <div className="mb-3 flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                <Sparkles className="h-5 w-5" />
+              </div>
+              <h3 className="font-semibold text-gray-900">Student Tips</h3>
             </div>
+            <ul className="space-y-2 text-sm text-secondary-700">
+              <li className="flex items-start gap-2">
+                <span className="text-blue-600">•</span>
+                <span>Complete skill assessments to earn certificates</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-600">•</span>
+                <span>Attend webinars to learn from industry experts</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-600">•</span>
+                <span>Build your resume early to stand out</span>
+              </li>
+            </ul>
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-6">
-            {/* Student Resources */}
-            <div className="card border-purple-200/50 bg-gradient-to-br from-purple-50/50 to-white">
-              <div className="mb-4 flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-purple-600" />
-                <h3 className="font-semibold text-gray-900">
-                  Student Resources
-                </h3>
+          <div className="card border-green-200/50 bg-gradient-to-br from-green-50/50 to-white">
+            <div className="mb-3 flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-100 text-green-600">
+                <TrendingUp className="h-5 w-5" />
               </div>
-              <div className="space-y-3">
-                <Link
-                  href="/career-map"
-                  className="block rounded-lg border border-purple-200 bg-white p-3 transition-all hover:border-purple-400 hover:shadow-md"
-                >
-                  <h4 className="mb-1 text-sm font-semibold text-gray-900">
-                    Career Map
-                  </h4>
-                  <p className="text-xs text-secondary-600">
-                    Explore career paths in your field
-                  </p>
-                </Link>
-                <Link
-                  href="/certificates"
-                  className="block rounded-lg border border-blue-200 bg-white p-3 transition-all hover:border-blue-400 hover:shadow-md"
-                >
-                  <h4 className="mb-1 text-sm font-semibold text-gray-900">
-                    My Certificates
-                  </h4>
-                  <p className="text-xs text-secondary-600">
-                    View your earned certificates
-                  </p>
-                </Link>
-                <Link
-                  href="/community"
-                  className="block rounded-lg border border-green-200 bg-white p-3 transition-all hover:border-green-400 hover:shadow-md"
-                >
-                  <h4 className="mb-1 text-sm font-semibold text-gray-900">
-                    Community
-                  </h4>
-                  <p className="text-xs text-secondary-600">
-                    Connect with other students
-                  </p>
-                </Link>
-              </div>
+              <h3 className="font-semibold text-gray-900">Your Progress</h3>
             </div>
-
-            {/* Quick Stats */}
-            <div className="card">
-              <h3 className="mb-4 font-semibold text-gray-900">
-                Your Progress
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <div className="mb-1 flex items-center justify-between text-sm">
-                    <span className="text-secondary-600">Profile Complete</span>
-                    <span className="font-semibold text-gray-900">60%</span>
-                  </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-gray-200">
-                    <div className="h-full w-3/5 rounded-full bg-gradient-to-r from-purple-500 to-blue-500"></div>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between rounded-lg bg-blue-50 p-3">
-                  <span className="text-sm text-secondary-700">
-                    Certificates Earned
-                  </span>
-                  <span className="text-lg font-bold text-blue-600">0</span>
-                </div>
-                <div className="flex items-center justify-between rounded-lg bg-green-50 p-3">
-                  <span className="text-sm text-secondary-700">
-                    Applications Sent
-                  </span>
-                  <span className="text-lg font-bold text-green-600">0</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Tips */}
-            <div className="card border-orange-200/50 bg-gradient-to-br from-orange-50/50 to-white">
-              <div className="mb-3 flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-orange-600" />
-                <h3 className="font-semibold text-gray-900">Student Tips</h3>
-              </div>
-              <ul className="space-y-2 text-sm text-secondary-700">
-                <li className="flex items-start gap-2">
-                  <span className="text-orange-600">💡</span>
-                  <span>Complete your profile to get better job matches</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-orange-600">💡</span>
-                  <span>Take assessments to earn certificates</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-orange-600">💡</span>
-                  <span>Attend webinars to learn from industry experts</span>
-                </li>
-              </ul>
+            <p className="mb-3 text-sm text-secondary-700">
+              Keep learning and growing your skills to prepare for your career!
+            </p>
+            <div className="text-xs text-secondary-600">
+              You're on the right track. Continue attending webinars and taking assessments.
             </div>
           </div>
         </div>

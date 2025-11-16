@@ -1,15 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import {
   User,
   Bell,
   Edit,
-  Home,
-  Briefcase,
-  MessageSquare,
   ChevronRight,
+  Briefcase,
+  Calendar,
+  TrendingUp,
+  Users,
+  ExternalLink,
+  MapPin,
+  BookOpen,
+  Target,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
@@ -74,6 +80,18 @@ export default function JobSeekerHomepage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
+  const [isEntering, setIsEntering] = useState(true);
+  const [stats, setStats] = useState({
+    applications: 0,
+    interviews: 0,
+    offers: 0,
+    profile_views: 0,
+  });
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setIsEntering(false), 900);
+    return () => clearTimeout(timeout);
+  }, []);
 
   useEffect(() => {
     fetchDashboardData();
@@ -132,6 +150,12 @@ export default function JobSeekerHomepage() {
       if (statsRes.ok) {
         const statsData = await statsRes.json();
         setApplicationStats({ applications: statsData.applications || 0 });
+        setStats({
+          applications: statsData.applications || 0,
+          interviews: statsData.interviews || 0,
+          offers: statsData.offers || 0,
+          profile_views: statsData.profile_views || 0,
+        });
       }
 
       if (applicationsRes.ok) {
@@ -208,38 +232,21 @@ export default function JobSeekerHomepage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
-        {/* Navigation Bar */}
-        <nav className="border-b border-white/30 bg-white/60 shadow-lg shadow-primary-900/10 backdrop-blur-xl">
-          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center">
-              <span className="rounded-xl border border-white/40 bg-white/70 px-3 py-1 text-2xl font-bold text-primary-600 shadow-inner shadow-primary-900/5">
-                  WorkQit
-              </span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="h-4 w-16 animate-pulse rounded-full bg-white/60"></div>
-              <div className="h-4 w-20 animate-pulse rounded-full bg-white/60"></div>
-              <div className="h-4 w-16 animate-pulse rounded-full bg-white/60"></div>
-              <div className="h-4 w-16 animate-pulse rounded-full bg-white/60"></div>
-            </div>
+      <div className="hero-gradient relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="auth-background-grid" aria-hidden="true" />
+        {isEntering && <div className="auth-entry-overlay" />}
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-500/20 blur-3xl animate-pulse"></div>
+          <div className="absolute right-1/4 top-1/3 h-72 w-72 rounded-full bg-secondary-500/15 blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+        </div>
+        <div className="text-center relative z-10 animate-[floatUp_0.85s_ease-out]">
+          <div className="futuristic-loader mx-auto mb-6">
+            <div className="futuristic-loader-inner"></div>
           </div>
-        </nav>
-
-        {/* Loading Content */}
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="animate-pulse space-y-6">
-            <div className="h-8 w-1/3 rounded-full bg-white/60"></div>
-            <div className="h-4 w-1/2 rounded-full bg-white/60"></div>
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-              <div className="rounded-2xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-primary-900/10">
-                <div className="h-32 rounded-2xl bg-white/70"></div>
-              </div>
-              <div className="rounded-2xl border border-white/40 bg-white/60 p-6 shadow-lg shadow-primary-900/10 lg:col-span-2">
-                <div className="h-64 rounded-2xl bg-white/70"></div>
-              </div>
-            </div>
-          </div>
+          <h2 className="auth-title text-2xl font-bold mb-3">
+            Loading Your Dashboard...
+          </h2>
+          <p className="auth-subtitle">Please wait while we fetch your data</p>
         </div>
       </div>
     );
@@ -247,16 +254,12 @@ export default function JobSeekerHomepage() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 px-4">
-        <div className="surface-panel max-w-md border-red-300/40 text-center text-red-600 shadow-red-900/10">
-          <h3 className="mb-3 text-lg font-semibold text-red-600">Error Loading Dashboard</h3>
-          <p className="text-sm text-red-500">{error}</p>
-          <button
-            onClick={fetchDashboardData}
-            className="btn-primary mt-6 bg-gradient-to-r from-red-600 to-red-500 px-6 py-2 text-sm hover:from-red-500 hover:to-red-600"
-          >
-            Try Again
-          </button>
+      <div className="hero-gradient relative min-h-screen flex items-center justify-center">
+        <div className="auth-background-grid" aria-hidden="true" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="glass-alert glass-alert-error">
+            {error}
+          </div>
         </div>
       </div>
     );
@@ -273,73 +276,159 @@ export default function JobSeekerHomepage() {
         }}
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
-
-      {/* Welcome Banner */}
-      <div className="relative overflow-hidden border-b border-white/30 bg-white/60 backdrop-blur-xl">
+      <div className="hero-gradient relative min-h-screen overflow-hidden">
+        <div className="auth-background-grid" aria-hidden="true" />
+        {isEntering && <div className="auth-entry-overlay" />}
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute right-10 top-[-40%] h-56 w-56 rounded-full bg-primary-500/20 blur-3xl"></div>
-          <div className="absolute left-[-20%] top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-secondary-500/15 blur-3xl"></div>
+          <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-primary-500/20 blur-3xl"></div>
+          <div className="absolute right-[-10%] top-20 h-72 w-72 rounded-full bg-secondary-500/15 blur-3xl"></div>
         </div>
-        <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <h1 className="mb-2 text-2xl font-bold text-gray-900">
-            Welcome back, {userProfile?.firstName || "User"}!
-          </h1>
-          <p className="text-secondary-600">
-            Ready to find your next career opportunity? Here's what's new today.
-          </p>
-        </div>
-      </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className={`mb-8 ${isEntering ? 'auth-panel-enter' : ''}`}>
+            <h1 className="auth-title text-3xl font-bold mb-2 animate-[floatUp_0.85s_ease-out]">
+              Welcome back, {userProfile?.firstName || user?.firstName || "User"}!
+            </h1>
+            <p className="auth-subtitle">
+              Here's what's happening with your job search.
+            </p>
+          </div>
 
-      {/* Main Content Area */}
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          {/* Left Column: User Profile Summary */}
-          <div className="space-y-6">
-            {/* Profile Card */}
-            <div className="card text-center">
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div 
+              className="stat-card"
+              style={{ '--float-delay': '0.1s' } as CSSProperties}
+            >
+              <div className="p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary-500/35 bg-primary-500/15 text-primary-500 shadow-inner shadow-primary-700/25">
+                      <Briefcase className="h-7 w-7" />
+                    </div>
+                  </div>
+                  <div className="ml-5 flex-1 min-w-0">
+                    <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">Applications</p>
+                    <p className="stat-number">
+                      {stats.applications}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div 
+              className="stat-card"
+              style={{ '--float-delay': '0.2s' } as CSSProperties}
+            >
+              <div className="p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary-500/35 bg-primary-500/15 text-primary-500 shadow-inner shadow-primary-700/25">
+                      <Calendar className="h-7 w-7" />
+                    </div>
+                  </div>
+                  <div className="ml-5 flex-1 min-w-0">
+                    <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">Interviews</p>
+                    <p className="stat-number">
+                      {stats.interviews}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div 
+              className="stat-card"
+              style={{ '--float-delay': '0.3s' } as CSSProperties}
+            >
+              <div className="p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary-500/35 bg-primary-500/15 text-primary-500 shadow-inner shadow-primary-700/25">
+                      <TrendingUp className="h-7 w-7" />
+                    </div>
+                  </div>
+                  <div className="ml-5 flex-1 min-w-0">
+                    <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">Offers</p>
+                    <p className="stat-number">{stats.offers}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div 
+              className="stat-card"
+              style={{ '--float-delay': '0.4s' } as CSSProperties}
+            >
+              <div className="p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary-500/35 bg-primary-500/15 text-primary-500 shadow-inner shadow-primary-700/25">
+                      <Users className="h-7 w-7" />
+                    </div>
+                  </div>
+                  <div className="ml-5 flex-1 min-w-0">
+                    <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">Profile Views</p>
+                    <p className="stat-number">
+                      {stats.profile_views}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* User Profile Summary */}
+            <div className="card">
+              <div className="flex justify-between items-center mb-6 animate-[floatUp_0.85s_ease-out]">
+                <h2 className="feature-heading text-xl font-semibold">
+                  Your Profile
+                </h2>
+                <Link
+                  href="/profile"
+                  className="auth-link text-sm font-medium"
+                >
+                  Edit Profile
+                </Link>
+              </div>
+              
               <div className="space-y-6">
                 {/* Profile Picture */}
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary-500/20 to-primary-500/5 text-primary-600 shadow-inner shadow-primary-900/10">
-                  {userProfile?.profile?.profilePicture ? (
-                    <img
-                      src={userProfile.profile.profilePicture}
-                      alt="Profile"
-                      className="h-20 w-20 rounded-full object-cover"
-                    />
-                  ) : (
-                    <User className="h-10 w-10" />
-                  )}
-                </div>
-
-                {/* User Name */}
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {userProfile?.firstName} {userProfile?.lastName}
-                </h3>
-
-                {/* Application Summary */}
-                <div>
-                  <div className="text-3xl font-bold text-primary-600">
-                    {applicationStats.applications}
+                <div className="flex items-center gap-4">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary-500/20 to-primary-500/5 text-primary-600 shadow-inner shadow-primary-900/10">
+                    {userProfile?.profile?.profilePicture ? (
+                      <img
+                        src={userProfile.profile.profilePicture}
+                        alt="Profile"
+                        className="h-16 w-16 rounded-full object-cover"
+                      />
+                    ) : (
+                      <User className="h-8 w-8" />
+                    )}
                   </div>
-                  <div className="text-xs uppercase tracking-wide text-secondary-500">
-                    Applications
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {userProfile?.firstName} {userProfile?.lastName}
+                    </h3>
+                    <p className="text-sm text-secondary-600">{userProfile?.email}</p>
                   </div>
                 </div>
 
                 {/* Career Interests */}
                 <div className="space-y-3">
                   <h4 className="text-sm font-medium text-secondary-600">
-                    Career Interests
+                    Skills & Interests
                   </h4>
-                  <div className="flex flex-wrap justify-center gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {userProfile?.profile?.skills?.length ? (
                       userProfile.profile.skills
-                        .slice(0, 4)
+                        .slice(0, 6)
                         .map((skill, index) => (
                           <span
                             key={index}
-                            className="badge bg-primary-500/10 text-primary-600"
+                            className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border text-primary-600 bg-primary-500/20 border-primary-500/30 shadow-inner shadow-primary-700/20"
                           >
                             {skill}
                           </span>
@@ -351,310 +440,252 @@ export default function JobSeekerHomepage() {
                     )}
                   </div>
                 </div>
-
-                {/* Edit Profile Button */}
-                <Link
-                  href="/profile"
-                  className="btn-primary px-6 py-2 text-sm"
-                >
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit Profile
-                </Link>
               </div>
             </div>
 
             {/* Recent Applications */}
             <div className="card">
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900">
+              <div className="flex justify-between items-center mb-6 animate-[floatUp_0.85s_ease-out]">
+                <h2 className="feature-heading text-xl font-semibold">
                   Recent Applications
-                </h3>
-                {applications.length > 0 && (
-                  <Link
-                    href="/applications"
-                    className="text-sm font-medium text-primary-600 transition-colors hover:text-primary-500"
-                  >
-                    View All
-                  </Link>
-                )}
+                </h2>
+                <Link
+                  href="/applications"
+                  className="auth-link text-sm font-medium"
+                >
+                  View All
+                </Link>
               </div>
-              <div className="space-y-3">
-                {applications.length === 0 ? (
-                  <div className="rounded-2xl border border-dashed border-primary-500/40 bg-white/40 py-8 text-center backdrop-blur">
-                    <p className="mb-4 text-secondary-500">
-                      No applications yet
-                    </p>
-                    <Link
-                      href="/jobs"
-                      className="btn-secondary px-5 py-2 text-sm"
-                    >
-                      <span>Browse Jobs to Apply</span>
-                    </Link>
+
+              {applications.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="feature-icon mx-auto mb-4 w-16 h-16">
+                    <Briefcase className="w-8 h-8 text-primary-500" />
                   </div>
-                ) : (
-                  applications.slice(0, 3).map((app) => (
+                  <p className="auth-subtitle mb-6">No applications yet</p>
+                  <Link href="/jobs" className="btn-primary inline-flex items-center gap-2">
+                    Browse Jobs
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {applications.slice(0, 3).map((app, index) => (
                     <div
                       key={app.id}
-                      className="flex items-center justify-between rounded-2xl border border-white/40 bg-white/60 p-4 shadow-inner shadow-primary-900/5 backdrop-blur transition-all duration-300 hover:border-primary-500/40"
+                      className="feature-card flex justify-between items-center p-5 group"
+                      style={{ '--float-delay': `${0.1 + index * 0.08}s` } as CSSProperties}
                     >
-                      <div>
-                        <h4 className="font-medium text-gray-900">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 mb-1 text-lg group-hover:text-primary-600 transition-colors">
                           {app.jobTitle}
-                        </h4>
-                        <p className="text-sm text-secondary-600">{app.company}</p>
+                        </h3>
+                        <p className="text-sm text-secondary-600 mb-2">{app.company}</p>
                         <p className="text-xs text-secondary-500">
                           Applied {new Date(app.appliedDate).toLocaleDateString()}
                         </p>
                       </div>
-                      <span
-                        className={`px-2 py-1 rounded text-sm ${
-                          app.status === 'pending'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : app.status === 'reviewed'
-                            ? 'bg-blue-100 text-blue-800'
-                            : app.status === 'accepted'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
-                      >
-                        {app.status === 'pending' ? 'Under Review' : 
-                         app.status === 'reviewed' ? 'Reviewed' :
-                         app.status === 'accepted' ? 'Accepted' : 'Not Selected'}
-                      </span>
+                      <div className="flex-shrink-0 ml-4">
+                        <span
+                          className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border shadow-inner ${
+                            app.status === 'pending' 
+                              ? 'text-yellow-600 bg-yellow-500/20 border-yellow-500/30 shadow-yellow-700/20'
+                              : app.status === 'reviewed'
+                              ? 'text-blue-600 bg-blue-500/20 border-blue-500/30 shadow-blue-700/20'
+                              : app.status === 'accepted'
+                              ? 'text-green-600 bg-green-500/20 border-green-500/30 shadow-green-700/20'
+                              : app.status === 'rejected'
+                              ? 'text-red-600 bg-red-500/20 border-red-500/30 shadow-red-700/20'
+                              : 'text-secondary-600 bg-secondary-500/20 border-secondary-500/30 shadow-secondary-700/20'
+                          }`}
+                        >
+                          {app.status === 'pending' ? 'Under Review' : 
+                           app.status === 'reviewed' ? 'Interview Scheduled' :
+                           app.status === 'accepted' ? 'Accepted' : 'Not Selected'}
+                        </span>
+                      </div>
                     </div>
-                  ))
-                )}
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Quick Actions & Resources */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {/* Career Webinars */}
+            <div className="card group hover:border-purple-500/40 transition-all duration-300">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-purple-500/35 bg-purple-500/15 text-purple-500 shadow-inner shadow-purple-700/25">
+                  <BookOpen className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Career Webinars
+                </h3>
               </div>
+              <p className="mb-4 text-sm text-secondary-600">
+                Learn from industry experts and mentors through live webinars
+              </p>
+              <Link
+                href="/webinars"
+                className="btn-secondary w-full px-4 py-2 text-sm inline-flex items-center justify-center gap-2"
+              >
+                Browse Webinars
+                <ChevronRight className="h-4 w-4" />
+              </Link>
             </div>
 
-            {/* Career Resources */}
-            <div className="space-y-4">
-              {/* Career Webinars */}
-              <div className="card border-purple-200/50 bg-gradient-to-br from-purple-50/50 to-white">
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    📚 Career Webinars
-                  </h3>
-                  <Link
-                    href="/webinars"
-                    className="text-sm font-medium text-primary-600 transition-colors hover:text-primary-500"
-                  >
-                    View All
-                  </Link>
+            {/* Interview Prep */}
+            <div className="card group hover:border-blue-500/40 transition-all duration-300">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-500/35 bg-blue-500/15 text-blue-500 shadow-inner shadow-blue-700/25">
+                  <Target className="h-6 w-6" />
                 </div>
-                <p className="mb-4 text-sm text-secondary-600">
-                  Learn from industry experts and mentors through live webinars
-                </p>
-                <Link
-                  href="/webinars"
-                  className="btn-secondary w-full px-4 py-2 text-sm"
-                >
-                  Browse Webinars
-                </Link>
-              </div>
-
-              {/* Interview Prep */}
-              <div className="card border-blue-200/50 bg-gradient-to-br from-blue-50/50 to-white">
-                <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                  🎯 Interview Preparation
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Interview Prep
                 </h3>
-                <p className="mb-4 text-sm text-secondary-600">
-                  Get AI-powered interview tips tailored to your target role
-                </p>
-                <Link
-                  href="/interview-prep"
-                  className="btn-primary w-full px-4 py-2 text-sm"
-                >
-                  Prepare for Interviews
-                </Link>
               </div>
+              <p className="mb-4 text-sm text-secondary-600">
+                Get AI-powered interview tips tailored to your target role
+              </p>
+              <Link
+                href="/interview-prep"
+                className="btn-primary w-full px-4 py-2 text-sm inline-flex items-center justify-center gap-2"
+              >
+                Start Preparing
+                <ChevronRight className="h-4 w-4" />
+              </Link>
             </div>
 
             {/* Notifications */}
             <div className="card">
-              <h3 className="mb-4 text-lg font-semibold text-gray-900">
-                Recent Notifications
-              </h3>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary-500/35 bg-primary-500/15 text-primary-500 shadow-inner shadow-primary-700/25">
+                  <Bell className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Notifications
+                </h3>
+              </div>
               <div className="space-y-3">
-                {notifications.slice(0, 3).map((notification) => (
+                {notifications.slice(0, 2).map((notification, index) => (
                   <div
                     key={notification.id}
-                    className="flex items-start gap-3 rounded-2xl border border-white/30 bg-white/60 p-3 shadow-inner shadow-primary-900/5 backdrop-blur"
+                    className="feature-card p-3 group"
+                    style={{ '--float-delay': `${0.1 + index * 0.08}s` } as CSSProperties}
                   >
-                    <div className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ${
-                      notification.read ? 'bg-white/50 text-secondary-500' : 'bg-primary-500/15 text-primary-600'
-                    }`}>
-                      <Bell className={`h-4 w-4 ${
-                        notification.read ? '' : ''
-                      }`} />
+                    <div className="flex items-start gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className={`text-sm ${
+                          notification.read ? 'text-secondary-600' : 'text-gray-900 font-medium'
+                        }`}>
+                          {notification.message}
+                        </p>
+                        <p className="mt-1 text-xs text-secondary-500">
+                          {new Date(notification.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      {!notification.read && (
+                        <div className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-primary-500"></div>
+                      )}
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className={`text-sm ${
-                        notification.read ? 'text-secondary-600' : 'text-gray-900'
-                      }`}>
-                        {notification.message}
-                      </p>
-                      <p className="mt-1 text-xs text-secondary-500">
-                        {new Date(notification.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                    {!notification.read && (
-                      <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-primary-500"></div>
-                    )}
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Right Column: AI-Powered Recommendations */}
-          <div className="lg:col-span-2">
-            <div className="surface-panel">
-              <div className="mb-6 flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-900">
-                    🤖 AI-Powered Recommendations
-                  </h2>
-                  <p className="mt-1 text-sm text-secondary-600">
-                    Personalized job matches based on your skills and profile
-                  </p>
+          {/* AI-Powered Recommendations */}
+          <div className="card">
+            <div className="flex justify-between items-center mb-6 animate-[floatUp_0.85s_ease-out]">
+              <h2 className="feature-heading text-xl font-semibold">
+                Recommended for You
+              </h2>
+              <Link
+                href="/jobs"
+                className="auth-link text-sm font-medium"
+              >
+                View All Jobs
+              </Link>
+            </div>
+
+            {loadingRecommendations ? (
+              <div className="text-center py-12">
+                <div className="futuristic-loader mx-auto mb-4" style={{ width: '48px', height: '48px' }}>
+                  <div className="futuristic-loader-inner"></div>
                 </div>
-                {userProfile?.profile?.skills?.length === 0 && (
-                  <Link
-                    href="/profile"
-                    className="btn-secondary px-4 py-2 text-xs"
-                  >
-                    Add Skills
-                  </Link>
-                )}
+                <p className="auth-subtitle">Loading recommendations...</p>
               </div>
-
-              {/* Loading State */}
-              {loadingRecommendations && (
-                <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div
-                      key={i}
-                      className="animate-pulse rounded-2xl border border-white/40 bg-white/60 p-5"
-                    >
-                      <div className="mb-2 h-6 w-3/4 rounded bg-white/70"></div>
-                      <div className="mb-2 h-4 w-1/2 rounded bg-white/70"></div>
-                      <div className="mb-4 h-4 w-full rounded bg-white/70"></div>
-                      <div className="flex items-center justify-between">
-                        <div className="h-3 w-1/3 rounded bg-white/70"></div>
-                        <div className="h-8 w-24 rounded bg-white/70"></div>
-                      </div>
-                    </div>
-                  ))}
+            ) : recommendations.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="feature-icon mx-auto mb-4 w-16 h-16">
+                  <TrendingUp className="w-8 h-8 text-primary-500" />
                 </div>
-              )}
-
-              {/* Recommendations Grid */}
-              {!loadingRecommendations && (
-                <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-                  {recommendations.length > 0 ? (
-                    recommendations.slice(0, 6).map((job) => (
-                      <div
-                        key={job._id}
-                        className="group relative rounded-2xl border border-white/40 bg-white/60 p-5 shadow-inner shadow-primary-900/5 backdrop-blur transition-all duration-400 hover:-translate-y-1 hover:border-primary-500/40 hover:shadow-xl hover:shadow-primary-900/10"
-                      >
-                        {/* Match Score Badge */}
-                        {job.matchScore && (
-                          <div className="absolute right-3 top-3">
-                            <span className="inline-flex items-center rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-2.5 py-1 text-xs font-semibold text-white shadow-lg">
-                              {Math.round(job.matchScore)}% Match
-                            </span>
-                          </div>
-                        )}
-
-                        <h3 className="mb-2 pr-20 text-lg font-semibold text-gray-900">
+                <p className="auth-subtitle mb-2">No recommendations available</p>
+                <p className="text-sm text-secondary-500 mb-6">
+                  {userProfile?.profile?.skills?.length === 0 
+                    ? "Add skills to your profile to get personalized job recommendations"
+                    : "Complete your profile to get personalized job recommendations"}
+                </p>
+                <Link
+                  href={userProfile?.profile?.skills?.length === 0 ? "/profile" : "/jobs"}
+                  className="btn-primary inline-flex items-center gap-2"
+                >
+                  {userProfile?.profile?.skills?.length === 0 ? "Add Skills" : "Browse All Jobs"}
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {recommendations.slice(0, 4).map((job, index) => (
+                  <div
+                    key={job._id}
+                    className="feature-card p-5 group"
+                    style={{ '--float-delay': `${0.1 + index * 0.08}s` } as CSSProperties}
+                  >
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 mb-1 text-lg group-hover:text-primary-600 transition-colors">
                           {job.title}
                         </h3>
-                        <p className="mb-2 text-sm font-medium text-secondary-600">
-                          {job.company}
-                        </p>
-                        
-                        {/* Match Reason */}
-                        {job.matchReason && (
-                          <div className="mb-3 rounded-lg bg-blue-50/50 p-2">
-                            <p className="text-xs text-blue-700">
-                              💡 {job.matchReason}
-                            </p>
-                          </div>
-                        )}
-
-                        <p className="mb-4 line-clamp-2 text-sm text-secondary-600">
-                          {job.description ||
-                            "Exciting opportunity to grow your career and gain valuable experience."}
-                        </p>
-                        
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs uppercase tracking-wide text-secondary-500">
-                            {job.location}{" "}
-                            {job.remote && "• Remote"}
-                          </span>
-                          <Link
-                            href={`/jobs/${job._id}`}
-                            className="btn-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide"
-                          >
-                            View Details
-                            <ChevronRight className="ml-1 h-3 w-3" />
-                          </Link>
-                        </div>
+                        <p className="text-sm text-secondary-600 mb-3">{job.company}</p>
                       </div>
-                    ))
-                  ) : (
-                    <div className="col-span-2 rounded-3xl border border-dashed border-primary-500/40 bg-white/40 py-10 text-center backdrop-blur">
-                      {userProfile?.profile?.skills?.length === 0 ? (
-                        <>
-                          <div className="mb-4 text-4xl">🎯</div>
-                          <p className="mb-2 font-medium text-gray-900">
-                            Add skills to get personalized recommendations
-                          </p>
-                          <p className="mb-4 text-sm text-secondary-500">
-                            Our AI will match you with the best opportunities based on your skills
-                          </p>
-                          <Link
-                            href="/profile"
-                            className="btn-primary px-5 py-2 text-sm"
-                          >
-                            Add Your Skills
-                          </Link>
-                        </>
-                      ) : (
-                        <>
-                          <p className="mb-4 text-secondary-500">
-                            No AI recommendations available at the moment
-                          </p>
-                          <Link
-                            href="/jobs"
-                            className="btn-secondary px-5 py-2 text-sm"
-                          >
-                            Browse All Opportunities
-                          </Link>
-                        </>
+                      {job.matchScore && (
+                        <span className="inline-flex items-center rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-2.5 py-1 text-xs font-semibold text-white shadow-lg">
+                          {Math.round(job.matchScore)}% Match
+                        </span>
                       )}
                     </div>
-                  )}
-                </div>
-              )}
-
-              {/* View All Jobs Link */}
-              {recommendations.length > 0 && (
-                <div className="text-center">
-                  <Link
-                    href="/jobs"
-                    className="btn-ghost px-6 py-2 text-sm uppercase tracking-wide"
-                  >
-                    View All Job Opportunities
-                  </Link>
-                </div>
-              )}
-            </div>
+                    
+                    {job.matchReason && (
+                      <div className="mb-3 rounded-lg bg-blue-50/80 border border-blue-200/50 p-2">
+                        <p className="text-xs text-blue-700">
+                          💡 {job.matchReason}
+                        </p>
+                      </div>
+                    )}
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="inline-flex items-center gap-1.5 text-xs text-secondary-500">
+                        <MapPin className="w-3.5 h-3.5 text-primary-500" />
+                        {job.location}
+                      </span>
+                      {job.remote && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-green-600 font-medium bg-green-500/20 border border-green-500/30 text-xs">Remote</span>
+                      )}
+                    </div>
+                    <Link
+                      href={`/jobs/${job._id}`}
+                      className="inline-flex items-center gap-2 auth-link text-sm font-medium group/link"
+                    >
+                      View Details
+                      <ExternalLink className="w-3.5 h-3.5 transition-transform duration-300 group-hover/link:translate-x-1" />
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 }
