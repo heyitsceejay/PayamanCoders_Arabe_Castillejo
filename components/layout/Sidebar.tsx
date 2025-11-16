@@ -134,23 +134,31 @@ export default function Sidebar() {
   const SidebarContent = () => (
     <>
       {/* Logo/Brand */}
-      <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} p-4 border-b border-white/30`}>
+      <div className={`relative flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} p-6 border-b border-white/40 bg-gradient-to-r from-primary-500/5 via-transparent to-secondary-500/5`}>
         {!isCollapsed && (
-          <Link href="/" className="brand-logo text-xl">
-            WorkQit
+          <Link 
+            href="/" 
+            className="brand-logo text-2xl font-bold tracking-tight relative group/logo"
+          >
+            <span className="relative z-10">WorkQit</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-500/20 via-secondary-500/20 to-primary-500/20 rounded-xl opacity-0 group-hover/logo:opacity-100 blur-xl transition-opacity duration-500"></div>
           </Link>
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="hidden lg:flex items-center justify-center w-8 h-8 rounded-lg hover:bg-primary-100 transition-colors text-secondary-600 hover:text-primary-600"
+          className="hidden lg:flex items-center justify-center w-10 h-10 rounded-xl border border-white/40 bg-white/40 backdrop-blur transition-all duration-300 text-secondary-600 hover:text-primary-600 hover:border-primary-500/50 hover:bg-white/60 hover:scale-110 hover:shadow-lg hover:shadow-primary-500/30 group/btn"
         >
-          {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+          {isCollapsed ? (
+            <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-0.5 transition-transform" />
+          ) : (
+            <ChevronLeft className="w-5 h-5 group-hover/btn:-translate-x-0.5 transition-transform" />
+          )}
         </button>
       </div>
 
       {/* Navigation Items */}
-      <nav className="flex-1 overflow-y-auto p-3 pt-4 space-y-1">
-        {filteredNavItems.map((item) => {
+      <nav className="flex-1 overflow-y-auto p-4 pt-6 space-y-2">
+        {filteredNavItems.map((item, index) => {
           const Icon = item.icon
           const active = isActive(item.href)
           
@@ -160,21 +168,41 @@ export default function Sidebar() {
               href={item.href}
               onClick={() => setIsMobileOpen(false)}
               className={`
-                flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group
+                relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-500 group/nav overflow-hidden
                 ${active 
-                  ? 'bg-gradient-to-r from-primary-500 to-secondary-500 text-white shadow-lg shadow-primary-500/25' 
-                  : 'text-secondary-700 hover:bg-primary-50 hover:text-primary-600'
+                  ? 'bg-gradient-to-r from-primary-500 via-primary-600 to-secondary-500 text-white shadow-xl shadow-primary-500/40 scale-[1.02]' 
+                  : 'text-secondary-700 hover:scale-[1.03] hover:shadow-lg hover:shadow-primary-500/20'
                 }
-                ${isCollapsed ? 'justify-center' : ''}
+                ${isCollapsed ? 'justify-center px-3' : ''}
               `}
               title={isCollapsed ? item.label : undefined}
+              style={{ '--float-delay': `${index * 0.05}s` } as React.CSSProperties}
             >
-              <Icon className={`flex-shrink-0 ${isCollapsed ? 'w-6 h-6' : 'w-5 h-5'} ${active ? '' : 'group-hover:scale-110 transition-transform'}`} />
-              {!isCollapsed && (
-                <span className="font-medium text-sm truncate">{item.label}</span>
+              {/* Gradient overlay on hover */}
+              {!active && (
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover/nav:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
               )}
+              
+              {/* Active indicator glow */}
+              {active && (
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-400/30 via-secondary-400/30 to-primary-400/30 rounded-2xl animate-pulse"></div>
+              )}
+              
+              <div className={`relative flex-shrink-0 ${isCollapsed ? 'w-7 h-7' : 'w-6 h-6'} flex items-center justify-center`}>
+                <Icon className={`w-full h-full ${active ? 'drop-shadow-lg' : 'group-hover/nav:scale-110 group-hover/nav:drop-shadow-md'} transition-all duration-300`} />
+                {active && (
+                  <div className="absolute inset-0 bg-primary-300/40 rounded-full blur-md animate-pulse"></div>
+                )}
+              </div>
+              
+              {!isCollapsed && (
+                <span className={`relative font-semibold text-base truncate flex-1 ${active ? 'text-white' : 'group-hover/nav:text-primary-600'} transition-colors duration-300`}>
+                  {item.label}
+                </span>
+              )}
+              
               {!isCollapsed && item.badge && (
-                <span className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-semibold shadow-sm">
+                <span className="ml-auto bg-red-500 text-white text-xs px-2.5 py-1 rounded-full font-bold shadow-lg shadow-red-500/40 animate-pulse">
                   {item.badge}
                 </span>
               )}
@@ -184,33 +212,47 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom Actions */}
-      <div className="p-3 border-t border-white/30 space-y-1">
+      <div className="p-4 border-t border-white/40 bg-gradient-to-r from-primary-500/5 via-transparent to-secondary-500/5 space-y-2">
         <Link
           href="/settings"
           onClick={() => setIsMobileOpen(false)}
           className={`
-            flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group
-            text-secondary-700 hover:bg-primary-50 hover:text-primary-600
-            ${isCollapsed ? 'justify-center' : ''}
+            relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-500 group/settings overflow-hidden
+            text-secondary-700 hover:scale-[1.03] hover:shadow-lg hover:shadow-primary-500/20
+            ${isCollapsed ? 'justify-center px-3' : ''}
           `}
           title={isCollapsed ? 'Settings' : undefined}
         >
-          <Settings className={`flex-shrink-0 ${isCollapsed ? 'w-6 h-6' : 'w-5 h-5'} group-hover:scale-110 transition-transform`} />
-          {!isCollapsed && <span className="font-medium text-sm">Settings</span>}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover/settings:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+          <div className={`relative flex-shrink-0 ${isCollapsed ? 'w-7 h-7' : 'w-6 h-6'} flex items-center justify-center`}>
+            <Settings className={`w-full h-full group-hover/settings:scale-110 group-hover/settings:rotate-90 group-hover/settings:drop-shadow-md transition-all duration-500`} />
+          </div>
+          {!isCollapsed && (
+            <span className="relative font-semibold text-base flex-1 group-hover/settings:text-primary-600 transition-colors duration-300">
+              Settings
+            </span>
+          )}
         </Link>
         
         {user && (
           <button
             onClick={handleLogout}
             className={`
-              w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group
-              text-secondary-700 hover:bg-red-50 hover:text-red-600
-              ${isCollapsed ? 'justify-center' : ''}
+              relative w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-500 group/logout overflow-hidden
+              text-secondary-700 hover:scale-[1.03] hover:shadow-lg hover:shadow-red-500/20
+              ${isCollapsed ? 'justify-center px-3' : ''}
             `}
             title={isCollapsed ? 'Logout' : undefined}
           >
-            <LogOut className={`flex-shrink-0 ${isCollapsed ? 'w-6 h-6' : 'w-5 h-5'} group-hover:scale-110 transition-transform`} />
-            {!isCollapsed && <span className="font-medium text-sm">Logout</span>}
+            <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-red-600/10 to-red-500/10 opacity-0 group-hover/logout:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+            <div className={`relative flex-shrink-0 ${isCollapsed ? 'w-7 h-7' : 'w-6 h-6'} flex items-center justify-center`}>
+              <LogOut className={`w-full h-full group-hover/logout:scale-110 group-hover/logout:-translate-x-1 group-hover/logout:drop-shadow-md transition-all duration-500 text-red-600 group-hover/logout:text-red-500`} />
+            </div>
+            {!isCollapsed && (
+              <span className="relative font-semibold text-base flex-1 group-hover/logout:text-red-600 transition-colors duration-300">
+                Logout
+              </span>
+            )}
           </button>
         )}
       </div>
@@ -232,29 +274,41 @@ export default function Sidebar() {
         className={`
           hidden lg:flex flex-col
           fixed left-0 top-0 h-screen
-          bg-white/60 backdrop-blur-2xl border-r border-white/30
-          shadow-lg shadow-primary-900/10 transition-all duration-300 z-40
-          ${isCollapsed ? 'w-20' : 'w-64'}
+          bg-white/70 backdrop-blur-2xl border-r border-white/40
+          shadow-2xl shadow-primary-900/20 transition-all duration-500 z-40
+          ${isCollapsed ? 'w-24' : 'w-72'}
         `}
       >
-        <SidebarContent />
+        {/* Animated background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.1),transparent_50%)] pointer-events-none"></div>
+        
+        <div className="relative z-10 flex flex-col h-full">
+          <SidebarContent />
+        </div>
       </aside>
 
       {/* Mobile Sidebar */}
       <aside
         className={`
           lg:hidden flex flex-col
-          fixed left-0 top-0 h-screen w-64 sm:w-72
-          bg-white/80 backdrop-blur-2xl border-r border-white/30
-          shadow-2xl transition-transform duration-300 z-50
+          fixed left-0 top-0 h-screen w-72 sm:w-80
+          bg-white/80 backdrop-blur-2xl border-r border-white/40
+          shadow-2xl transition-transform duration-500 z-50
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
-        <SidebarContent />
+        {/* Animated background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.1),transparent_50%)] pointer-events-none"></div>
+        
+        <div className="relative z-10 flex flex-col h-full">
+          <SidebarContent />
+        </div>
       </aside>
 
       {/* Spacer for desktop */}
-      <div className={`hidden lg:block transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`} />
+      <div className={`hidden lg:block transition-all duration-500 ${isCollapsed ? 'w-24' : 'w-72'}`} />
     </>
   )
 }

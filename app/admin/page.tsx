@@ -340,10 +340,10 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                       <div className="ml-5 flex-1 min-w-0">
-                        <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                        <p className="text-xs font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
                           Total Users
                         </p>
-                        <p className="stat-number">
+                        <p className="text-2xl md:text-3xl font-bold tracking-tight text-transparent bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-500 bg-clip-text">
                           {stats.totalUsers}
                         </p>
                       </div>
@@ -363,10 +363,10 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                       <div className="ml-5 flex-1 min-w-0">
-                        <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                        <p className="text-xs font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
                           Active Jobs
                         </p>
-                        <p className="stat-number">
+                        <p className="text-2xl md:text-3xl font-bold tracking-tight text-transparent bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-500 bg-clip-text">
                           {stats.activeJobs}
                         </p>
                       </div>
@@ -386,10 +386,10 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                       <div className="ml-5 flex-1 min-w-0">
-                        <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                        <p className="text-xs font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
                           Applications
                         </p>
-                        <p className="stat-number">
+                        <p className="text-2xl md:text-3xl font-bold tracking-tight text-transparent bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-500 bg-clip-text">
                           {stats.totalApplications}
                         </p>
                       </div>
@@ -409,10 +409,10 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                       <div className="ml-5 flex-1 min-w-0">
-                        <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                        <p className="text-xs font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
                           Pending
                         </p>
-                        <p className="stat-number">
+                        <p className="text-2xl md:text-3xl font-bold tracking-tight text-transparent bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-500 bg-clip-text">
                           {stats.pendingApplications}
                         </p>
                       </div>
@@ -426,7 +426,7 @@ export default function AdminDashboard() {
             {stats?.recentActivity && (
               <div className="card">
                 <div className="px-6 py-6">
-                  <h3 className="feature-heading text-xl font-semibold mb-6">
+                  <h3 className="text-lg md:text-xl font-semibold mb-4 text-gray-900">
                     Recent Activity
                   </h3>
                   <div className="space-y-4">
