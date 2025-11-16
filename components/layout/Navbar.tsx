@@ -8,10 +8,12 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useMessaging } from '@/contexts/MessagingContext'
 import { useRealtime } from '@/contexts/RealtimeContext'
 import MessagesDropdown from '@/components/messaging/MessagesDropdown'
+import LogoutConfirmModal from '@/components/modals/LogoutConfirmModal'
 
 export default function Navbar() {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
   const [notifications, setNotifications] = useState<any[]>([])
   const router = useRouter()
   const { user, loading, logout } = useAuth()
@@ -38,14 +40,23 @@ export default function Navbar() {
     }
   }
 
-  const handleLogout = async () => {
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true)
+    setShowUserMenu(false)
+  }
+
+  const handleLogoutConfirm = async () => {
     try {
       await logout()
-      setShowUserMenu(false)
+      setShowLogoutModal(false)
       router.push('/')
     } catch (error) {
       console.error('Logout error:', error)
     }
+  }
+
+  const handleLogoutCancel = () => {
+    setShowLogoutModal(false)
   }
 
   const AuthenticatedNav = () => (
@@ -200,7 +211,7 @@ export default function Navbar() {
               </div>
             </Link>
             <button
-              onClick={handleLogout}
+              onClick={handleLogoutClick}
               className="group relative flex w-full items-center gap-4 rounded-xl px-5 py-3.5 text-left text-base font-medium text-red-600 transition-all duration-300 hover:bg-gradient-to-r hover:from-red-500/20 hover:to-red-600/20 hover:text-red-700 hover:shadow-lg hover:shadow-red-500/20 border border-transparent hover:border-red-500/30 mt-2"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-red-500/30 bg-red-500/15 text-red-600 shadow-inner shadow-red-700/20 group-hover:bg-red-500/25 group-hover:border-red-500/50 transition-all duration-300 flex-shrink-0">
@@ -244,6 +255,7 @@ export default function Navbar() {
   }, [showUserMenu, showNotifications])
 
   return (
+    <>
     <nav className="relative z-50 border-b border-white/30 bg-white/60 shadow-lg shadow-primary-900/10 backdrop-blur-2xl transition-all duration-500">
       <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
@@ -272,5 +284,13 @@ export default function Navbar() {
       </div>
 
     </nav>
+
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onConfirm={handleLogoutConfirm}
+        onCancel={handleLogoutCancel}
+      />
+    </>
   )
 }

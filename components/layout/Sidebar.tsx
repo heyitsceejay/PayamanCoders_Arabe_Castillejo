@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import LogoutConfirmModal from '@/components/modals/LogoutConfirmModal'
 import {
   Home,
   Briefcase,
@@ -12,16 +13,12 @@ import {
   Users,
   Video,
   Award,
-  Settings,
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Menu,
-  X,
   Target,
   MessageCircle,
   TrendingUp,
-  Calendar,
   Building2,
   UserPlus,
   Shield,
@@ -41,6 +38,7 @@ export default function Sidebar() {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
 
   // Don't render sidebar if user is not authenticated
   if (!user) {
@@ -183,9 +181,18 @@ export default function Sidebar() {
     return user?.role && item.roles.includes(user.role)
   })
 
-  const handleLogout = async () => {
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true)
+  }
+
+  const handleLogoutConfirm = async () => {
     await logout()
+    setShowLogoutModal(false)
     setIsMobileOpen(false)
+  }
+
+  const handleLogoutCancel = () => {
+    setShowLogoutModal(false)
   }
 
   const SidebarContent = () => (
@@ -269,31 +276,10 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom Actions */}
-      <div className="p-4 border-t border-white/40 bg-gradient-to-r from-primary-500/5 via-transparent to-secondary-500/5 space-y-2">
-        <Link
-          href="/settings"
-          onClick={() => setIsMobileOpen(false)}
-          className={`
-            relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-500 group/settings overflow-hidden
-            text-secondary-700 hover:scale-[1.03] hover:shadow-lg hover:shadow-primary-500/20
-            ${isCollapsed ? 'justify-center px-3' : ''}
-          `}
-          title={isCollapsed ? 'Settings' : undefined}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover/settings:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-          <div className={`relative flex-shrink-0 ${isCollapsed ? 'w-7 h-7' : 'w-6 h-6'} flex items-center justify-center`}>
-            <Settings className={`w-full h-full group-hover/settings:scale-110 group-hover/settings:rotate-90 group-hover/settings:drop-shadow-md transition-all duration-500`} />
-          </div>
-          {!isCollapsed && (
-            <span className="relative font-semibold text-base flex-1 group-hover/settings:text-primary-600 transition-colors duration-300">
-              Settings
-            </span>
-          )}
-        </Link>
-        
+      <div className="p-4 border-t border-white/40 bg-gradient-to-r from-primary-500/5 via-transparent to-secondary-500/5">
         {user && (
           <button
-            onClick={handleLogout}
+            onClick={handleLogoutClick}
             className={`
               relative w-full flex items-center gap-2 px-4 py-3.5 rounded-2xl transition-all duration-500 group/logout overflow-hidden
               text-secondary-700 hover:scale-[1.03] hover:shadow-lg hover:shadow-red-500/20
@@ -366,6 +352,13 @@ export default function Sidebar() {
 
       {/* Spacer for desktop */}
       <div className={`hidden lg:block transition-all duration-500 ${isCollapsed ? 'w-24' : 'w-72'}`} />
+
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onConfirm={handleLogoutConfirm}
+        onCancel={handleLogoutCancel}
+      />
     </>
   )
 }
