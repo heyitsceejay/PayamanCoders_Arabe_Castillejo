@@ -130,154 +130,181 @@ export default function StudentHomepage() {
       <div className="auth-background-grid" aria-hidden="true" />
       {isEntering && <div className="auth-entry-overlay" />}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-purple-500/20 blur-3xl"></div>
-        <div className="absolute right-[-10%] top-20 h-72 w-72 rounded-full bg-blue-500/15 blur-3xl"></div>
+        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-purple-500/30 blur-3xl animate-pulse"></div>
+        <div className="absolute right-[-10%] top-20 h-72 w-72 rounded-full bg-blue-500/25 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute left-[-10%] bottom-20 h-80 w-80 rounded-full bg-purple-400/20 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 right-1/4 h-96 w-96 rounded-full bg-blue-400/15 blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className={`mb-8 ${isEntering ? 'auth-panel-enter' : ''}`}>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 text-white">
-              <GraduationCap className="h-7 w-7" />
+        <div className={`mb-10 ${isEntering ? 'auth-panel-enter' : ''}`}>
+          <div className="relative overflow-hidden group/header mb-4">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-blue-500/5 to-purple-500/5 opacity-0 group-hover/header:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+            <div className="relative flex items-center gap-4">
+              <div className="relative flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 via-purple-600 to-blue-500 text-white shadow-xl shadow-purple-500/40 group/icon flex-shrink-0">
+                <GraduationCap className="h-8 w-8 md:h-10 md:w-10 relative z-10 group-hover/icon:scale-110 group-hover/icon:rotate-12 transition-all duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-400/50 to-blue-400/50 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute -inset-1 bg-gradient-to-br from-purple-400/30 to-blue-400/30 rounded-2xl blur-xl opacity-0 group-hover/icon:opacity-100 animate-pulse transition-opacity duration-300"></div>
+              </div>
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 animate-[floatUp_0.85s_ease-out] mb-2">
+                  Welcome, {user?.firstName || 'Student'}! 🎓
+                </h1>
+                <p className="text-lg md:text-xl text-secondary-600">
+                  Your journey to career success starts here
+                </p>
+              </div>
             </div>
-            <h1 className="auth-title text-3xl font-bold animate-[floatUp_0.85s_ease-out]">
-              Welcome, {user?.firstName || 'Student'}! 🎓
-            </h1>
           </div>
-          <p className="auth-subtitle">
-            Your journey to career success starts here
-          </p>
         </div>
 
         {/* Profile and Tips Section */}
-        <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="mb-10 grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Profile Card */}
           <ProfileCard userProfile={userProfile} />
 
           {/* Tips Cards */}
-          <div className="lg:col-span-2 grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="card border-blue-200/50 bg-gradient-to-br from-blue-50/50 to-white">
-              <div className="mb-3 flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                  <Sparkles className="h-5 w-5" />
+          <div className="lg:col-span-2 grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="card relative overflow-hidden group/tips hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] border-2 border-blue-200/50 bg-gradient-to-br from-blue-50/50 to-white">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-cyan-500/10 opacity-0 group-hover/tips:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative p-8">
+                <div className="mb-6 flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-blue-500/40 bg-blue-500/20 text-blue-600 shadow-lg shadow-blue-500/40 group-hover/tips:scale-110 group-hover/tips:rotate-12 transition-all duration-500">
+                    <Sparkles className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900">Student Tips</h3>
                 </div>
-                <h3 className="font-semibold text-gray-900">Student Tips</h3>
+                <ul className="space-y-3 text-base text-secondary-700">
+                  <li className="flex items-start gap-3">
+                    <span className="text-blue-600 text-xl font-bold">•</span>
+                    <span>Complete skill assessments to earn certificates</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-blue-600 text-xl font-bold">•</span>
+                    <span>Attend webinars to learn from industry experts</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-blue-600 text-xl font-bold">•</span>
+                    <span>Build your resume early to stand out</span>
+                  </li>
+                </ul>
               </div>
-              <ul className="space-y-2 text-sm text-secondary-700">
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600">•</span>
-                  <span>Complete skill assessments to earn certificates</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600">•</span>
-                  <span>Attend webinars to learn from industry experts</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600">•</span>
-                  <span>Build your resume early to stand out</span>
-                </li>
-              </ul>
             </div>
 
-            <div className="card border-green-200/50 bg-gradient-to-br from-green-50/50 to-white">
-              <div className="mb-3 flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-100 text-green-600">
-                  <TrendingUp className="h-5 w-5" />
+            <div className="card relative overflow-hidden group/progress hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] border-2 border-green-200/50 bg-gradient-to-br from-green-50/50 to-white">
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-emerald-500/10 opacity-0 group-hover/progress:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative p-8">
+                <div className="mb-6 flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-green-500/40 bg-green-500/20 text-green-600 shadow-lg shadow-green-500/40 group-hover/progress:scale-110 group-hover/progress:rotate-12 transition-all duration-500">
+                    <TrendingUp className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900">Your Progress</h3>
                 </div>
-                <h3 className="font-semibold text-gray-900">Your Progress</h3>
-              </div>
-              <p className="mb-3 text-sm text-secondary-700">
-                Keep learning and growing your skills to prepare for your career!
-              </p>
-              <div className="text-xs text-secondary-600">
-                You're on the right track. Continue attending webinars and taking assessments.
+                <p className="mb-4 text-base text-secondary-700 font-medium">
+                  Keep learning and growing your skills to prepare for your career!
+                </p>
+                <div className="text-sm text-secondary-600">
+                  You're on the right track. Continue attending webinars and taking assessments.
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           <div
-            className="stat-card"
+            className="stat-card relative overflow-hidden group/stat hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02]"
             style={{ '--float-delay': '0.1s' } as CSSProperties}
           >
-            <div className="p-6">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.15),transparent_70%)] opacity-0 group-hover/stat:opacity-100 transition-opacity duration-700"></div>
+            <div className="relative p-8">
               <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-purple-500/35 bg-purple-500/15 text-purple-500 shadow-inner shadow-purple-700/25">
-                    <Video className="h-7 w-7" />
+                <div className="flex-shrink-0 relative group/icon">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-purple-500/40 bg-purple-500/20 text-purple-600 shadow-xl shadow-purple-500/40 group-hover/icon:scale-110 group-hover/icon:rotate-12 transition-all duration-500">
+                    <Video className="h-8 w-8 group-hover/icon:drop-shadow-[0_0_8px_rgba(147,51,234,0.6)] transition-all duration-300" />
                   </div>
+                  <div className="absolute -inset-1 bg-gradient-to-br from-purple-400/30 to-purple-600/30 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
                 </div>
-                <div className="ml-5 flex-1 min-w-0">
-                  <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                <div className="ml-6 flex-1 min-w-0">
+                  <p className="text-xs font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-2 break-words">
                     Webinars
                   </p>
-                  <p className="stat-number">{stats.webinarsAttended}</p>
+                  <p className="stat-number text-3xl md:text-4xl">{stats.webinarsAttended}</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div
-            className="stat-card"
+            className="stat-card relative overflow-hidden group/stat hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02]"
             style={{ '--float-delay': '0.2s' } as CSSProperties}
           >
-            <div className="p-6">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-cyan-500/10 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15),transparent_70%)] opacity-0 group-hover/stat:opacity-100 transition-opacity duration-700"></div>
+            <div className="relative p-8">
               <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-500/35 bg-blue-500/15 text-blue-500 shadow-inner shadow-blue-700/25">
-                    <FileText className="h-7 w-7" />
+                <div className="flex-shrink-0 relative group/icon">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-blue-500/40 bg-blue-500/20 text-blue-600 shadow-xl shadow-blue-500/40 group-hover/icon:scale-110 group-hover/icon:rotate-12 transition-all duration-500">
+                    <FileText className="h-8 w-8 group-hover/icon:drop-shadow-[0_0_8px_rgba(59,130,246,0.6)] transition-all duration-300" />
                   </div>
+                  <div className="absolute -inset-1 bg-gradient-to-br from-blue-400/30 to-blue-600/30 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
                 </div>
-                <div className="ml-5 flex-1 min-w-0">
-                  <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                <div className="ml-6 flex-1 min-w-0">
+                  <p className="text-xs font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-2 break-words">
                     Assessments
                   </p>
-                  <p className="stat-number">{stats.assessmentsTaken}</p>
+                  <p className="stat-number text-3xl md:text-4xl">{stats.assessmentsTaken}</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div
-            className="stat-card"
+            className="stat-card relative overflow-hidden group/stat hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02]"
             style={{ '--float-delay': '0.3s' } as CSSProperties}
           >
-            <div className="p-6">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-emerald-500/10 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.15),transparent_70%)] opacity-0 group-hover/stat:opacity-100 transition-opacity duration-700"></div>
+            <div className="relative p-8">
               <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-green-500/35 bg-green-500/15 text-green-500 shadow-inner shadow-green-700/25">
-                    <Award className="h-7 w-7" />
+                <div className="flex-shrink-0 relative group/icon">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-green-500/40 bg-green-500/20 text-green-600 shadow-xl shadow-green-500/40 group-hover/icon:scale-110 group-hover/icon:rotate-12 transition-all duration-500">
+                    <Award className="h-8 w-8 group-hover/icon:drop-shadow-[0_0_8px_rgba(34,197,94,0.6)] transition-all duration-300" />
                   </div>
+                  <div className="absolute -inset-1 bg-gradient-to-br from-green-400/30 to-green-600/30 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
                 </div>
-                <div className="ml-5 flex-1 min-w-0">
-                  <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                <div className="ml-6 flex-1 min-w-0">
+                  <p className="text-xs font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-2 break-words">
                     Certificates
                   </p>
-                  <p className="stat-number">{stats.certificatesEarned}</p>
+                  <p className="stat-number text-3xl md:text-4xl">{stats.certificatesEarned}</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div
-            className="stat-card"
+            className="stat-card relative overflow-hidden group/stat hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02]"
             style={{ '--float-delay': '0.4s' } as CSSProperties}
           >
-            <div className="p-6">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-amber-500/10 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(249,115,22,0.15),transparent_70%)] opacity-0 group-hover/stat:opacity-100 transition-opacity duration-700"></div>
+            <div className="relative p-8">
               <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-orange-500/35 bg-orange-500/15 text-orange-500 shadow-inner shadow-orange-700/25">
-                    <TrendingUp className="h-7 w-7" />
+                <div className="flex-shrink-0 relative group/icon">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-orange-500/40 bg-orange-500/20 text-orange-600 shadow-xl shadow-orange-500/40 group-hover/icon:scale-110 group-hover/icon:rotate-12 transition-all duration-500">
+                    <TrendingUp className="h-8 w-8 group-hover/icon:drop-shadow-[0_0_8px_rgba(249,115,22,0.6)] transition-all duration-300" />
                   </div>
+                  <div className="absolute -inset-1 bg-gradient-to-br from-orange-400/30 to-orange-600/30 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
                 </div>
-                <div className="ml-5 flex-1 min-w-0">
-                  <p className="text-base font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-1 break-words">
+                <div className="ml-6 flex-1 min-w-0">
+                  <p className="text-xs font-medium uppercase tracking-wide text-secondary-600 leading-tight mb-2 break-words">
                     Learning Hours
                   </p>
-                  <p className="stat-number">{stats.learningHours}</p>
+                  <p className="stat-number text-3xl md:text-4xl">{stats.learningHours}</p>
                 </div>
               </div>
             </div>
@@ -285,264 +312,303 @@ export default function StudentHomepage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-8">
-          <h2 className="feature-heading text-xl font-semibold mb-6 animate-[floatUp_0.85s_ease-out]">
+        <div className="mb-10">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 animate-[floatUp_0.85s_ease-out]">
             Quick Actions
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Link
               href="/webinars"
-              className="feature-card p-6 group"
+              className="feature-card relative overflow-hidden p-8 group hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02]"
               style={{ '--float-delay': '0.1s' } as CSSProperties}
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-purple-600 mb-4 group-hover:scale-110 transition-transform">
-                <Video className="h-6 w-6" />
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(147,51,234,0.15),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              <div className="relative">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-purple-500/40 bg-purple-500/20 text-purple-600 mb-6 shadow-xl shadow-purple-500/40 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 group/icon">
+                  <Video className="h-8 w-8 group-hover/icon:drop-shadow-[0_0_8px_rgba(147,51,234,0.6)] transition-all duration-300" />
+                  <div className="absolute -inset-1 bg-gradient-to-br from-purple-400/30 to-purple-600/30 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">
+                  Career Webinars
+                </h3>
+                <p className="text-base text-secondary-600">Learn from experts</p>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
-                Career Webinars
-              </h3>
-              <p className="text-sm text-secondary-600">Learn from experts</p>
             </Link>
 
             <Link
               href="/interview-prep"
-              className="feature-card p-6 group"
+              className="feature-card relative overflow-hidden p-8 group hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02]"
               style={{ '--float-delay': '0.2s' } as CSSProperties}
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-600 mb-4 group-hover:scale-110 transition-transform">
-                <Target className="h-6 w-6" />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              <div className="relative">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-blue-500/40 bg-blue-500/20 text-blue-600 mb-6 shadow-xl shadow-blue-500/40 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 group/icon">
+                  <Target className="h-8 w-8 group-hover/icon:drop-shadow-[0_0_8px_rgba(59,130,246,0.6)] transition-all duration-300" />
+                  <div className="absolute -inset-1 bg-gradient-to-br from-blue-400/30 to-blue-600/30 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">
+                  Interview Prep
+                </h3>
+                <p className="text-base text-secondary-600">AI-powered tips</p>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
-                Interview Prep
-              </h3>
-              <p className="text-sm text-secondary-600">AI-powered tips</p>
             </Link>
 
             <Link
               href="/mentors"
-              className="feature-card p-6 group"
+              className="feature-card relative overflow-hidden p-8 group hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02]"
               style={{ '--float-delay': '0.3s' } as CSSProperties}
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-600 mb-4 group-hover:scale-110 transition-transform">
-                <Users className="h-6 w-6" />
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.15),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              <div className="relative">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-green-500/40 bg-green-500/20 text-green-600 mb-6 shadow-xl shadow-green-500/40 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 group/icon">
+                  <Users className="h-8 w-8 group-hover/icon:drop-shadow-[0_0_8px_rgba(34,197,94,0.6)] transition-all duration-300" />
+                  <div className="absolute -inset-1 bg-gradient-to-br from-green-400/30 to-green-600/30 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">
+                  Find Mentors
+                </h3>
+                <p className="text-base text-secondary-600">Get guidance</p>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
-                Find Mentors
-              </h3>
-              <p className="text-sm text-secondary-600">Get guidance</p>
             </Link>
 
             <Link
               href="/resume-builder"
-              className="feature-card p-6 group"
+              className="feature-card relative overflow-hidden p-8 group hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02]"
               style={{ '--float-delay': '0.4s' } as CSSProperties}
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-orange-600 mb-4 group-hover:scale-110 transition-transform">
-                <FileText className="h-6 w-6" />
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-amber-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(249,115,22,0.15),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              <div className="relative">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-orange-500/40 bg-orange-500/20 text-orange-600 mb-6 shadow-xl shadow-orange-500/40 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 group/icon">
+                  <FileText className="h-8 w-8 group-hover/icon:drop-shadow-[0_0_8px_rgba(249,115,22,0.6)] transition-all duration-300" />
+                  <div className="absolute -inset-1 bg-gradient-to-br from-orange-400/30 to-orange-600/30 rounded-2xl blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">
+                  Resume Builder
+                </h3>
+                <p className="text-base text-secondary-600">Create your resume</p>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
-                Resume Builder
-              </h3>
-              <p className="text-sm text-secondary-600">Create your resume</p>
             </Link>
           </div>
         </div>
 
         {/* Profile and Tips Section */}
-        <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="mb-10 grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Profile Card */}
           <ProfileCard userProfile={userProfile} />
 
           {/* Tips Cards */}
-          <div className="lg:col-span-2 grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="card border-blue-200/50 bg-gradient-to-br from-blue-50/50 to-white">
-              <div className="mb-3 flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                  <Sparkles className="h-5 w-5" />
+          <div className="lg:col-span-2 grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="card relative overflow-hidden group/tips hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] border-2 border-blue-200/50 bg-gradient-to-br from-blue-50/50 to-white">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-cyan-500/10 opacity-0 group-hover/tips:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative p-8">
+                <div className="mb-6 flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-blue-500/40 bg-blue-500/20 text-blue-600 shadow-lg shadow-blue-500/40 group-hover/tips:scale-110 group-hover/tips:rotate-12 transition-all duration-500">
+                    <Sparkles className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900">Student Tips</h3>
                 </div>
-                <h3 className="font-semibold text-gray-900">Student Tips</h3>
+                <ul className="space-y-3 text-base text-secondary-700">
+                  <li className="flex items-start gap-3">
+                    <span className="text-blue-600 text-xl font-bold">•</span>
+                    <span>Complete skill assessments to earn certificates</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-blue-600 text-xl font-bold">•</span>
+                    <span>Attend webinars to learn from industry experts</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-blue-600 text-xl font-bold">•</span>
+                    <span>Build your resume early to stand out</span>
+                  </li>
+                </ul>
               </div>
-              <ul className="space-y-2 text-sm text-secondary-700">
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600">•</span>
-                  <span>Complete skill assessments to earn certificates</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600">•</span>
-                  <span>Attend webinars to learn from industry experts</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600">•</span>
-                  <span>Build your resume early to stand out</span>
-                </li>
-              </ul>
             </div>
 
-            <div className="card border-green-200/50 bg-gradient-to-br from-green-50/50 to-white">
-              <div className="mb-3 flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-100 text-green-600">
-                  <TrendingUp className="h-5 w-5" />
+            <div className="card relative overflow-hidden group/progress hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] border-2 border-green-200/50 bg-gradient-to-br from-green-50/50 to-white">
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-emerald-500/10 opacity-0 group-hover/progress:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative p-8">
+                <div className="mb-6 flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-green-500/40 bg-green-500/20 text-green-600 shadow-lg shadow-green-500/40 group-hover/progress:scale-110 group-hover/progress:rotate-12 transition-all duration-500">
+                    <TrendingUp className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900">Your Progress</h3>
                 </div>
-                <h3 className="font-semibold text-gray-900">Your Progress</h3>
-              </div>
-              <p className="mb-3 text-sm text-secondary-700">
-                Keep learning and growing your skills to prepare for your career!
-              </p>
-              <div className="text-xs text-secondary-600">
-                You're on the right track. Continue attending webinars and taking assessments.
+                <p className="mb-4 text-base text-secondary-700 font-medium">
+                  Keep learning and growing your skills to prepare for your career!
+                </p>
+                <div className="text-sm text-secondary-600">
+                  You're on the right track. Continue attending webinars and taking assessments.
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Learning Path */}
-          <div className="card">
-            <div className="flex items-center gap-2 mb-6 animate-[floatUp_0.85s_ease-out]">
-              <Target className="h-5 w-5 text-purple-600" />
-              <h2 className="feature-heading text-xl font-semibold">
-                Your Learning Path
-              </h2>
-            </div>
-            <div className="space-y-4">
-              <div
-                className="feature-card flex items-center gap-4 p-4"
-                style={{ '--float-delay': '0.1s' } as CSSProperties}
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-600 text-white">
-                  <span className="text-sm font-bold">1</span>
+          <div className="card relative overflow-hidden group/path hover:shadow-2xl hover:shadow-primary-500/30 transition-all duration-500">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover/path:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative p-8">
+              <div className="flex items-center gap-3 mb-8 animate-[floatUp_0.85s_ease-out]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-purple-500/40 bg-purple-500/20 text-purple-600 shadow-lg shadow-purple-500/40">
+                  <Target className="h-6 w-6" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">
-                    Complete Your Profile
-                  </h3>
-                  <p className="text-sm text-secondary-600">
-                    Add your skills and experience
-                  </p>
-                </div>
-                <Link href="/profile" className="btn-secondary px-4 py-2 text-sm">
-                  Start
-                </Link>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                  Your Learning Path
+                </h2>
               </div>
+              <div className="space-y-5">
+                <div
+                  className="feature-card relative overflow-hidden flex items-center gap-5 p-6 group/step hover:shadow-xl hover:shadow-purple-500/30 transition-all duration-500 hover:-translate-y-1 hover:scale-[1.02]"
+                  style={{ '--float-delay': '0.1s' } as CSSProperties}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 opacity-0 group-hover/step:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative flex h-14 w-14 items-center justify-center rounded-xl border-2 border-purple-500/40 bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-xl shadow-purple-500/40 group-hover/step:scale-110 group-hover/step:rotate-12 transition-all duration-500 flex-shrink-0">
+                    <span className="text-lg font-bold">1</span>
+                  </div>
+                  <div className="flex-1 relative z-10">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">
+                      Complete Your Profile
+                    </h3>
+                    <p className="text-base text-secondary-600">
+                      Add your skills and experience
+                    </p>
+                  </div>
+                  <Link href="/profile" className="btn-secondary px-6 py-3 text-base font-bold relative z-10 hover:scale-110 transition-transform duration-300">
+                    Start
+                  </Link>
+                </div>
 
-              <div
-                className="feature-card flex items-center gap-4 p-4"
-                style={{ '--float-delay': '0.2s' } as CSSProperties}
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-white">
-                  <span className="text-sm font-bold">2</span>
+                <div
+                  className="feature-card relative overflow-hidden flex items-center gap-5 p-6 group/step hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-500 hover:-translate-y-1 hover:scale-[1.02]"
+                  style={{ '--float-delay': '0.2s' } as CSSProperties}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-cyan-500/10 opacity-0 group-hover/step:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative flex h-14 w-14 items-center justify-center rounded-xl border-2 border-blue-500/40 bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-xl shadow-blue-500/40 group-hover/step:scale-110 group-hover/step:rotate-12 transition-all duration-500 flex-shrink-0">
+                    <span className="text-lg font-bold">2</span>
+                  </div>
+                  <div className="flex-1 relative z-10">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">
+                      Take Skill Assessments
+                    </h3>
+                    <p className="text-base text-secondary-600">
+                      Test your knowledge and earn certificates
+                    </p>
+                  </div>
+                  <Link href="/assessments" className="btn-secondary px-6 py-3 text-base font-bold relative z-10 hover:scale-110 transition-transform duration-300">
+                    Start
+                  </Link>
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">
-                    Take Skill Assessments
-                  </h3>
-                  <p className="text-sm text-secondary-600">
-                    Test your knowledge and earn certificates
-                  </p>
-                </div>
-                <Link href="/assessments" className="btn-secondary px-4 py-2 text-sm">
-                  Start
-                </Link>
-              </div>
 
-              <div
-                className="feature-card flex items-center gap-4 p-4"
-                style={{ '--float-delay': '0.3s' } as CSSProperties}
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-600 text-white">
-                  <span className="text-sm font-bold">3</span>
+                <div
+                  className="feature-card relative overflow-hidden flex items-center gap-5 p-6 group/step hover:shadow-xl hover:shadow-green-500/30 transition-all duration-500 hover:-translate-y-1 hover:scale-[1.02]"
+                  style={{ '--float-delay': '0.3s' } as CSSProperties}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-emerald-500/10 opacity-0 group-hover/step:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative flex h-14 w-14 items-center justify-center rounded-xl border-2 border-green-500/40 bg-gradient-to-br from-green-500 to-green-600 text-white shadow-xl shadow-green-500/40 group-hover/step:scale-110 group-hover/step:rotate-12 transition-all duration-500 flex-shrink-0">
+                    <span className="text-lg font-bold">3</span>
+                  </div>
+                  <div className="flex-1 relative z-10">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">
+                      Attend Webinars
+                    </h3>
+                    <p className="text-base text-secondary-600">
+                      Learn from industry professionals
+                    </p>
+                  </div>
+                  <Link href="/webinars" className="btn-secondary px-6 py-3 text-base font-bold relative z-10 hover:scale-110 transition-transform duration-300">
+                    Browse
+                  </Link>
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">
-                    Attend Webinars
-                  </h3>
-                  <p className="text-sm text-secondary-600">
-                    Learn from industry professionals
-                  </p>
-                </div>
-                <Link href="/webinars" className="btn-secondary px-4 py-2 text-sm">
-                  Browse
-                </Link>
-              </div>
 
-              <div
-                className="feature-card flex items-center gap-4 p-4"
-                style={{ '--float-delay': '0.4s' } as CSSProperties}
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-600 text-white">
-                  <span className="text-sm font-bold">4</span>
+                <div
+                  className="feature-card relative overflow-hidden flex items-center gap-5 p-6 group/step hover:shadow-xl hover:shadow-orange-500/30 transition-all duration-500 hover:-translate-y-1 hover:scale-[1.02]"
+                  style={{ '--float-delay': '0.4s' } as CSSProperties}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-amber-500/10 opacity-0 group-hover/step:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative flex h-14 w-14 items-center justify-center rounded-xl border-2 border-orange-500/40 bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-xl shadow-orange-500/40 group-hover/step:scale-110 group-hover/step:rotate-12 transition-all duration-500 flex-shrink-0">
+                    <span className="text-lg font-bold">4</span>
+                  </div>
+                  <div className="flex-1 relative z-10">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">
+                      Apply for Internships
+                    </h3>
+                    <p className="text-base text-secondary-600">
+                      Gain real-world experience
+                    </p>
+                  </div>
+                  <Link href="/jobs?type=internship" className="btn-secondary px-6 py-3 text-base font-bold relative z-10 hover:scale-110 transition-transform duration-300">
+                    Search
+                  </Link>
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">
-                    Apply for Internships
-                  </h3>
-                  <p className="text-sm text-secondary-600">
-                    Gain real-world experience
-                  </p>
-                </div>
-                <Link href="/jobs?type=internship" className="btn-secondary px-4 py-2 text-sm">
-                  Search
-                </Link>
               </div>
             </div>
           </div>
 
           {/* Upcoming Webinars */}
-          <div className="card">
-            <div className="flex justify-between items-center mb-6 animate-[floatUp_0.85s_ease-out]">
-              <h2 className="feature-heading text-xl font-semibold">
-                Upcoming Webinars
-              </h2>
-              <Link href="/webinars" className="auth-link text-sm font-medium">
-                View All
-              </Link>
-            </div>
-
-            {upcomingWebinars.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="feature-icon mx-auto mb-4 w-16 h-16">
-                  <Video className="w-8 h-8 text-primary-500" />
-                </div>
-                <p className="auth-subtitle mb-6">No upcoming webinars</p>
-                <Link
-                  href="/webinars"
-                  className="btn-primary inline-flex items-center gap-2"
-                >
-                  Browse Webinars
+          <div className="card relative overflow-hidden group/webinars hover:shadow-2xl hover:shadow-primary-500/30 transition-all duration-500">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover/webinars:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative p-8">
+              <div className="flex justify-between items-center mb-8 animate-[floatUp_0.85s_ease-out]">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                  Upcoming Webinars
+                </h2>
+                <Link href="/webinars" className="auth-link text-base font-bold hover:scale-110 transition-transform duration-300">
+                  View All
                 </Link>
               </div>
-            ) : (
-              <div className="space-y-4">
-                {upcomingWebinars.map((webinar, index) => (
+
+              {upcomingWebinars.length === 0 ? (
+                <div className="text-center py-16">
+                  <div className="feature-icon mx-auto mb-6 w-20 h-20">
+                    <Video className="w-12 h-12 text-primary-500" />
+                  </div>
+                  <p className="text-lg text-secondary-600 mb-8 font-medium">No upcoming webinars</p>
                   <Link
-                    key={webinar._id}
-                    href={`/webinars/${webinar._id}`}
-                    className="feature-card p-5 group block"
-                    style={
-                      { '--float-delay': `${0.1 + index * 0.08}s` } as CSSProperties
-                    }
+                    href="/webinars"
+                    className="btn-primary inline-flex items-center gap-3 px-8 py-4 text-base font-bold hover:scale-110 transition-transform duration-300"
                   >
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
-                        <Video className="h-5 w-5" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-primary-600 transition-colors">
-                          {webinar.title}
-                        </h3>
-                        <p className="text-sm text-secondary-600 mb-2">
-                          by {webinar.host.name}
-                        </p>
-                        <div className="flex items-center gap-2 text-xs text-secondary-500">
-                          <Calendar className="h-3.5 w-3.5" />
-                          {formatDate(webinar.scheduledDate)}
+                    Browse Webinars
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  {upcomingWebinars.map((webinar, index) => (
+                    <Link
+                      key={webinar._id}
+                      href={`/webinars/${webinar._id}`}
+                      className="feature-card relative overflow-hidden p-6 group/webinar block hover:shadow-xl hover:shadow-purple-500/30 transition-all duration-500 hover:-translate-y-1 hover:scale-[1.02]"
+                      style={
+                        { '--float-delay': `${0.1 + index * 0.08}s` } as CSSProperties
+                      }
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 opacity-0 group-hover/webinar:opacity-100 transition-opacity duration-500"></div>
+                      <div className="flex items-start gap-4 relative z-10">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-xl border-2 border-purple-500/40 bg-purple-500/20 text-purple-600 shadow-lg shadow-purple-500/40 group-hover/webinar:scale-110 group-hover/webinar:rotate-12 transition-all duration-500 flex-shrink-0">
+                          <Video className="h-7 w-7" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover/webinar:text-primary-600 transition-colors">
+                            {webinar.title}
+                          </h3>
+                          <p className="text-base text-secondary-600 mb-3 font-medium">
+                            by {webinar.host.name}
+                          </p>
+                          <div className="flex items-center gap-2 text-sm text-secondary-500">
+                            <Calendar className="h-4 w-4" />
+                            {formatDate(webinar.scheduledDate)}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
