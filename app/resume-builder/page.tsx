@@ -20,21 +20,27 @@ export default function ResumeBuilderPage() {
   const [resumeData, setResumeData] = useState<any>(null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="hero-gradient relative min-h-screen overflow-hidden">
+      <div className="auth-background-grid" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-primary-500/20 blur-3xl"></div>
+        <div className="absolute right-[-10%] top-20 h-72 w-72 rounded-full bg-secondary-500/15 blur-3xl"></div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 animate-[floatUp_0.85s_ease-out]">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-3 rounded-xl">
-              <FileText className="w-8 h-8 text-white" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary-500/35 bg-primary-500/15 text-primary-500 shadow-inner shadow-primary-700/25">
+              <FileText className="w-7 h-7" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="auth-title text-4xl font-bold">
               Resume Builder
             </h1>
-            <Sparkles className="w-6 h-6 text-purple-600 animate-pulse" />
+            <Sparkles className="w-6 h-6 text-primary-600 animate-pulse" />
           </div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Create a professional resume in minutes
+          <p className="auth-subtitle text-lg max-w-2xl mx-auto">
+            Create a professional resume in minutes with AI assistance
           </p>
         </div>
 
@@ -47,9 +53,9 @@ export default function ResumeBuilderPage() {
               active={step === 'build'}
               completed={step === 'preview'}
             />
-            <div className="w-24 h-1 bg-gray-300 rounded">
+            <div className="w-24 h-1 bg-white/40 rounded-full backdrop-blur">
               <div 
-                className={`h-full bg-purple-600 rounded transition-all ${
+                className={`h-full bg-gradient-to-r from-primary-600 to-primary-500 rounded-full transition-all duration-500 ${
                   step === 'preview' ? 'w-full' : 'w-0'
                 }`}
               />
@@ -95,57 +101,61 @@ export default function ResumeBuilderPage() {
           {/* Right Column - Tips */}
           <div className="space-y-6">
             {/* Tips Card */}
-            <div className="bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg p-6">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-purple-600" />
+            <div className="card border-primary-200/50 bg-gradient-to-br from-primary-50/50 to-white">
+              <h3 className="feature-heading text-lg font-semibold mb-4 flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-500/15 text-primary-600">
+                  <TrendingUp className="w-4 h-4" />
+                </div>
                 Pro Tips
               </h3>
-              <ul className="space-y-2 text-sm text-gray-700">
+              <ul className="space-y-3 text-sm text-secondary-700">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  Use action verbs to start bullet points
+                  <span>Use action verbs to start bullet points</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  Quantify achievements with numbers
+                  <span>Quantify achievements with numbers</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  Highlight relevant skills and experience
+                  <span>Highlight relevant skills and experience</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  Keep it concise (1-2 pages max)
+                  <span>Keep it concise (1-2 pages max)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  Proofread for spelling and grammar
+                  <span>Proofread for spelling and grammar</span>
                 </li>
               </ul>
             </div>
 
             {/* Best Practices */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                <Lightbulb className="w-5 h-5 text-yellow-500" />
+            <div className="card">
+              <h3 className="feature-heading text-lg font-semibold mb-4 flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-500/15 text-yellow-600">
+                  <Lightbulb className="w-4 h-4" />
+                </div>
                 Best Practices
               </h3>
-              <ul className="space-y-2 text-sm text-gray-700">
+              <ul className="space-y-3 text-sm text-secondary-700">
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-600 font-bold">•</span>
-                  Include contact information at the top
+                  <span className="text-primary-600 font-bold">•</span>
+                  <span>Include contact information at the top</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-600 font-bold">•</span>
-                  List work experience in reverse chronological order
+                  <span className="text-primary-600 font-bold">•</span>
+                  <span>List work experience in reverse chronological order</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-600 font-bold">•</span>
-                  Focus on achievements, not just responsibilities
+                  <span className="text-primary-600 font-bold">•</span>
+                  <span>Focus on achievements, not just responsibilities</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-600 font-bold">•</span>
-                  Tailor your resume for each application
+                  <span className="text-primary-600 font-bold">•</span>
+                  <span>Tailor your resume for each application</span>
                 </li>
               </ul>
             </div>
@@ -170,17 +180,17 @@ function StepIndicator({
   return (
     <div className="flex flex-col items-center gap-2">
       <div 
-        className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
+        className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${
           active 
-            ? 'bg-purple-600 text-white ring-4 ring-purple-200' 
+            ? 'bg-gradient-to-br from-primary-600 to-primary-500 text-white ring-4 ring-primary-200 shadow-lg shadow-primary-500/30' 
             : completed
-            ? 'bg-green-600 text-white'
-            : 'bg-gray-200 text-gray-500'
+            ? 'bg-gradient-to-br from-green-600 to-green-500 text-white shadow-lg'
+            : 'bg-white/60 text-secondary-500 border border-white/40 backdrop-blur'
         }`}
       >
-        {completed ? <CheckCircle className="w-5 h-5" /> : number}
+        {completed ? <CheckCircle className="w-6 h-6" /> : number}
       </div>
-      <span className={`text-xs font-medium ${active ? 'text-purple-600' : 'text-gray-500'}`}>
+      <span className={`text-sm font-medium ${active ? 'text-primary-600' : 'text-secondary-500'}`}>
         {label}
       </span>
     </div>
