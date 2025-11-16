@@ -60,6 +60,14 @@ export default function Navbar() {
           <BookOpen className={`nav-icon ${isActive('/career-map') ? 'text-yellow-500' : 'text-secondary-500 group-hover:text-primary-500'}`} />
           Career Map
         </Link>
+        <Link href="/webinars" className={`nav-link group ${isActive('/webinars') ? 'nav-link-active' : ''}`}>
+          <BookOpen className="nav-icon text-secondary-500 group-hover:text-primary-500" />
+          Webinars
+        </Link>
+        <Link href="/mentors" className={`nav-link group ${isActive('/mentors') ? 'nav-link-active' : ''}`}>
+          <Users className="nav-icon text-secondary-500 group-hover:text-primary-500" />
+          Mentors
+        </Link>
         <Link href="/community" className={`nav-link group ${isActive('/community') ? 'nav-link-active-green' : ''}`}>
           <Users className={`nav-icon ${isActive('/community') ? 'text-green-500' : 'text-secondary-500 group-hover:text-primary-500'}`} />
           Community
@@ -140,6 +148,14 @@ export default function Navbar() {
         <BookOpen className={`nav-icon ${isActive('/career-map') ? 'text-yellow-500' : 'text-secondary-500 group-hover:text-primary-500'}`} />
         Career Map
       </Link>
+      <Link href="/webinars" className={`nav-link group ${isActive('/webinars') ? 'nav-link-active' : ''}`}>
+        <BookOpen className="nav-icon text-secondary-500 group-hover:text-primary-500" />
+        Webinars
+      </Link>
+      <Link href="/mentors" className={`nav-link group ${isActive('/mentors') ? 'nav-link-active' : ''}`}>
+        <Users className="nav-icon text-secondary-500 group-hover:text-primary-500" />
+        Mentors
+      </Link>
       <Link href="/community" className={`nav-link group ${isActive('/community') ? 'nav-link-active-green' : ''}`}>
         <Users className={`nav-icon ${isActive('/community') ? 'text-green-500' : 'text-secondary-500 group-hover:text-primary-500'}`} />
         Community
@@ -165,6 +181,12 @@ export default function Navbar() {
       )}
       <Link href="/career-map" className={`nav-link-block ${isActive('/career-map') ? 'nav-link-block-active-yellow' : ''}`}>
         Career Map
+      </Link>
+      <Link href="/webinars" className={`nav-link-block ${isActive('/webinars') ? 'nav-link-block-active' : ''}`}>
+        Webinars
+      </Link>
+      <Link href="/mentors" className={`nav-link-block ${isActive('/mentors') ? 'nav-link-block-active' : ''}`}>
+        Mentors
       </Link>
       <Link href="/community" className={`nav-link-block ${isActive('/community') ? 'nav-link-block-active-green' : ''}`}>
         Community
@@ -196,6 +218,12 @@ export default function Navbar() {
       </Link>
       <Link href="/career-map" className={`nav-link-block ${isActive('/career-map') ? 'nav-link-block-active-yellow' : ''}`}>
         Career Map
+      </Link>
+      <Link href="/webinars" className={`nav-link-block ${isActive('/webinars') ? 'nav-link-block-active' : ''}`}>
+        Webinars
+      </Link>
+      <Link href="/mentors" className={`nav-link-block ${isActive('/mentors') ? 'nav-link-block-active' : ''}`}>
+        Mentors
       </Link>
       <Link href="/community" className={`nav-link-block ${isActive('/community') ? 'nav-link-block-active-green' : ''}`}>
         Community

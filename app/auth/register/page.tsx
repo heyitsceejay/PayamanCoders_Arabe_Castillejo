@@ -249,7 +249,9 @@ export default function RegisterPage() {
                 className="glass-input"
               >
                 <option value="job_seeker">Job Seeker</option>
+                <option value="student">Student</option>
                 <option value="employer">Employer</option>
+                <option value="mentor">Mentor</option>
               </select>
             </div>
           </div>

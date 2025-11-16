@@ -582,7 +582,7 @@ export default function AdminDashboard() {
                           className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold uppercase tracking-wider border shadow-inner ${
                             job.status === "active"
                               ? "text-green-600 bg-green-500/20 border-green-500/30 shadow-green-700/20"
-                              : job.status === "inactive" || job.status === "draft"
+                              : (job.status as string) === "inactive" || (job.status as string) === "draft"
                               ? "text-yellow-600 bg-yellow-500/20 border-yellow-500/30 shadow-yellow-700/20"
                               : "text-red-600 bg-red-500/20 border-red-500/30 shadow-red-700/20"
                           }`}

@@ -26,7 +26,7 @@ export const JobCard: React.FC<JobCardProps> = ({
   }
 
   return (
-    <Card variant="default" padding="md" hover={!!onView} onClick={onView}>
+    <Card variant="default" padding="md" hover={!!onView} onClick={onView ? () => onView(job) : undefined}>
       <div className="space-y-3">
         {/* Header */}
         <div className="flex justify-between items-start">
@@ -74,12 +74,12 @@ export const JobCard: React.FC<JobCardProps> = ({
         {showActions && (
           <div className="flex gap-2 pt-2">
             {onView && (
-              <Button variant="outline" size="sm" onClick={onView}>
+              <Button variant="outline" size="sm" onClick={() => onView(job)}>
                 View Details
               </Button>
             )}
             {onApply && !hasApplied && (
-              <Button variant="primary" size="sm" onClick={onApply}>
+              <Button variant="primary" size="sm" onClick={() => onApply(job)}>
                 Apply Now
               </Button>
             )}

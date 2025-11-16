@@ -5,7 +5,7 @@ export interface IUser extends mongoose.Document {
   password?: string
   firstName: string
   lastName: string
-  role: 'job_seeker' | 'employer' | 'mentor' | 'admin'
+  role: 'job_seeker' | 'employer' | 'mentor' | 'student' | 'admin'
   emailVerified: boolean
   emailVerificationToken?: string
   emailVerificationExpires?: Date
@@ -145,7 +145,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['job_seeker', 'employer', 'mentor', 'admin'],
+    enum: ['job_seeker', 'employer', 'mentor', 'student', 'admin'],
     default: 'job_seeker',
   },
   profile: {

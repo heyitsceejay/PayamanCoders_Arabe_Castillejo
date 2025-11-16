@@ -6,6 +6,7 @@ import Stats from '@/components/LandingPage/Stats'
 import JobSeekerHomepage from '@/components/homepage/JobSeekerHomepage'
 import EmployerHomepage from '@/components/homepage/EmployerHomepage'
 import MentorHomepage from '@/components/homepage/MentorHomepage'
+import StudentHomepage from '@/components/homepage/StudentHomepage'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function HomePage() {
@@ -26,6 +27,8 @@ if (user) {
       return <EmployerHomepage />
     case 'mentor':
       return <MentorHomepage />
+    case 'student':
+      return <StudentHomepage />
     case 'job_seeker':
       return <JobSeekerHomepage />
     case 'admin':

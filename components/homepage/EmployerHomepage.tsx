@@ -140,7 +140,7 @@ export default function EmployerHomepage() {
         <div className="mb-8 auth-panel flex flex-col gap-5 md:flex-row md:items-center md:justify-between max-w-5xl mx-auto" style={{ '--float-delay': '0.1s' } as CSSProperties}>
           <div className="flex-1 min-w-0 text-center md:text-left">
             <h1 className="auth-title text-2xl md:text-3xl font-bold mb-2 leading-tight">
-              Employer Portal{user ? ` — ${user.firstName || user.company || 'company'}` : ''}
+              Employer Portal{user ? ` — ${user.firstName || (user as any).company || 'company'}` : ''}
             </h1>
             <p className="auth-subtitle text-xs md:text-sm text-secondary-600/90 leading-relaxed">
               Manage your company, job listings, applicants, and hiring analytics
