@@ -15,6 +15,12 @@ export default function AdminVerificationPage() {
     fetchEmployers()
   }, [filter])
 
+  // Real-time updates every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(fetchEmployers, 30000)
+    return () => clearInterval(interval)
+  }, [filter])
+
   const fetchEmployers = async () => {
     setLoading(true)
     try {

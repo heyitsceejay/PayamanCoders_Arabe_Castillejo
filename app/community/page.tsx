@@ -49,6 +49,16 @@ export default function CommunityPage() {
     fetchTopContributors();
   }, [activeTab, selectedCategory, searchQuery]);
 
+  // Real-time updates every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchPosts();
+      fetchTopContributors();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [activeTab, selectedCategory, searchQuery]);
+
   const fetchPosts = async () => {
     try {
       setLoading(true);

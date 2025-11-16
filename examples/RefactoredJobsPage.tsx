@@ -75,7 +75,7 @@ export default function RefactoredJobsPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Find Your Next Opportunity</h1>
         <p className="text-gray-600">
-          Discover internships, apprenticeships, and job opportunities that match your skills and goals.
+          Discover internships and job opportunities that match your skills and goals.
         </p>
       </div>
 

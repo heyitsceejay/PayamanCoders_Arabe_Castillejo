@@ -236,7 +236,6 @@ export default function NewJobPage() {
                   className="glass-input w-full text-base px-5 py-4"
                 >
                   <option value="internship">Internship</option>
-                  <option value="apprenticeship">Apprenticeship</option>
                   <option value="full_time">Full Time</option>
                   <option value="part_time">Part Time</option>
                   <option value="contract">Contract</option>

@@ -1,32 +1,30 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { User, LogOut, Settings, Bell, Bookmark } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useMessaging } from '@/contexts/MessagingContext'
+import { useRealtime } from '@/contexts/RealtimeContext'
 import MessagesDropdown from '@/components/messaging/MessagesDropdown'
 
 export default function Navbar() {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
   const [notifications, setNotifications] = useState<any[]>([])
-  const [unreadCount, setUnreadCount] = useState(0)
   const router = useRouter()
   const { user, loading, logout } = useAuth()
   const { openChat } = useMessaging()
+  const { unreadNotifications, refreshNotifications } = useRealtime()
 
   const isAuthenticated = !!user
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && showNotifications) {
       fetchNotifications()
-      // Poll for new notifications every 30 seconds
-      const interval = setInterval(fetchNotifications, 30000)
-      return () => clearInterval(interval)
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, showNotifications])
 
   const fetchNotifications = async () => {
     try {
@@ -34,7 +32,6 @@ export default function Navbar() {
       if (response.ok) {
         const data = await response.json()
         setNotifications(data.notifications || [])
-        setUnreadCount(data.notifications?.filter((n: any) => !n.read).length || 0)
       }
     } catch (error) {
       console.error('Error fetching notifications:', error)
@@ -82,9 +79,9 @@ export default function Navbar() {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
             <Bell className="h-7 w-7 relative z-10 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
-            {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 text-xs font-bold text-white ring-2 ring-white shadow-lg shadow-red-500/50 z-20 group-hover:scale-125 transition-transform duration-300">
-                {unreadCount}
+            {unreadNotifications > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 text-xs font-bold text-white ring-2 ring-white shadow-lg shadow-red-500/50 z-20 group-hover:scale-125 transition-transform duration-300 animate-pulse">
+                {unreadNotifications}
               </span>
             )}
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 group-hover:translate-x-full transition-all duration-1000"></div>

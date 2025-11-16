@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import type { CSSProperties } from 'react'
-import { MapPin, Clock, DollarSign, Users } from 'lucide-react'
+import { MapPin, Clock, DollarSign, Users, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 
 interface Job {
@@ -33,9 +33,20 @@ export default function JobsPage() {
     skills: '',
   })
   const [isEntering, setIsEntering] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
 
   useEffect(() => {
     fetchJobs()
+  }, [filters, searchQuery])
+
+  // Auto-refresh jobs every 30 seconds for real-time updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchJobs()
+    }, 30000) // 30 seconds
+
+    return () => clearInterval(interval)
   }, [filters, searchQuery])
 
   useEffect(() => {
@@ -43,8 +54,10 @@ export default function JobsPage() {
     return () => clearTimeout(timeout)
   }, [])
 
-  const fetchJobs = async () => {
+  const fetchJobs = async (isManualRefresh = false) => {
     try {
+      if (isManualRefresh) setRefreshing(true)
+      
       const params = new URLSearchParams()
       
       // Add search query if present
@@ -62,12 +75,18 @@ export default function JobsPage() {
       
       if (response.ok) {
         setJobs(data.jobs)
+        setLastUpdated(new Date())
       }
     } catch (error) {
       console.error('Error fetching jobs:', error)
     } finally {
       setLoading(false)
+      if (isManualRefresh) setRefreshing(false)
     }
+  }
+
+  const handleManualRefresh = () => {
+    fetchJobs(true)
   }
 
   const handleFilterChange = (key: string, value: string) => {
@@ -114,9 +133,22 @@ export default function JobsPage() {
           <div className="auth-holo-grid" aria-hidden="true" />
 
           <div className="space-y-5 text-center">
-            <h1 className="auth-title text-5xl md:text-[3.5rem]">Find Your Next Opportunity</h1>
+            <div className="flex items-center justify-center gap-4">
+              <h1 className="auth-title text-5xl md:text-[3.5rem]">Find Your Next Opportunity</h1>
+              <button
+                onClick={handleManualRefresh}
+                disabled={refreshing}
+                className="group relative flex items-center justify-center h-12 w-12 rounded-xl border-2 border-primary-500/40 bg-white/70 text-primary-600 shadow-lg backdrop-blur-xl hover:border-primary-500/70 hover:bg-white/90 hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Refresh jobs"
+              >
+                <RefreshCw className={`h-6 w-6 ${refreshing ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
+              </button>
+            </div>
             <p className="auth-subtitle text-lg md:text-xl">
-              Discover internships, apprenticeships, and career opportunities aligned with your skills and growth goals.
+              Discover internships and career opportunities aligned with your skills and growth goals.
+            </p>
+            <p className="text-sm text-gray-500">
+              Last updated: {lastUpdated.toLocaleTimeString()} • Auto-refreshes every 30 seconds
             </p>
           </div>
 
@@ -150,7 +182,6 @@ export default function JobsPage() {
                 >
                   <option value="">All Types</option>
                   <option value="internship">Internship</option>
-                  <option value="apprenticeship">Apprenticeship</option>
                   <option value="full_time">Full Time</option>
                   <option value="part_time">Part Time</option>
                   <option value="contract">Contract</option>

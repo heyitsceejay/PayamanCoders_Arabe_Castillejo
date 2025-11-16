@@ -48,7 +48,7 @@ export default function Hero({ user }: HeroProps) {
           <p className="hero-subheadline">
             {user 
               ? 'Explore new opportunities, track your applications, and continue building your career with personalized recommendations.'
-              : 'Connect with short-term jobs, remote internships, and apprenticeships while accessing free upskilling resources. Designed for individuals from low-income communities and recent graduates.'
+              : 'Connect with short-term jobs and remote internships while accessing free upskilling resources. Designed for individuals from low-income communities and recent graduates.'
             }
           </p>
           

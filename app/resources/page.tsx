@@ -32,6 +32,12 @@ export default function ResourcesPage() {
     fetchResources();
   }, [filter, category]);
 
+  // Real-time updates every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(fetchResources, 30000);
+    return () => clearInterval(interval);
+  }, [filter, category]);
+
   const fetchResources = async () => {
     try {
       setLoading(true);

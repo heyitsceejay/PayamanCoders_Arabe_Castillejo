@@ -66,6 +66,13 @@ export default function MentorshipRequestsPage() {
     }
   }, [user])
 
+  // Real-time updates every 30 seconds
+  useEffect(() => {
+    if (!user) return
+    const interval = setInterval(fetchRequests, 30000)
+    return () => clearInterval(interval)
+  }, [user])
+
   const fetchRequests = async () => {
     try {
       const type = user?.role === 'mentor' ? 'received' : 'sent'

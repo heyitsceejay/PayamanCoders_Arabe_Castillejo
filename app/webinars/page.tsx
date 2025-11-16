@@ -35,6 +35,12 @@ export default function WebinarsPage() {
     fetchWebinars();
   }, [filter, category]);
 
+  // Real-time updates every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(fetchWebinars, 30000);
+    return () => clearInterval(interval);
+  }, [filter, category]);
+
   const fetchWebinars = async () => {
     try {
       setLoading(true);

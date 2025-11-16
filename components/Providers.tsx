@@ -3,6 +3,7 @@
 import { AuthProvider } from '@/contexts/AuthContext'
 import { CounterProvider } from '@/contexts/CounterContext'
 import { MessagingProvider } from '@/contexts/MessagingContext'
+import { RealtimeProvider } from '@/contexts/RealtimeContext'
 
 interface ProvidersProps {
   children: React.ReactNode
@@ -11,11 +12,13 @@ interface ProvidersProps {
 export default function Providers({ children }: ProvidersProps) {
   return (
     <AuthProvider>
-      <CounterProvider>
-        <MessagingProvider>
-          {children}
-        </MessagingProvider>
-      </CounterProvider>
+      <RealtimeProvider>
+        <CounterProvider>
+          <MessagingProvider>
+            {children}
+          </MessagingProvider>
+        </CounterProvider>
+      </RealtimeProvider>
     </AuthProvider>
   )
 }

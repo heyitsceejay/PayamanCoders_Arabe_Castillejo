@@ -13,6 +13,12 @@ export default function AssessmentsPage() {
     fetchAssessments()
   }, [filter])
 
+  // Real-time updates every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(fetchAssessments, 30000)
+    return () => clearInterval(interval)
+  }, [filter])
+
   const fetchAssessments = async () => {
     try {
       const params = new URLSearchParams()

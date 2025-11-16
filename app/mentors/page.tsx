@@ -66,6 +66,12 @@ export default function MentorsPage() {
     fetchMentors()
   }, [])
 
+  // Real-time updates every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(fetchMentors, 30000)
+    return () => clearInterval(interval)
+  }, [])
+
   useEffect(() => {
     filterMentors()
   }, [searchQuery, selectedSkills, mentors])

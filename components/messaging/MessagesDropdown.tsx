@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { MessageCircle, X, RefreshCw } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import { useRealtime } from '@/contexts/RealtimeContext'
 
 interface Conversation {
   _id: string
@@ -28,6 +29,7 @@ export default function MessagesDropdown({
   onConversationClick,
 }: MessagesDropdownProps) {
   const { user } = useAuth()
+  const { unreadMessages } = useRealtime()
   const [isOpen, setIsOpen] = useState(false)
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loading, setLoading] = useState(false)
@@ -82,10 +84,8 @@ export default function MessagesDropdown({
     }
   }
 
-  const totalUnread = conversations.reduce(
-    (sum, conv) => sum + conv.unreadCount,
-    0
-  )
+  // Use realtime unread count from context
+  const totalUnread = unreadMessages
 
   const getOtherParticipant = (conv: Conversation) => {
     return conv.participants.find((p) => p._id !== (user as any)?._id)
@@ -105,7 +105,7 @@ export default function MessagesDropdown({
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
         <MessageCircle className="h-7 w-7 relative z-10 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
         {totalUnread > 0 && (
-          <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 text-xs font-bold text-white ring-2 ring-white shadow-lg shadow-red-500/50 z-20 group-hover:scale-125 transition-transform duration-300">
+          <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 text-xs font-bold text-white ring-2 ring-white shadow-lg shadow-red-500/50 z-20 group-hover:scale-125 transition-transform duration-300 animate-pulse">
             {totalUnread > 9 ? '9+' : totalUnread}
           </span>
         )}
