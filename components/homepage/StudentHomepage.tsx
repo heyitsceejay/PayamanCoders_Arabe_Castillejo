@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import ProfileCard from '@/components/ProfileCard'
+import JobSeekerScoreCard from '@/components/JobSeekerScoreCard'
 
 interface Webinar {
   _id: string
@@ -157,6 +158,11 @@ export default function StudentHomepage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Job Seeker Score Card */}
+        <div className="mb-10 animate-[floatUp_0.85s_ease-out_0.1s_both]">
+          <JobSeekerScoreCard />
         </div>
 
         {/* Profile and Tips Section */}

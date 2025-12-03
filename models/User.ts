@@ -56,6 +56,25 @@ export interface IUser extends mongoose.Document {
     assessmentTaken: boolean
     certificateEarned: boolean
   }
+  jobSeekerScore?: {
+    totalScore: number
+    lastCalculated: Date
+    breakdown: {
+      profileCompleteness: number
+      resumeDocuments: number
+      skillsAssessments: number
+      platformEngagement: number
+      accountQuality: number
+    }
+    tier: 'incomplete' | 'basic' | 'ready' | 'strong' | 'excellent'
+    missingItems: string[]
+    recommendations: string[]
+    history: Array<{
+      score: number
+      calculatedAt: Date
+      changes: string[]
+    }>
+  }
   companyProfile?: {
     companyName?: string
     industry?: string
@@ -393,6 +412,45 @@ const UserSchema = new mongoose.Schema({
       type: Boolean,
       default: false
     }
+  },
+  
+  // Job Seeker Scoring
+  jobSeekerScore: {
+    totalScore: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100
+    },
+    lastCalculated: {
+      type: Date,
+      default: Date.now
+    },
+    breakdown: {
+      profileCompleteness: { type: Number, default: 0, min: 0, max: 30 },
+      resumeDocuments: { type: Number, default: 0, min: 0, max: 20 },
+      skillsAssessments: { type: Number, default: 0, min: 0, max: 25 },
+      platformEngagement: { type: Number, default: 0, min: 0, max: 15 },
+      accountQuality: { type: Number, default: 0, min: 0, max: 10 }
+    },
+    tier: {
+      type: String,
+      enum: ['incomplete', 'basic', 'ready', 'strong', 'excellent'],
+      default: 'incomplete'
+    },
+    missingItems: {
+      type: [String],
+      default: []
+    },
+    recommendations: {
+      type: [String],
+      default: []
+    },
+    history: [{
+      score: Number,
+      calculatedAt: { type: Date, default: Date.now },
+      changes: [String]
+    }]
   }
 }, {
   timestamps: true,

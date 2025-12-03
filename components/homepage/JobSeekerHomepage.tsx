@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
+import JobSeekerScoreCard from "@/components/JobSeekerScoreCard";
 
 interface UserProfile {
   _id: string;
@@ -292,6 +293,11 @@ export default function JobSeekerHomepage() {
             <p className="auth-subtitle">
               Here's what's happening with your job search
             </p>
+          </div>
+
+          {/* Job Seeker Score Card */}
+          <div className="mb-8 animate-[floatUp_0.85s_ease-out_0.1s_both]">
+            <JobSeekerScoreCard />
           </div>
 
           {/* Stats Grid */}

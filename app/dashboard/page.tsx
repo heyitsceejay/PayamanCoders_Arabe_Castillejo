@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import AIRecommendations from "@/components/ai/AIRecommendations";
+import JobSeekerScoreCard from "@/components/JobSeekerScoreCard";
 
 interface Stats {
   applications: number;
@@ -211,6 +212,13 @@ export default function DashboardPage() {
             Here's what's happening with your job search.
           </p>
         </div>
+
+        {/* Job Seeker Score Card - Only for job seekers and students */}
+        {user && (user.role === 'job_seeker' || user.role === 'student') && (
+          <div className="mb-8 animate-[floatUp_0.85s_ease-out_0.1s_both]">
+            <JobSeekerScoreCard />
+          </div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
