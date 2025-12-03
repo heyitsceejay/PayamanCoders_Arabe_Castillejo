@@ -244,75 +244,8 @@ export default function JobSeekerScoreCard() {
           transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
         }}
       >
-        <div className={`bg-gradient-to-r ${tierConfig.color} px-6 pb-6 text-white relative overflow-hidden`}>
-            <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" aria-hidden="true"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div>
-                    <h3 className="text-xl font-bold">Detailed Score Breakdown</h3>
-                    <p className="text-sm text-white/90">Your job readiness rating</p>
-                  </div>
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    refreshScore()
-                  }}
-                  disabled={refreshing}
-                  className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors disabled:opacity-50"
-                  aria-label="Refresh score"
-                >
-                  <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-                  <span className="text-sm font-medium">Refresh</span>
-                </button>
-              </div>
-              
-              {/* Score Display */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-6xl font-bold mb-2">{score.totalScore.toFixed(1)}<span className="text-3xl">/100</span></div>
-                  <div className="flex items-center gap-2">
-                    {tierConfig.icon}
-                    <span className="text-xl font-semibold">{tierConfig.label} Profile</span>
-                  </div>
-                </div>
-                
-                {/* Circular Progress */}
-                <div className="relative w-28 h-28">
-                  <svg className="transform -rotate-90 w-28 h-28">
-                    <circle
-                      cx="56"
-                      cy="56"
-                      r="40"
-                      stroke="currentColor"
-                      strokeWidth="8"
-                      fill="transparent"
-                      className="text-white/30"
-                    />
-                    <circle
-                      cx="56"
-                      cy="56"
-                      r="40"
-                      stroke="currentColor"
-                      strokeWidth="8"
-                      fill="transparent"
-                      strokeDasharray={circumference}
-                      strokeDashoffset={circumference * (1 - score.totalScore / 100)}
-                      className="text-white transition-all duration-1000"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <TrendingUp className="w-10 h-10" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        {/* Content */}
-        <div className="p-6 relative z-10 space-y-6">
+        {/* Content - White Background */}
+        <div className="p-6 bg-white relative z-10 space-y-6">
           {/* Application Status Alert */}
           <div className="animate-[floatUp_0.6s_ease-out_0.1s_both]">
             {score.totalScore < 60 ? (
