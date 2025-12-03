@@ -163,8 +163,14 @@ export default function Navbar() {
           className="group relative flex items-center gap-3 sm:gap-4 rounded-2xl border-2 border-primary-500/40 bg-white/70 px-3 sm:px-4 py-2.5 text-secondary-700 shadow-xl shadow-primary-700/20 backdrop-blur-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 hover:border-primary-500/70 hover:bg-white/90 hover:text-primary-600 hover:shadow-2xl hover:shadow-primary-500/50 hover:scale-105 transition-all duration-500 overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-          <div className="relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 text-base sm:text-lg font-bold text-white shadow-xl shadow-primary-500/40 ring-2 ring-white/50 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 z-10">
-            {user?.firstName?.[0] && user?.lastName?.[0] ? (
+          <div className="relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 text-base sm:text-lg font-bold text-white shadow-xl shadow-primary-500/40 ring-2 ring-white/50 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 z-10 overflow-hidden">
+            {user?.profile?.profilePicture ? (
+              <img
+                src={user.profile.profilePicture}
+                alt="Profile"
+                className="relative z-10 h-full w-full object-cover"
+              />
+            ) : user?.firstName?.[0] && user?.lastName?.[0] ? (
               <span className="relative z-10">{user?.firstName?.[0]}{user?.lastName?.[0]}</span>
             ) : (
               <User className="relative z-10 h-6 w-6 sm:h-7 sm:w-7" />

@@ -33,6 +33,7 @@ interface UserProfile {
     education?: string
     availability?: string
     remote?: boolean
+    profilePicture?: string
   }
   resume?: ResumeData
   createdAt: string
@@ -59,6 +60,8 @@ export default function ProfilePage() {
     contactNumber: ''
   })
   const [isEntering, setIsEntering] = useState(true)
+  const [uploadingPicture, setUploadingPicture] = useState(false)
+  const [profilePicture, setProfilePicture] = useState<string>('')
 
   useEffect(() => {
     const timeout = setTimeout(() => setIsEntering(false), 900)
@@ -89,6 +92,7 @@ export default function ProfilePage() {
           birthdate: data.user.birthdate ? new Date(data.user.birthdate).toISOString().split('T')[0] : '',
           contactNumber: data.user.contactNumber || ''
         })
+        setProfilePicture(data.user.profile?.profilePicture || '')
       } else {
         setError('Failed to load profile')
       }
@@ -96,6 +100,36 @@ export default function ProfilePage() {
       setError('Error loading profile')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleProfilePictureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadingPicture(true)
+    try {
+      const formData = new FormData()
+      formData.append('profilePicture', file)
+
+      const response = await fetch('/api/upload/profile-picture', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setProfilePicture(data.profilePicture)
+        await fetchProfile() // Refresh profile data
+      } else {
+        setError(data.error || 'Failed to upload profile picture')
+      }
+    } catch (error) {
+      console.error('Profile picture upload error:', error)
+      setError('Error uploading profile picture')
+    } finally {
+      setUploadingPicture(false)
     }
   }
 
@@ -119,7 +153,8 @@ export default function ProfilePage() {
             experience: formData.experience,
             education: formData.education,
             availability: formData.availability,
-            remote: formData.remote
+            remote: formData.remote,
+            profilePicture: profilePicture // Preserve profile picture
           }
         }),
       })
@@ -218,6 +253,49 @@ export default function ProfilePage() {
                   <div className="p-8">
                     {isEditing ? (
                       <div className="space-y-8 animate-[floatUp_0.5s_ease-out]">
+                        {/* Profile Picture Upload */}
+                        <div className="flex items-center gap-6 p-6 bg-gradient-to-br from-primary-50/50 to-secondary-50/50 rounded-2xl border-2 border-primary-200/50">
+                          <div className="relative">
+                            {profilePicture ? (
+                              <img
+                                src={profilePicture}
+                                alt="Profile"
+                                className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+                              />
+                            ) : (
+                              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                                {user?.firstName?.[0]}{user?.lastName?.[0]}
+                              </div>
+                            )}
+                            {uploadingPicture && (
+                              <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="text-base font-bold text-gray-900 mb-2">Profile Picture</h4>
+                            <p className="text-sm text-gray-600 mb-3">Upload a professional photo (JPG, PNG, or WebP, max 5MB)</p>
+                            <input
+                              type="file"
+                              accept="image/jpeg,image/jpg,image/png,image/webp"
+                              onChange={handleProfilePictureUpload}
+                              disabled={uploadingPicture}
+                              className="hidden"
+                              id="profilePictureInput"
+                            />
+                            <label
+                              htmlFor="profilePictureInput"
+                              className={`inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors cursor-pointer text-sm font-semibold ${
+                                uploadingPicture ? 'opacity-50 cursor-not-allowed' : ''
+                              }`}
+                            >
+                              <User className="w-4 h-4" />
+                              {uploadingPicture ? 'Uploading...' : 'Upload Photo'}
+                            </label>
+                          </div>
+                        </div>
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="group">
                             <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
@@ -413,13 +491,23 @@ export default function ProfilePage() {
                       <div className="space-y-8">
                         <div className="flex items-center space-x-6 p-6 rounded-2xl border border-primary-500/20 bg-gradient-to-br from-primary-500/10 via-white/40 to-secondary-500/10 backdrop-blur relative overflow-hidden">
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-500/5 to-transparent opacity-50"></div>
-                          <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 text-white text-3xl font-bold shadow-inner shadow-primary-900/30 ring-4 ring-primary-500/40 group-hover:ring-primary-500/60 transition-all duration-300">
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent"></div>
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-t from-primary-700/40 to-transparent"></div>
-                            <span className="relative z-10 drop-shadow-lg">{user?.firstName?.[0]}{user?.lastName?.[0]}</span>
-                            <div className="absolute -inset-2 rounded-full bg-primary-500/50 blur-xl animate-pulse"></div>
-                            <div className="absolute -inset-1 rounded-full bg-primary-500/40 blur-md"></div>
-                          </div>
+                          {user?.profile?.profilePicture ? (
+                            <div className="relative">
+                              <img
+                                src={user.profile.profilePicture}
+                                alt="Profile"
+                                className="h-24 w-24 rounded-full object-cover ring-4 ring-primary-500/40 shadow-lg"
+                              />
+                            </div>
+                          ) : (
+                            <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 text-white text-3xl font-bold shadow-inner shadow-primary-900/30 ring-4 ring-primary-500/40 group-hover:ring-primary-500/60 transition-all duration-300">
+                              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent"></div>
+                              <div className="absolute inset-0 rounded-full bg-gradient-to-t from-primary-700/40 to-transparent"></div>
+                              <span className="relative z-10 drop-shadow-lg">{user?.firstName?.[0]}{user?.lastName?.[0]}</span>
+                              <div className="absolute -inset-2 rounded-full bg-primary-500/50 blur-xl animate-pulse"></div>
+                              <div className="absolute -inset-1 rounded-full bg-primary-500/40 blur-md"></div>
+                            </div>
+                          )}
                           <div className="relative z-10">
                             <h3 className="text-3xl font-bold bg-gradient-to-r from-primary-600 via-secondary-600 to-primary-600 bg-clip-text text-transparent mb-2 animate-[headlinePulse_3s_ease-in-out_infinite] drop-shadow-sm">
                               {user?.firstName} {user?.lastName}

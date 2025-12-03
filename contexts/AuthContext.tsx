@@ -16,6 +16,16 @@ export interface User {
     trustScore?: number
     verifiedAt?: string
   }
+  profile?: {
+    bio?: string
+    skills?: string[]
+    location?: string
+    experience?: string
+    education?: string
+    availability?: string
+    remote?: boolean
+    profilePicture?: string
+  }
 }
 
 export interface AuthContextValue {
