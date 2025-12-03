@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react'
 import type { CSSProperties } from 'react'
 import Link from 'next/link'
-import { User, Mail, MapPin, Briefcase, GraduationCap, Clock, Globe } from 'lucide-react'
+import { User, Mail, MapPin, Briefcase, GraduationCap, Clock, Globe, Shield, FileText } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import ResumeUpload from '@/components/ResumeUpload'
+import TabNavigation from '@/components/TabNavigation'
 
 interface ResumeData {
   filename: string
@@ -171,8 +172,317 @@ export default function ProfilePage() {
           <p className="auth-subtitle text-base">Manage your account information and preferences.</p>
         </div>
 
-      {/* Password Management Section */}
-      {authUser && (authUser.authProvider === 'google' || authUser.authProvider === 'hybrid') && (
+        {/* Tab Navigation */}
+        <TabNavigation
+          tabs={[
+            { id: 'profile', label: 'Profile', icon: <User className="w-4 h-4" /> },
+            { id: 'security', label: 'Security', icon: <Shield className="w-4 h-4" /> },
+            ...(user?.role === 'job_seeker' ? [{ id: 'resume', label: 'Resume', icon: <FileText className="w-4 h-4" /> }] : []),
+          ]}
+          defaultTab="profile"
+        >
+          {(activeTab) => (
+            <>
+              {activeTab === 'profile' && (
+                <div className="card overflow-hidden" style={{ '--float-delay': '0.1s' } as CSSProperties}>
+                  <div className="px-8 py-6 border-b border-primary-500/30 flex justify-between items-center bg-gradient-to-r from-primary-500/10 via-primary-500/5 to-secondary-500/10 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-500/5 to-transparent animate-pulse"></div>
+                    <h2 className="feature-heading text-3xl font-bold relative z-10 bg-gradient-to-r from-primary-600 via-secondary-600 to-primary-600 bg-clip-text text-transparent animate-[headlinePulse_3s_ease-in-out_infinite] drop-shadow-sm">
+                      Personal Information
+                    </h2>
+                    <button
+                      onClick={() => setIsEditing(!isEditing)}
+                      className={`relative z-10 ${isEditing ? 'btn-secondary' : 'btn-primary'} px-6 py-3 text-base font-semibold shadow-lg hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300 group`}
+                    >
+                      <span className="relative z-10 flex items-center gap-2">
+                        {isEditing ? 'Cancel' : 'Edit Profile'}
+                        {!isEditing && (
+                          <div className="h-1.5 w-1.5 rounded-full bg-white/80 group-hover:bg-white animate-pulse"></div>
+                        )}
+                      </span>
+                    </button>
+                  </div>
+
+                  <div className="p-8">
+                    {isEditing ? (
+                      <div className="space-y-8 animate-[floatUp_0.5s_ease-out]">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="group">
+                            <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
+                              <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
+                              First Name
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.firstName}
+                              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                              className="glass-input w-full px-5 py-3.5 text-base font-medium transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
+                            />
+                          </div>
+                          <div className="group">
+                            <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
+                              <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
+                              Last Name
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.lastName}
+                              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                              className="glass-input w-full px-5 py-3.5 text-base font-medium transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="group">
+                          <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
+                            <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
+                            Bio
+                          </label>
+                          <textarea
+                            value={formData.bio}
+                            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                            rows={4}
+                            className="glass-input w-full px-5 py-3.5 text-base font-medium resize-none transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
+                            placeholder="Tell us about yourself..."
+                          />
+                        </div>
+
+                        <div className="group">
+                          <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
+                            <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
+                            Skills (comma-separated)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.skills}
+                            onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
+                            className="glass-input w-full px-5 py-3.5 text-base font-medium transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
+                            placeholder="JavaScript, React, Node.js, etc."
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="group">
+                            <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
+                              <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
+                              Location
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.location}
+                              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                              className="glass-input w-full px-5 py-3.5 text-base font-medium transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
+                              placeholder="City, State/Country"
+                            />
+                          </div>
+                          <div className="group">
+                            <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
+                              <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
+                              Availability
+                            </label>
+                            <select
+                              value={formData.availability}
+                              onChange={(e) => setFormData({ ...formData, availability: e.target.value })}
+                              className="glass-input w-full px-5 py-3.5 text-base font-medium appearance-none bg-white/70 cursor-pointer transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
+                            >
+                              <option value="">Select availability</option>
+                              <option value="full_time">Full Time</option>
+                              <option value="part_time">Part Time</option>
+                              <option value="contract">Contract</option>
+                              <option value="internship">Internship</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="group">
+                          <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
+                            <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
+                            Experience
+                          </label>
+                          <textarea
+                            value={formData.experience}
+                            onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
+                            rows={3}
+                            className="glass-input w-full px-5 py-3.5 text-base font-medium resize-none transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
+                            placeholder="Describe your work experience..."
+                          />
+                        </div>
+
+                        <div className="group">
+                          <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
+                            <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
+                            Education
+                          </label>
+                          <textarea
+                            value={formData.education}
+                            onChange={(e) => setFormData({ ...formData, education: e.target.value })}
+                            rows={3}
+                            className="glass-input w-full px-5 py-3.5 text-base font-medium resize-none transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
+                            placeholder="Describe your educational background..."
+                          />
+                        </div>
+
+                        <div className="flex items-center p-6 rounded-xl border border-primary-500/30 bg-gradient-to-br from-primary-500/10 via-white/50 to-secondary-500/10 backdrop-blur group hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/20 transition-all duration-300">
+                          <input
+                            type="checkbox"
+                            id="remote"
+                            checked={formData.remote}
+                            onChange={(e) => setFormData({ ...formData, remote: e.target.checked })}
+                            className="h-6 w-6 text-primary-600 focus:ring-primary-500 border-primary-500/40 rounded-md bg-white/80 cursor-pointer focus:ring-2 focus:ring-primary-500/50 shadow-inner shadow-primary-700/20 transition-all duration-300 checked:bg-primary-600 checked:border-primary-600"
+                          />
+                          <label htmlFor="remote" className="ml-4 block text-lg font-semibold text-gray-900 cursor-pointer group-hover:text-primary-600 transition-colors duration-300 flex items-center gap-2">
+                            <span>Open to remote work</span>
+                            <div className="h-1.5 w-1.5 rounded-full bg-primary-500 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300"></div>
+                          </label>
+                        </div>
+
+                        <div className="flex space-x-4 pt-6 border-t border-white/30">
+                          <button onClick={handleSave} className="btn-primary px-10 py-4 text-base font-bold shadow-xl hover:shadow-2xl hover:shadow-primary-500/40 transition-all duration-300 group relative overflow-hidden">
+                            <span className="relative z-10 flex items-center gap-2">
+                              Save Changes
+                              <div className="h-1.5 w-1.5 rounded-full bg-white/80 group-hover:bg-white animate-pulse"></div>
+                            </span>
+                          </button>
+                          <button
+                            onClick={() => setIsEditing(false)}
+                            className="btn-secondary px-10 py-4 text-base font-bold shadow-xl hover:shadow-2xl transition-all duration-300"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-8">
+                        <div className="flex items-center space-x-6 p-6 rounded-2xl border border-primary-500/20 bg-gradient-to-br from-primary-500/10 via-white/40 to-secondary-500/10 backdrop-blur relative overflow-hidden">
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-500/5 to-transparent opacity-50"></div>
+                          <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 text-white text-3xl font-bold shadow-inner shadow-primary-900/30 ring-4 ring-primary-500/40 group-hover:ring-primary-500/60 transition-all duration-300">
+                            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent"></div>
+                            <div className="absolute inset-0 rounded-full bg-gradient-to-t from-primary-700/40 to-transparent"></div>
+                            <span className="relative z-10 drop-shadow-lg">{user?.firstName?.[0]}{user?.lastName?.[0]}</span>
+                            <div className="absolute -inset-2 rounded-full bg-primary-500/50 blur-xl animate-pulse"></div>
+                            <div className="absolute -inset-1 rounded-full bg-primary-500/40 blur-md"></div>
+                          </div>
+                          <div className="relative z-10">
+                            <h3 className="text-3xl font-bold bg-gradient-to-r from-primary-600 via-secondary-600 to-primary-600 bg-clip-text text-transparent mb-2 animate-[headlinePulse_3s_ease-in-out_infinite] drop-shadow-sm">
+                              {user?.firstName} {user?.lastName}
+                            </h3>
+                            <div className="flex items-center gap-2">
+                              <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse shadow-lg shadow-green-500/50"></div>
+                              <p className="text-lg font-semibold text-secondary-600 capitalize tracking-wide">{user?.role?.replace('_', ' ')}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="feature-card p-6 flex items-center space-x-5 group hover:border-primary-500/50 transition-all duration-300">
+                            <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary-500/40 bg-gradient-to-br from-primary-500/20 to-primary-600/20 text-primary-600 shadow-inner shadow-primary-700/30 group-hover:shadow-lg group-hover:shadow-primary-500/30 transition-all duration-300">
+                              <Mail className="h-7 w-7 group-hover:scale-110 transition-transform duration-300" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="text-xs font-bold uppercase tracking-[0.15em] text-primary-600 mb-2">Email</div>
+                              <span className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors duration-300">{user?.email}</span>
+                            </div>
+                          </div>
+                          {user?.profile?.location && (
+                            <div className="feature-card p-5 flex items-center space-x-4 group">
+                              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/15 text-primary-600 shadow-inner shadow-primary-700/20">
+                                <MapPin className="h-6 w-6" />
+                              </div>
+                              <div>
+                                <div className="text-xs font-semibold uppercase tracking-wider text-secondary-500 mb-1">Location</div>
+                                <span className="text-base font-medium text-gray-900">{user.profile.location}</span>
+                              </div>
+                            </div>
+                          )}
+                          {user?.profile?.availability && (
+                            <div className="feature-card p-5 flex items-center space-x-4 group">
+                              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/15 text-primary-600 shadow-inner shadow-primary-700/20">
+                                <Clock className="h-6 w-6" />
+                              </div>
+                              <div>
+                                <div className="text-xs font-semibold uppercase tracking-wider text-secondary-500 mb-1">Availability</div>
+                                <span className="text-base font-medium text-gray-900 capitalize">
+                                  {user.profile.availability.replace('_', ' ')}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                          {user?.profile?.remote && (
+                            <div className="feature-card p-5 flex items-center space-x-4 group">
+                              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/15 text-primary-600 shadow-inner shadow-primary-700/20">
+                                <Globe className="h-6 w-6" />
+                              </div>
+                              <div>
+                                <div className="text-xs font-semibold uppercase tracking-wider text-secondary-500 mb-1">Remote Work</div>
+                                <span className="text-base font-medium text-gray-900">Available</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {user?.profile?.bio && (
+                          <div>
+                            <h4 className="text-lg font-medium text-gray-900 mb-2">About</h4>
+                            <p className="text-gray-700">{user.profile.bio}</p>
+                          </div>
+                        )}
+
+                        {user?.profile?.skills && user.profile.skills.length > 0 && (
+                          <div>
+                            <h4 className="text-lg font-medium text-gray-900 mb-2">Skills</h4>
+                            <div className="flex flex-wrap gap-2">
+                              {user.profile.skills.map((skill, index) => (
+                                <span
+                                  key={index}
+                                  className="px-3 py-1 bg-primary-100 text-primary-800 rounded-full text-sm"
+                                >
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {user?.profile?.experience && (
+                          <div>
+                            <h4 className="text-lg font-medium text-gray-900 mb-2 flex items-center">
+                              <Briefcase className="w-5 h-5 mr-2" />
+                              Experience
+                            </h4>
+                            <p className="text-gray-700">{user.profile.experience}</p>
+                          </div>
+                        )}
+
+                        {user?.profile?.education && (
+                          <div>
+                            <h4 className="text-lg font-medium text-gray-900 mb-2 flex items-center">
+                              <GraduationCap className="w-5 h-5 mr-2" />
+                              Education
+                            </h4>
+                            <p className="text-gray-700">{user.profile.education}</p>
+                          </div>
+                        )}
+
+                        <div className="flex items-center gap-4 p-6 rounded-xl border border-primary-500/30 bg-gradient-to-br from-primary-500/10 via-white/50 to-secondary-500/10 backdrop-blur group hover:border-primary-500/50 transition-all duration-300">
+                          <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary-500/40 bg-gradient-to-br from-primary-500/20 to-primary-600/20 text-primary-600 shadow-inner shadow-primary-700/30 group-hover:shadow-lg group-hover:shadow-primary-500/30 transition-all duration-300">
+                            <Clock className="h-7 w-7 group-hover:scale-110 transition-transform duration-300" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-xs font-bold uppercase tracking-[0.15em] text-primary-600 mb-2">Member Since</div>
+                            <span className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors duration-300">
+                              {new Date(user?.createdAt || '').toLocaleDateString() !== "Invalid Date" 
+                                ? new Date(user?.createdAt || '').toLocaleDateString()
+                                : "N/A"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'security' && authUser && (authUser.authProvider === 'google' || authUser.authProvider === 'hybrid') && (
         <div className="card relative overflow-hidden group/auth mb-6 animate-[floatUp_0.6s_ease-out_0.15s_both]" style={{ '--float-delay': '0.15s' } as CSSProperties}>
           <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover/auth:opacity-100 transition-opacity duration-500"></div>
           <div className="relative px-8 py-6 border-b border-primary-500/30 bg-gradient-to-r from-primary-500/10 via-primary-500/5 to-secondary-500/10">
@@ -263,10 +573,9 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
-      )}
+              )}
 
-      {/* Resume Section - Only for job seekers */}
-      {user?.role === 'job_seeker' && (
+              {activeTab === 'resume' && user?.role === 'job_seeker' && (
         <div className="card relative overflow-hidden group/resume mb-6 animate-[floatUp_0.6s_ease-out_0.2s_both]" style={{ '--float-delay': '0.2s' } as CSSProperties}>
           <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover/resume:opacity-100 transition-opacity duration-500"></div>
           <div className="relative px-8 py-6 border-b border-primary-500/30 bg-gradient-to-r from-primary-500/10 via-primary-500/5 to-secondary-500/10">
@@ -291,304 +600,10 @@ export default function ProfilePage() {
             />
           </div>
         </div>
-      )}
-
-      <div className="card overflow-hidden" style={{ '--float-delay': '0.1s' } as CSSProperties}>
-        <div className="px-8 py-6 border-b border-primary-500/30 flex justify-between items-center bg-gradient-to-r from-primary-500/10 via-primary-500/5 to-secondary-500/10 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-500/5 to-transparent animate-pulse"></div>
-          <h2 className="feature-heading text-3xl font-bold relative z-10 bg-gradient-to-r from-primary-600 via-secondary-600 to-primary-600 bg-clip-text text-transparent animate-[headlinePulse_3s_ease-in-out_infinite] drop-shadow-sm">
-            Personal Information
-          </h2>
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className={`relative z-10 ${isEditing ? 'btn-secondary' : 'btn-primary'} px-6 py-3 text-base font-semibold shadow-lg hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300 group`}
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              {isEditing ? 'Cancel' : 'Edit Profile'}
-              {!isEditing && (
-                <div className="h-1.5 w-1.5 rounded-full bg-white/80 group-hover:bg-white animate-pulse"></div>
               )}
-            </span>
-          </button>
-        </div>
-
-        <div className="p-8">
-          {isEditing ? (
-            <div className="space-y-8 animate-[floatUp_0.5s_ease-out]">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="group">
-                  <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    className="glass-input w-full px-5 py-3.5 text-base font-medium transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
-                  />
-                </div>
-                <div className="group">
-                  <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    className="glass-input w-full px-5 py-3.5 text-base font-medium transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
-                  />
-                </div>
-              </div>
-
-              <div className="group">
-                <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
-                  Bio
-                </label>
-                <textarea
-                  value={formData.bio}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  rows={4}
-                  className="glass-input w-full px-5 py-3.5 text-base font-medium resize-none transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
-                  placeholder="Tell us about yourself..."
-                />
-              </div>
-
-              <div className="group">
-                <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
-                  Skills (comma-separated)
-                </label>
-                <input
-                  type="text"
-                  value={formData.skills}
-                  onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
-                  className="glass-input w-full px-5 py-3.5 text-base font-medium transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
-                  placeholder="JavaScript, React, Node.js, etc."
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="group">
-                  <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    className="glass-input w-full px-5 py-3.5 text-base font-medium transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
-                    placeholder="City, State/Country"
-                  />
-                </div>
-                <div className="group">
-                  <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
-                    Availability
-                  </label>
-                  <select
-                    value={formData.availability}
-                    onChange={(e) => setFormData({ ...formData, availability: e.target.value })}
-                    className="glass-input w-full px-5 py-3.5 text-base font-medium appearance-none bg-white/70 cursor-pointer transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
-                  >
-                    <option value="">Select availability</option>
-                    <option value="full_time">Full Time</option>
-                    <option value="part_time">Part Time</option>
-                    <option value="contract">Contract</option>
-                    <option value="internship">Internship</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="group">
-                <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
-                  Experience
-                </label>
-                <textarea
-                  value={formData.experience}
-                  onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
-                  rows={3}
-                  className="glass-input w-full px-5 py-3.5 text-base font-medium resize-none transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
-                  placeholder="Describe your work experience..."
-                />
-              </div>
-
-              <div className="group">
-                <label className="auth-label block text-sm font-bold uppercase tracking-[0.15em] text-primary-600 mb-3 flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-primary-500 animate-pulse"></div>
-                  Education
-                </label>
-                <textarea
-                  value={formData.education}
-                  onChange={(e) => setFormData({ ...formData, education: e.target.value })}
-                  rows={3}
-                  className="glass-input w-full px-5 py-3.5 text-base font-medium resize-none transition-all duration-300 group-hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
-                  placeholder="Describe your educational background..."
-                />
-              </div>
-
-              <div className="flex items-center p-6 rounded-xl border border-primary-500/30 bg-gradient-to-br from-primary-500/10 via-white/50 to-secondary-500/10 backdrop-blur group hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/20 transition-all duration-300">
-                <input
-                  type="checkbox"
-                  id="remote"
-                  checked={formData.remote}
-                  onChange={(e) => setFormData({ ...formData, remote: e.target.checked })}
-                  className="h-6 w-6 text-primary-600 focus:ring-primary-500 border-primary-500/40 rounded-md bg-white/80 cursor-pointer focus:ring-2 focus:ring-primary-500/50 shadow-inner shadow-primary-700/20 transition-all duration-300 checked:bg-primary-600 checked:border-primary-600"
-                />
-                <label htmlFor="remote" className="ml-4 block text-lg font-semibold text-gray-900 cursor-pointer group-hover:text-primary-600 transition-colors duration-300 flex items-center gap-2">
-                  <span>Open to remote work</span>
-                  <div className="h-1.5 w-1.5 rounded-full bg-primary-500 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300"></div>
-                </label>
-              </div>
-
-              <div className="flex space-x-4 pt-6 border-t border-white/30">
-                <button onClick={handleSave} className="btn-primary px-10 py-4 text-base font-bold shadow-xl hover:shadow-2xl hover:shadow-primary-500/40 transition-all duration-300 group relative overflow-hidden">
-                  <span className="relative z-10 flex items-center gap-2">
-                    Save Changes
-                    <div className="h-1.5 w-1.5 rounded-full bg-white/80 group-hover:bg-white animate-pulse"></div>
-                  </span>
-                </button>
-                <button
-                  onClick={() => setIsEditing(false)}
-                  className="btn-secondary px-10 py-4 text-base font-bold shadow-xl hover:shadow-2xl transition-all duration-300"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-8">
-              <div className="flex items-center space-x-6 p-6 rounded-2xl border border-primary-500/20 bg-gradient-to-br from-primary-500/10 via-white/40 to-secondary-500/10 backdrop-blur relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-500/5 to-transparent opacity-50"></div>
-                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 text-white text-3xl font-bold shadow-inner shadow-primary-900/30 ring-4 ring-primary-500/40 group-hover:ring-primary-500/60 transition-all duration-300">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent"></div>
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-t from-primary-700/40 to-transparent"></div>
-                  <span className="relative z-10 drop-shadow-lg">{user?.firstName?.[0]}{user?.lastName?.[0]}</span>
-                  <div className="absolute -inset-2 rounded-full bg-primary-500/50 blur-xl animate-pulse"></div>
-                  <div className="absolute -inset-1 rounded-full bg-primary-500/40 blur-md"></div>
-                </div>
-                <div className="relative z-10">
-                  <h3 className="text-3xl font-bold bg-gradient-to-r from-primary-600 via-secondary-600 to-primary-600 bg-clip-text text-transparent mb-2 animate-[headlinePulse_3s_ease-in-out_infinite] drop-shadow-sm">
-                    {user?.firstName} {user?.lastName}
-                  </h3>
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse shadow-lg shadow-green-500/50"></div>
-                    <p className="text-lg font-semibold text-secondary-600 capitalize tracking-wide">{user?.role?.replace('_', ' ')}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="feature-card p-6 flex items-center space-x-5 group hover:border-primary-500/50 transition-all duration-300">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary-500/40 bg-gradient-to-br from-primary-500/20 to-primary-600/20 text-primary-600 shadow-inner shadow-primary-700/30 group-hover:shadow-lg group-hover:shadow-primary-500/30 transition-all duration-300">
-                    <Mail className="h-7 w-7 group-hover:scale-110 transition-transform duration-300" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-xs font-bold uppercase tracking-[0.15em] text-primary-600 mb-2">Email</div>
-                    <span className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors duration-300">{user?.email}</span>
-                  </div>
-                </div>
-                {user?.profile?.location && (
-                  <div className="feature-card p-5 flex items-center space-x-4 group">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/15 text-primary-600 shadow-inner shadow-primary-700/20">
-                      <MapPin className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-semibold uppercase tracking-wider text-secondary-500 mb-1">Location</div>
-                      <span className="text-base font-medium text-gray-900">{user.profile.location}</span>
-                    </div>
-                  </div>
-                )}
-                {user?.profile?.availability && (
-                  <div className="feature-card p-5 flex items-center space-x-4 group">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/15 text-primary-600 shadow-inner shadow-primary-700/20">
-                      <Clock className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-semibold uppercase tracking-wider text-secondary-500 mb-1">Availability</div>
-                      <span className="text-base font-medium text-gray-900 capitalize">
-                        {user.profile.availability.replace('_', ' ')}
-                      </span>
-                    </div>
-                  </div>
-                )}
-                {user?.profile?.remote && (
-                  <div className="feature-card p-5 flex items-center space-x-4 group">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-primary-500/30 bg-primary-500/15 text-primary-600 shadow-inner shadow-primary-700/20">
-                      <Globe className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-semibold uppercase tracking-wider text-secondary-500 mb-1">Remote Work</div>
-                      <span className="text-base font-medium text-gray-900">Available</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {user?.profile?.bio && (
-                <div>
-                  <h4 className="text-lg font-medium text-gray-900 mb-2">About</h4>
-                  <p className="text-gray-700">{user.profile.bio}</p>
-                </div>
-              )}
-
-              {user?.profile?.skills && user.profile.skills.length > 0 && (
-                <div>
-                  <h4 className="text-lg font-medium text-gray-900 mb-2">Skills</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {user.profile.skills.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-primary-100 text-primary-800 rounded-full text-sm"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {user?.profile?.experience && (
-                <div>
-                  <h4 className="text-lg font-medium text-gray-900 mb-2 flex items-center">
-                    <Briefcase className="w-5 h-5 mr-2" />
-                    Experience
-                  </h4>
-                  <p className="text-gray-700">{user.profile.experience}</p>
-                </div>
-              )}
-
-              {user?.profile?.education && (
-                <div>
-                  <h4 className="text-lg font-medium text-gray-900 mb-2 flex items-center">
-                    <GraduationCap className="w-5 h-5 mr-2" />
-                    Education
-                  </h4>
-                  <p className="text-gray-700">{user.profile.education}</p>
-                </div>
-              )}
-
-              <div className="flex items-center gap-4 p-6 rounded-xl border border-primary-500/30 bg-gradient-to-br from-primary-500/10 via-white/50 to-secondary-500/10 backdrop-blur group hover:border-primary-500/50 transition-all duration-300">
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary-500/40 bg-gradient-to-br from-primary-500/20 to-primary-600/20 text-primary-600 shadow-inner shadow-primary-700/30 group-hover:shadow-lg group-hover:shadow-primary-500/30 transition-all duration-300">
-                  <Clock className="h-7 w-7 group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-xs font-bold uppercase tracking-[0.15em] text-primary-600 mb-2">Member Since</div>
-                  <span className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors duration-300">
-                    {new Date(user?.createdAt || '').toLocaleDateString() !== "Invalid Date" 
-                      ? new Date(user?.createdAt || '').toLocaleDateString()
-                      : "N/A"}
-                  </span>
-                </div>
-              </div>
-            </div>
+            </>
           )}
-        </div>
-      </div>
+        </TabNavigation>
       </div>
     </div>
   )
