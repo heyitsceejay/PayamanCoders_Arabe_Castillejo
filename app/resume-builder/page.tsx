@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   FileText, 
   Sparkles, 
@@ -18,6 +18,42 @@ import ResumePreview from '@/components/resume-builder/ResumePreview';
 export default function ResumeBuilderPage() {
   const [step, setStep] = useState<'build' | 'preview'>('build');
   const [resumeData, setResumeData] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch user profile data on mount
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch('/api/user/profile');
+        if (response.ok) {
+          const data = await response.json();
+          setUserProfile(data.user);
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="hero-gradient relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="auth-background-grid" aria-hidden="true" />
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-500/20 blur-3xl animate-pulse"></div>
+        </div>
+        <div className="text-center relative z-10">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-lg text-secondary-600 font-medium">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="hero-gradient relative min-h-screen overflow-hidden">
@@ -76,6 +112,7 @@ export default function ResumeBuilderPage() {
             {step === 'build' && (
               <ResumeBuilderForm
                 initialData={resumeData}
+                userProfile={userProfile}
                 onSave={(data: any) => {
                   setResumeData(data);
                 }}
