@@ -19,6 +19,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import ProfileCard from '@/components/ProfileCard'
 import TabNavigation from '@/components/TabNavigation'
 import MentorScoreCard from '@/components/MentorScoreCard'
+import MentorshipAvailabilityToggle from '@/components/MentorshipAvailabilityToggle'
 
 interface Webinar {
   _id: string
@@ -200,6 +201,11 @@ export default function MentorHomepage() {
                   {/* Mentor Score Card */}
                   <div className="animate-[floatUp_0.85s_ease-out_0.1s_both]">
                     <MentorScoreCard />
+                  </div>
+
+                  {/* Mentorship Availability Toggle */}
+                  <div className="animate-[floatUp_0.85s_ease-out_0.2s_both]">
+                    <MentorshipAvailabilityToggle />
                   </div>
 
                   {/* Stats Grid */}
