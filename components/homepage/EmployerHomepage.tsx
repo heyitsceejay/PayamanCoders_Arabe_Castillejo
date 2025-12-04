@@ -11,8 +11,11 @@ import {
   FileText,
   LifeBuoy,
   Clock,
+  TrendingUp,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import TabNavigation from '@/components/TabNavigation'
+import EmployerVerificationCard from '@/components/EmployerVerificationCard'
 
 interface Job {
   _id: string
@@ -59,10 +62,19 @@ export default function EmployerHomepage() {
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'closed'>(
     'all'
   )
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 5
 
   useEffect(() => {
     fetchData()
   }, [])
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [query, filterStatus])
 
   const fetchData = async () => {
     try {
@@ -170,6 +182,11 @@ export default function EmployerHomepage() {
           </p>
         </div>
 
+        {/* Verification Card */}
+        <div className="mb-6 sm:mb-8 animate-[floatUp_0.85s_ease-out_0.1s_both]">
+          <EmployerVerificationCard />
+        </div>
+
         {/* Stats Grid - Fully Responsive */}
         <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <div
@@ -257,11 +274,25 @@ export default function EmployerHomepage() {
           </div>
         </div>
 
-        {/* Quick Actions - Fully Responsive */}
-        <div className="mb-6 sm:mb-8">
-          <h2 className="feature-heading text-lg sm:text-xl font-semibold mb-4 sm:mb-6 animate-[floatUp_0.85s_ease-out]">
-            Quick Actions
-          </h2>
+        {/* Tab Navigation */}
+        <TabNavigation
+          tabs={[
+            { id: 'overview', label: 'Overview', icon: <Briefcase className="w-4 h-4" /> },
+            { id: 'jobs', label: 'My Jobs', icon: <FileText className="w-4 h-4" /> },
+            { id: 'applicants', label: 'Applicants', icon: <Users className="w-4 h-4" /> },
+            { id: 'analytics', label: 'Analytics', icon: <TrendingUp className="w-4 h-4" /> },
+          ]}
+          defaultTab="overview"
+        >
+          {(activeTab) => (
+            <>
+              {activeTab === 'overview' && (
+                <div className="space-y-8">
+                  {/* Quick Actions - Fully Responsive */}
+                  <div>
+                    <h2 className="feature-heading text-lg sm:text-xl font-semibold mb-4 sm:mb-6 animate-[floatUp_0.85s_ease-out]">
+                      Quick Actions
+                    </h2>
           <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <Link
               href="/jobs/new"
@@ -319,10 +350,10 @@ export default function EmployerHomepage() {
               <p className="text-xs sm:text-sm text-secondary-600">View hiring metrics</p>
             </Link>
           </div>
-        </div>
+                  </div>
 
-        {/* Main Content Grid - Responsive Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                  {/* Main Content Grid - Responsive Layout */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Left Column: Company overview & help */}
           <div className="space-y-4 sm:space-y-6">
             {/* Company Overview Card */}
@@ -709,8 +740,296 @@ export default function EmployerHomepage() {
               </div>
             </div>
           </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'jobs' && (
+                <div className="card p-6 sm:p-8 relative overflow-hidden group hover:shadow-2xl hover:shadow-primary-500/20 transition-all duration-500" style={{ '--float-delay': '0.6s' } as CSSProperties}>
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative">
+                    {/* Search and Filter Section - Fully Responsive */}
+                    <div className="flex flex-col gap-4 sm:gap-5 mb-5 sm:mb-6">
+                      <div className="relative flex w-full items-center group/search">
+                        <span className="pointer-events-none absolute left-4 sm:left-5 text-primary-500 group-hover/search:text-primary-600 transition-colors duration-300 z-10">
+                          <Search className="h-5 w-5 sm:h-6 sm:w-6" />
+                        </span>
+                        <input
+                          value={query}
+                          onChange={(e) => setQuery(e.target.value)}
+                          className="glass-input w-full pl-12 sm:pl-14 pr-4 sm:pr-5 py-3 sm:py-4 text-sm sm:text-base font-medium transition-all duration-300 group-hover/search:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20"
+                          placeholder="Search jobs or companies..."
+                        />
+                      </div>
+
+                      <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-3 sm:gap-4">
+                        <select
+                          value={filterStatus}
+                          onChange={(e) =>
+                            setFilterStatus(e.target.value as 'all' | 'active' | 'closed')
+                          }
+                          className="glass-input px-4 sm:px-5 py-3 sm:py-4 text-sm sm:text-base font-medium appearance-none bg-white/70 cursor-pointer transition-all duration-300 hover:border-primary-500/50 focus:border-primary-500/70 focus:shadow-lg focus:shadow-primary-500/20 flex-1 xs:flex-initial"
+                        >
+                          <option value="all">All statuses</option>
+                          <option value="active">Active</option>
+                          <option value="closed">Closed</option>
+                        </select>
+
+                        <Link
+                          href="/jobs/new"
+                          className="btn-primary px-4 sm:px-5 py-3 text-sm font-semibold group/btn hover:shadow-xl hover:shadow-primary-500/40 flex items-center justify-center gap-2"
+                        >
+                          <PlusCircle className="h-4 w-4 group-hover/btn:scale-110 transition-transform duration-300" />
+                          <span>New job</span>
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Jobs List */}
+                    <div className="space-y-3 sm:space-y-4 border-t border-white/30 pt-5 sm:pt-6">
+                      {loading ? (
+                        <div className="text-sm sm:text-base text-secondary-500 text-center py-6 sm:py-8">Loading jobs…</div>
+                      ) : filteredJobs.length === 0 ? (
+                        <div className="text-sm sm:text-base text-secondary-500 text-center py-6 sm:py-8">No jobs found.</div>
+                      ) : (
+                        <>
+                          {filteredJobs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((job, index) => (
+                          <div
+                            key={job._id}
+                            className="feature-card flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-6 gap-4 group/job hover:scale-[1.01] hover:shadow-xl hover:shadow-primary-500/20 transition-all duration-500"
+                            style={{ '--float-delay': `${0.7 + index * 0.1}s` } as CSSProperties}
+                          >
+                            <div className="min-w-0 flex-1 w-full sm:w-auto">
+                              <div className="font-bold text-base sm:text-xl text-gray-900 mb-2 group-hover/job:text-primary-600 transition-colors duration-300 break-words">{job.title}</div>
+                              <div className="text-xs sm:text-base text-secondary-600/90 mb-2 sm:mb-3 flex items-center gap-2 flex-wrap">
+                                <span className="flex items-center gap-1.5">
+                                  <div className="h-1.5 w-1.5 rounded-full bg-primary-500/60"></div>
+                                  {job.company}
+                                </span>
+                                <span>•</span>
+                                <span>{job.location || 'Remote'}</span>
+                                <span>•</span>
+                                <span>{job.type || '—'}</span>
+                              </div>
+                              {typeof job.applicantCount === 'number' && (
+                                <div className="text-xs sm:text-base font-semibold text-primary-600 flex items-center gap-2">
+                                  <Users className="h-3 w-3 sm:h-4 sm:w-4" />
+                                  {job.applicantCount} applicant{job.applicantCount !== 1 ? 's' : ''}
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-3 sm:gap-4 flex-shrink-0 w-full sm:w-auto">
+                              <span
+                                className={`rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+                                  job.status === 'active'
+                                    ? 'bg-green-500/20 text-green-600 border border-green-500/40 shadow-lg shadow-green-500/20 group-hover/job:shadow-xl group-hover/job:shadow-green-500/30'
+                                    : 'bg-gray-500/20 text-gray-600 border border-gray-500/40 shadow-lg shadow-gray-500/20 group-hover/job:shadow-xl group-hover/job:shadow-gray-500/30'
+                                }`}
+                              >
+                                {job.status || 'active'}
+                              </span>
+
+                              <Link
+                                href={`/jobs/${job._id}/applicants`}
+                                className="auth-link text-xs sm:text-base font-semibold group/link"
+                              >
+                                <span className="flex items-center gap-2">
+                                  View Applicants
+                                  <div className="h-1.5 w-1.5 rounded-full bg-primary-500 opacity-0 group-hover/link:opacity-100 animate-pulse transition-opacity duration-300"></div>
+                                </span>
+                              </Link>
+
+                              <Link
+                                href={`/jobs/${job._id}`}
+                                className="text-xs sm:text-base text-secondary-600/90 font-semibold transition-colors hover:text-primary-600 group/edit"
+                              >
+                                <span className="flex items-center gap-2">
+                                  Edit
+                                  <div className="h-1 w-1 rounded-full bg-primary-500 opacity-0 group-hover/edit:opacity-100 transition-opacity duration-300"></div>
+                                </span>
+                              </Link>
+                            </div>
+                          </div>
+                          ))}
+                          
+                          {/* Pagination Controls */}
+                          {filteredJobs.length > itemsPerPage && (
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/30 mt-6">
+                              <div className="text-sm text-secondary-600">
+                                Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredJobs.length)} of {filteredJobs.length} jobs
+                              </div>
+                              
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                  disabled={currentPage === 1}
+                                  className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${
+                                    currentPage === 1
+                                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                      : 'bg-white/60 text-primary-600 hover:bg-primary-500 hover:text-white border border-primary-500/40'
+                                  }`}
+                                >
+                                  Previous
+                                </button>
+                                
+                                <div className="flex items-center gap-1">
+                                  {Array.from({ length: Math.ceil(filteredJobs.length / itemsPerPage) }, (_, i) => i + 1).map((page) => (
+                                    <button
+                                      key={page}
+                                      onClick={() => setCurrentPage(page)}
+                                      className={`w-10 h-10 rounded-lg font-semibold text-sm transition-all duration-300 ${
+                                        currentPage === page
+                                          ? 'bg-primary-500 text-white shadow-lg'
+                                          : 'bg-white/60 text-gray-700 hover:bg-primary-100 border border-primary-500/20'
+                                      }`}
+                                    >
+                                      {page}
+                                    </button>
+                                  ))}
+                                </div>
+                                
+                                <button
+                                  onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredJobs.length / itemsPerPage), prev + 1))}
+                                  disabled={currentPage === Math.ceil(filteredJobs.length / itemsPerPage)}
+                                  className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${
+                                    currentPage === Math.ceil(filteredJobs.length / itemsPerPage)
+                                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                      : 'bg-white/60 text-primary-600 hover:bg-primary-500 hover:text-white border border-primary-500/40'
+                                  }`}
+                                >
+                                  Next
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'applicants' && (
+                <div className="card p-6 sm:p-8 relative overflow-hidden group hover:shadow-2xl hover:shadow-primary-500/20 transition-all duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative">
+                    <div className="mb-5 sm:mb-6 flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3">
+                      <h2 className="feature-heading text-2xl font-bold">Recent Applicants</h2>
+                      <Link
+                        href="/applications"
+                        className="auth-link text-sm sm:text-base font-semibold group/link"
+                      >
+                        <span className="flex items-center gap-2">
+                          View all
+                          <div className="h-1.5 w-1.5 rounded-full bg-primary-500 opacity-0 group-hover/link:opacity-100 animate-pulse transition-opacity duration-300"></div>
+                        </span>
+                      </Link>
+                    </div>
+
+                    <div className="space-y-3 sm:space-y-4">
+                      {applicants.length === 0 ? (
+                        <div className="rounded-2xl border border-dashed border-primary-500/40 bg-white/50 p-6 sm:p-8 text-center text-sm sm:text-base text-secondary-500 backdrop-blur">
+                          <div className="flex flex-col items-center gap-3">
+                            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full border border-primary-500/30 bg-primary-500/10 flex items-center justify-center">
+                              <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary-500/60" />
+                            </div>
+                            <span className="font-medium">No recent applicants</span>
+                          </div>
+                        </div>
+                      ) : (
+                        applicants.map((a, index) => (
+                          <div
+                            key={a._id}
+                            className="feature-card flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-6 gap-4 group/applicant hover:scale-[1.01] hover:shadow-xl hover:shadow-primary-500/20 transition-all duration-500"
+                            style={{ '--float-delay': `${0.1 + index * 0.1}s` } as CSSProperties}
+                          >
+                            <div className="min-w-0 flex-1 w-full sm:w-auto">
+                              <div className="font-bold text-base sm:text-lg text-gray-900 mb-2 group-hover/applicant:text-primary-600 transition-colors duration-300 break-words">
+                                {a.firstName} {a.lastName}
+                              </div>
+                              <div className="text-xs sm:text-base text-secondary-600/90 flex items-center gap-2 flex-wrap">
+                                <span>Applied to {a.role || '—'}</span>
+                                <span>•</span>
+                                <span>{new Date(a.appliedAt || Date.now()).toLocaleDateString()}</span>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-3 sm:gap-4 flex-shrink-0 w-full sm:w-auto">
+                              <Link
+                                href={`/applications/${a._id}`}
+                                className="auth-link text-sm sm:text-base font-semibold group/link"
+                              >
+                                <span className="flex items-center gap-2">
+                                  Review
+                                  <div className="h-1.5 w-1.5 rounded-full bg-primary-500 opacity-0 group-hover/link:opacity-100 animate-pulse transition-opacity duration-300"></div>
+                                </span>
+                              </Link>
+                              <button
+                                onClick={() => {
+                                  alert(`Shortlisted ${a.firstName} ${a.lastName}`)
+                                }}
+                                className="rounded-full bg-green-500/20 border border-green-500/40 px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold text-green-600 shadow-lg shadow-green-500/20 hover:bg-green-500/30 hover:shadow-xl hover:shadow-green-500/30 hover:scale-105 transition-all duration-300"
+                              >
+                                Shortlist
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'analytics' && (
+                <div className="card p-6 sm:p-8 relative overflow-hidden group hover:shadow-2xl hover:shadow-primary-500/20 transition-all duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative">
+                    <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between mb-5 sm:mb-6 gap-3">
+                      <h2 className="feature-heading text-2xl font-bold">Hiring Analytics</h2>
+                      <Link
+                        href="/analytics"
+                        className="auth-link text-sm sm:text-base font-semibold group/link"
+                      >
+                        <span className="flex items-center gap-2">
+                          See full report
+                          <div className="h-1.5 w-1.5 rounded-full bg-primary-500 opacity-0 group-hover/link:opacity-100 animate-pulse transition-opacity duration-300"></div>
+                        </span>
+                      </Link>
+                    </div>
+
+                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-4 sm:gap-5">
+                      <div className="feature-card p-4 sm:p-6 group/metric hover:scale-[1.02] hover:shadow-xl hover:shadow-primary-500/20 transition-all duration-500 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-green-500/5 opacity-0 group-hover/metric:opacity-100 transition-opacity duration-500"></div>
+                        <div className="relative">
+                          <div className="stat-label mb-2 sm:mb-3 text-xs">Applications / Week</div>
+                          <div className="stat-number text-3xl sm:text-4xl mb-2">34</div>
+                          <div className="text-xs sm:text-sm font-bold text-green-600 flex items-center gap-2">
+                            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse shadow-lg shadow-green-500/50"></div>
+                            +8% vs last week
+                          </div>
+                        </div>
+                      </div>
+                      <div className="feature-card p-4 sm:p-6 group/metric hover:scale-[1.02] hover:shadow-xl hover:shadow-primary-500/20 transition-all duration-500 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-red-500/5 opacity-0 group-hover/metric:opacity-100 transition-opacity duration-500"></div>
+                        <div className="relative">
+                          <div className="stat-label mb-2 sm:mb-3 text-xs">Avg Time to Hire</div>
+                          <div className="stat-number text-3xl sm:text-4xl mb-2">21 days</div>
+                          <div className="text-xs sm:text-sm font-bold text-red-500 flex items-center gap-2">
+                            <div className="h-2 w-2 rounded-full bg-red-500 shadow-lg shadow-red-500/50"></div>
+                            +2 days vs target
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </TabNavigation>
         </div>
       </div>
-    </div>
   )
 }

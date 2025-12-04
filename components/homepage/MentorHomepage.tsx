@@ -12,10 +12,12 @@ import {
   CheckCircle,
   AlertCircle,
   ArrowRight,
-  GraduationCap
+  GraduationCap,
+  Briefcase
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import ProfileCard from '@/components/ProfileCard'
+import TabNavigation from '@/components/TabNavigation'
 
 interface Webinar {
   _id: string
@@ -180,7 +182,21 @@ export default function MentorHomepage() {
 
         {/* Main Content */}
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        {/* Stats Grid */}
+        
+        {/* Tab Navigation */}
+        <TabNavigation
+          tabs={[
+            { id: 'overview', label: 'Overview', icon: <Briefcase className="w-4 h-4" /> },
+            { id: 'webinars', label: 'My Webinars', icon: <Video className="w-4 h-4" /> },
+            { id: 'mentorship', label: 'Mentorship', icon: <Users className="w-4 h-4" /> },
+          ]}
+          defaultTab="overview"
+        >
+          {(activeTab) => (
+            <>
+              {activeTab === 'overview' && (
+                <div className="space-y-10">
+                  {/* Stats Grid */}
         <div className="mb-10 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div className="card relative overflow-hidden group/stat hover:shadow-2xl hover:shadow-primary-500/30 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02]">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-blue-500/10 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500"></div>
@@ -474,6 +490,158 @@ export default function MentorHomepage() {
             </div>
           </div>
         </div>
+                </div>
+              )}
+
+              {activeTab === 'webinars' && (
+                <div className="card relative overflow-hidden group/webinars hover:shadow-2xl hover:shadow-primary-500/30 transition-all duration-500 mb-10">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover/webinars:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative p-8">
+                    <div className="mb-8 flex items-center justify-between">
+                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Your Webinars</h2>
+                      <Link
+                        href="/webinars/create"
+                        className="relative flex items-center justify-center gap-2 px-6 py-3 text-base font-bold rounded-xl border-2 border-primary-500/50 bg-white/60 backdrop-blur-xl text-primary-600 shadow-xl shadow-primary-500/30 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-primary-500/50 hover:border-primary-500/70 hover:bg-white/80 overflow-hidden group/btn"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 rounded-xl"></div>
+                        <Plus className="h-5 w-5 relative z-10 group-hover/btn:rotate-90 transition-transform duration-300" />
+                        <span className="relative z-10">Create New</span>
+                        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-full transition-all duration-1000"></div>
+                      </Link>
+                    </div>
+
+                    {loading ? (
+                      <div className="space-y-6">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="animate-pulse rounded-xl bg-white/50 p-6">
+                            <div className="mb-3 h-7 w-3/4 rounded bg-white/70"></div>
+                            <div className="h-5 w-1/2 rounded bg-white/70"></div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : webinars.length === 0 ? (
+                      <div className="rounded-2xl border-2 border-dashed border-primary-500/40 bg-white/40 py-16 text-center backdrop-blur">
+                        <div className="feature-icon mx-auto mb-6 w-20 h-20">
+                          <Video className="w-12 h-12 text-primary-500" />
+                        </div>
+                        <h3 className="mb-3 text-2xl font-bold text-gray-900">
+                          No webinars yet
+                        </h3>
+                        <p className="mb-6 text-lg text-secondary-600">
+                          Create your first webinar to start sharing your expertise
+                        </p>
+                        <Link
+                          href="/webinars/create"
+                          className="relative inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold rounded-xl border-2 border-primary-500/50 bg-white/60 backdrop-blur-xl text-primary-600 shadow-xl shadow-primary-500/30 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-primary-500/50 hover:border-primary-500/70 hover:bg-white/80 overflow-hidden group/btn"
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-secondary-500/10 to-primary-500/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 rounded-xl"></div>
+                          <Plus className="h-5 w-5 relative z-10 group-hover/btn:rotate-90 transition-transform duration-300" />
+                          <span className="relative z-10">Create Webinar</span>
+                          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-full transition-all duration-1000"></div>
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="space-y-6">
+                        {webinars.map((webinar) => (
+                          <Link
+                            key={webinar._id}
+                            href={`/webinars/${webinar._id}`}
+                            className="group relative flex items-center justify-between rounded-2xl border-2 border-white/40 bg-white/60 p-6 shadow-inner shadow-primary-900/5 backdrop-blur transition-all duration-500 hover:border-primary-500/40 hover:shadow-2xl hover:shadow-primary-500/30 hover:-translate-y-1 hover:scale-[1.01] overflow-hidden"
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div className="relative flex-1">
+                              <div className="mb-3 flex items-center gap-3">
+                                <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
+                                  {webinar.title}
+                                </h3>
+                                <span
+                                  className={`rounded-full border-2 px-4 py-1.5 text-sm font-bold shadow-md ${getStatusColor(
+                                    webinar.status
+                                  )}`}
+                                >
+                                  {webinar.status}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-6 text-base text-secondary-600">
+                                <span className="flex items-center gap-2">
+                                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30">
+                                    <Calendar className="h-4 w-4 text-purple-600" />
+                                  </div>
+                                  <span className="font-semibold">{formatDate(webinar.scheduledDate)}</span>
+                                </span>
+                                <span className="flex items-center gap-2">
+                                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30">
+                                    <Clock className="h-4 w-4 text-blue-600" />
+                                  </div>
+                                  <span className="font-semibold">{webinar.duration} min</span>
+                                </span>
+                                <span className="flex items-center gap-2">
+                                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30">
+                                    <Users className="h-4 w-4 text-green-600" />
+                                  </div>
+                                  <span className="font-semibold">{webinar.attendees.length} registered</span>
+                                </span>
+                              </div>
+                            </div>
+                            <ArrowRight className="h-6 w-6 text-secondary-400 transition-all duration-300 group-hover:translate-x-2 group-hover:text-primary-600 group-hover:scale-110 relative z-10" />
+                          </Link>
+                        ))}
+                        
+                        {webinars.length > 5 && (
+                          <Link
+                            href="/webinars"
+                            className="block text-center text-lg font-bold text-primary-600 hover:text-primary-500 transition-colors"
+                          >
+                            View all {webinars.length} webinars →
+                          </Link>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'mentorship' && (
+                <div className="card relative overflow-hidden group/mentorship hover:shadow-2xl hover:shadow-primary-500/30 transition-all duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover/mentorship:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative p-8">
+                    <div className="mb-8 flex items-center justify-between">
+                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Mentorship Requests</h2>
+                      <Link
+                        href="/mentorship/requests"
+                        className="auth-link text-base font-bold"
+                      >
+                        View All
+                      </Link>
+                    </div>
+
+                    <div className="text-center py-16">
+                      <div className="feature-icon mx-auto mb-6 w-20 h-20">
+                        <Users className="w-12 h-12 text-primary-500" />
+                      </div>
+                      <h3 className="mb-3 text-2xl font-bold text-gray-900">
+                        {stats.pendingRequests && stats.pendingRequests > 0 
+                          ? `${stats.pendingRequests} Pending Request${stats.pendingRequests !== 1 ? 's' : ''}`
+                          : 'No Pending Requests'}
+                      </h3>
+                      <p className="mb-6 text-lg text-secondary-600">
+                        {stats.pendingRequests && stats.pendingRequests > 0
+                          ? 'Review and respond to mentorship requests from job seekers'
+                          : 'You have no pending mentorship requests at the moment'}
+                      </p>
+                      <Link
+                        href="/mentorship/requests"
+                        className="btn-primary inline-flex items-center gap-3 px-8 py-4 text-base font-bold"
+                      >
+                        View Requests
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </TabNavigation>
         </div>
       </div>
     </div>
