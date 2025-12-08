@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
-import { cache } from '@/lib/redis';
+import { cache } from '@/lib/cache';
 
 export async function GET() {
   try {
-    // Test Redis connection
+    // Test cache connection
     const testKey = 'test:connection';
-    const testValue = { message: 'Redis is working!', timestamp: new Date().toISOString() };
+    const testValue = { 
+      message: 'Cache is working!', 
+      timestamp: new Date().toISOString(),
+      cacheType: cache.isRedisAvailable() ? 'Redis' : 'Memory'
+    };
     
     await cache.set(testKey, testValue, 60); // Cache for 60 seconds
     const retrieved = await cache.get(testKey);
@@ -13,7 +17,12 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       data: retrieved,
-      message: 'Redis connection successful'
+      cacheType: cache.isRedisAvailable() ? 'Redis' : 'Memory',
+      redisAvailable: cache.isRedisAvailable(),
+      memoryCacheSize: cache.getMemoryCacheSize(),
+      message: cache.isRedisAvailable() 
+        ? 'Redis connection successful' 
+        : 'Using in-memory cache (Redis unavailable)'
     });
   } catch (error: any) {
     return NextResponse.json({

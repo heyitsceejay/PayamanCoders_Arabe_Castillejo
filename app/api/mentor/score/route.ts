@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import dbConnect from '@/lib/mongoose'
 import User from '@/models/User'
 import { verifyToken } from '@/lib/auth'
-import { cache } from '@/lib/redis'
+import { cache } from '@/lib/cache'
 
 export async function GET(request: NextRequest) {
   try {
