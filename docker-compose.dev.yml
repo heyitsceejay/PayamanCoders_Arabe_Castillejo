@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: workqit-nginx-dev
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/logs:/var/log/nginx
+    depends_on:
+      - nextjs
+    restart: unless-stopped
+    networks:
+      - workqit-network
+
+  nextjs:
+    image: node:18-alpine
+    container_name: workqit-nextjs-dev
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    command: sh -c "npm install && npm run dev"
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env.local
+    expose:
+      - "3000"
+    restart: unless-stopped
+    networks:
+      - workqit-network
+
+networks:
+  workqit-network:
+    driver: bridge
