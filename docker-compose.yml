@@ -22,10 +22,23 @@ services:
     container_name: workqit-nextjs
     environment:
       - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
     env_file:
       - .env.local
     expose:
       - "3000"
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - workqit-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: workqit-redis
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     restart: unless-stopped
     networks:
       - workqit-network
@@ -33,3 +46,6 @@ services:
 networks:
   workqit-network:
     driver: bridge
+
+volumes:
+  redis-data:

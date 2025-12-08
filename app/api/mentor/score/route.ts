@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import dbConnect from '@/lib/mongoose'
 import User from '@/models/User'
 import { verifyToken } from '@/lib/auth'
+import { cache } from '@/lib/redis'
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,9 +24,19 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const score = calculateMentorScore(userProfile)
+    // Try to get cached score
+    const cacheKey = `mentor:score:${user.userId}`
+    const cachedScore = await cache.get(cacheKey)
+    
+    if (cachedScore) {
+      return NextResponse.json({ score: cachedScore, cached: true })
+    }
 
-    return NextResponse.json({ score })
+    // Calculate and cache score for 5 minutes
+    const score = calculateMentorScore(userProfile)
+    await cache.set(cacheKey, score, 300)
+
+    return NextResponse.json({ score, cached: false })
 
   } catch (error) {
     console.error('Mentor score error:', error)
@@ -37,8 +48,29 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  // Same as GET - recalculates score
-  return GET(request)
+  try {
+    await dbConnect()
+    
+    const user = await verifyToken(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    // Clear cache and recalculate
+    const cacheKey = `mentor:score:${user.userId}`
+    await cache.del(cacheKey)
+
+    return GET(request)
+  } catch (error) {
+    console.error('Mentor score refresh error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
 }
 
 function calculateMentorScore(user: any) {

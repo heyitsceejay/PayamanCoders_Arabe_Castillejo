@@ -26,10 +26,25 @@ services:
     command: sh -c "npm install && npm run dev"
     environment:
       - NODE_ENV=development
+      - REDIS_URL=redis://redis:6379
     env_file:
       - .env.local
     expose:
       - "3000"
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - workqit-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: workqit-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
     restart: unless-stopped
     networks:
       - workqit-network
@@ -37,3 +52,6 @@ services:
 networks:
   workqit-network:
     driver: bridge
+
+volumes:
+  redis-data:
