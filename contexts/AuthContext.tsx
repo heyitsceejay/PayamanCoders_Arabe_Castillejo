@@ -8,7 +8,7 @@ export interface User {
   lastName: string
   role: string
   email?: string
-  authProvider?: 'local' | 'google' | 'hybrid'
+  authProvider?: 'local' | 'google' | 'hybrid' | 'student-management'
   hasPassword?: boolean
   googleId?: string
   verification?: {

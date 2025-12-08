@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import dbConnect from '@/lib/mongoose'
 import User from '@/models/User'
+import { studentManagementService } from '@/services/studentManagementService'
 
 export async function POST(request: NextRequest) {
   console.log('🔐 Login API called')
@@ -27,18 +28,52 @@ export async function POST(request: NextRequest) {
 
     console.log('🔍 Looking for user with email:', email)
     // Find user
-    const user = await User.findOne({ email: email.toLowerCase() })
+    let user = await User.findOne({ email: email.toLowerCase() })
+    
+    // If user not found, check student management system
     if (!user) {
-      console.log('❌ User not found')
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 }
-      )
+      console.log('❌ User not found in local database')
+      console.log('🔍 Checking student management system...')
+      
+      const student = await studentManagementService.validateStudentCredentials(email, password)
+      
+      if (student) {
+        console.log('✅ Valid student found in management system, creating local account...')
+        
+        // Create new user from student data
+        const hashedPassword = await bcrypt.hash(password, 10)
+        
+        user = await User.create({
+          email: student.email.toLowerCase(),
+          password: hashedPassword,
+          firstName: student.firstName,
+          lastName: student.lastName,
+          role: 'student',
+          emailVerified: true,
+          authProvider: 'student-management',
+          profile: {
+            department: student.department,
+            program: student.program,
+            year: student.year,
+            block: student.block,
+          },
+        })
+        
+        console.log('✅ User created from student management system')
+      } else {
+        console.log('❌ Invalid credentials - not found in local DB or student management system')
+        return NextResponse.json(
+          { error: 'Invalid credentials' },
+          { status: 401 }
+        )
+      }
+    } else {
+      console.log('✅ User found:', user.email, 'Role:', user.role)
     }
-    console.log('✅ User found:', user.email, 'Role:', user.role)
 
-    // Check if email is verified
-    if (!user.emailVerified) {
+
+    // Check if email is verified (skip for student-management users)
+    if (!user.emailVerified && user.authProvider !== 'student-management') {
       console.log('❌ Email not verified')
       return NextResponse.json(
         { 
@@ -76,7 +111,22 @@ export async function POST(request: NextRequest) {
 
     console.log('🔑 Comparing passwords...')
     // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.password)
+    let isPasswordValid = await bcrypt.compare(password, user.password)
+    
+    // If local password doesn't match, try student management system
+    if (!isPasswordValid) {
+      console.log('🔍 Checking student management system...')
+      const student = await studentManagementService.validateStudentCredentials(email, password)
+      
+      if (student) {
+        console.log('✅ Valid credentials in student management system, syncing...')
+        // Update local password to match student management system
+        user.password = await bcrypt.hash(password, 10)
+        await user.save()
+        isPasswordValid = true
+      }
+    }
+    
     if (!isPasswordValid) {
       console.log('❌ Password invalid')
       return NextResponse.json(
