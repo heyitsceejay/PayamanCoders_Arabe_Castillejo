@@ -65,8 +65,8 @@ export default function Hero({ user }: HeroProps) {
               </>
             ) : (
               <>
-                <Link href="/auth/register" className="btn-primary group px-9 py-3 text-lg">
-                  <span>Get Started</span>
+                <Link href="/auth/login" className="btn-primary group px-9 py-3 text-lg">
+                  <span>Get Startedd</span>
                   <ArrowRight className="ml-2 inline h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
                 <Link href="/jobs" className="btn-secondary group px-9 py-3 text-lg">
